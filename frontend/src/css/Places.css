@@ -1,0 +1,31 @@
+.places-container {
+  position: relative;
+  min-height: 100px;
+  border: 1px solid lightslategray;
+  border-radius: 10px;
+}
+
+.left-arrow {
+  margin-top: 10px;
+  position: absolute;
+  left: 10px;
+  width: 60px;
+  bottom: 0;
+}
+
+.arrow-container {
+  min-height: 40px;
+}
+
+.right-arrow {
+  margin-top: 10px;
+  position: absolute;
+  right: 10px;
+  width: 60px;
+  bottom: 0;
+}
+
+.search {
+  width: 380px;
+  margin-left: 10px;
+}
