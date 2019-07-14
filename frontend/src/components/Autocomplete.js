@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Autosuggest from "react-autosuggest";
 import UseTextInput from "../hooks/UseTextInput";
 import { CityContext } from "../contexts/CityContext";

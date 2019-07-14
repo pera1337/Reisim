@@ -1,0 +1,15 @@
+.cities-container {
+  min-height: 50px;
+  min-width: 50px;
+  width: 500px;
+  border: 1px solid #aaaaaa;
+  border-radius: 10px;
+}
+
+.city-container {
+  display: inline-block;
+  border: 1px solid #aaaaaa;
+  border-radius: 10px;
+  margin: 3px;
+  padding: 3px;
+}
