@@ -19,7 +19,8 @@ router.post("/new", auth, async (req, res) => {
     await Location.create({
       lat: element.lat,
       lng: element.lng,
-      guideId: guide.id
+      guideId: guide.id,
+	  locationNumber:element.num,
     });
   });
 
@@ -29,10 +30,10 @@ router.post("/new", auth, async (req, res) => {
 router.get("/:id", async (req, res) => {
   const guide = await Guide.findOne({
     where: { id: req.params.id },
-    include: [{ model: Location, as: "Locations" }, { model: User, as: "User" }]
+    include: [{ model: Location, as: "Locations" }, { model: User, as: "User" }],
+	order:[[Location,"locationNumber"]],
   });
   if (!guide) return res.status(404).send("Guide not found");
-
   res.send(guide);
 });
 
@@ -61,6 +62,7 @@ router.put("/:id", auth, async (req, res) => {
       else {
         locations[i].lat = coords[i].lat;
         locations[i].lng = coords[i].lng;
+		locations[i].locationNumber = coords[i].num;
         await locations[i].save({ transaction });
       }
     }
@@ -69,7 +71,8 @@ router.put("/:id", auth, async (req, res) => {
         {
           lat: coords[i].lat,
           lng: coords[i].lng,
-          guideId: guide.id
+          guideId: guide.id,
+		  locationNumber:coords[i].num,
         },
         { transaction }
       );

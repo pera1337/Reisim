@@ -15,6 +15,7 @@ class GuideMap extends React.Component {
     this.state = {
       map: {},
       num: 0,
+      locationNumber: 0,
       removedNums: []
     };
     this.addMarker.bind(this);
@@ -31,6 +32,7 @@ class GuideMap extends React.Component {
       argNum = stateCpy.pop();
       this.setState({ removedNums: stateCpy });
     }
+    this.setState({ locationNumber: argNum });
     var clickedPointGeom = new Point(fromLonLat(point));
     var marker = new Feature({
       geometry: clickedPointGeom
@@ -140,6 +142,7 @@ class GuideMap extends React.Component {
 
     const point = toLonLat(clickedCoordinate);
     this.addMarker(point);
+    point.push(this.state.locationNumber - 1);
     this.props.addPoint(point);
   }
   render() {

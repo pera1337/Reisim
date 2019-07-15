@@ -28,6 +28,7 @@ const CreateGuide = props => {
           const point = [];
           point.push(element.lng);
           point.push(element.lat);
+          point.push(element.locationNumber);
           p.push(point);
         });
         setPoints(p);
@@ -40,12 +41,12 @@ const CreateGuide = props => {
     e.preventDefault();
     async function add() {
       try {
-        console.log("points :", points);
         const postPoints = [];
         points.map(element => {
           var el = {
             lat: element[1],
-            lng: element[0]
+            lng: element[0],
+            num: element[2]
           };
           postPoints.push(el);
         });

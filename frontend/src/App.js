@@ -28,9 +28,6 @@ function App() {
             path="/guide/:id"
             render={routeProps => <Guide id={routeProps.match.params.id} />}
           />
-          <CityProvider>
-            <Route exact path="/sandbox" render={Sandbox} />
-          </CityProvider>
           <Route
             exact
             path="/guide/edit/:id"
@@ -52,6 +49,9 @@ function App() {
               <EditProfile id={routeProps.match.params.id} />
             )}
           />
+          <CityProvider>
+            <Route exact path="/sandbox" render={Sandbox} />
+          </CityProvider>
         </Switch>
       </UserProvider>
     </div>
