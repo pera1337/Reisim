@@ -23,9 +23,10 @@ const Places = () => {
   }, [city]);
 
   async function fetchPlaces(off) {
-    if (city != "") {
+    const cityName = city.name;
+    if (cityName != "") {
       const response = await axios.get(
-        `http://localhost:5000/api/places/?city=${city}&limit=10&offset=${off}`
+        `http://localhost:5000/api/places/?city=${cityName}&limit=10&offset=${off}`
       );
       setPlaces(response.data);
       if (response.data.length < 10) setMaxOffset(true);
@@ -51,12 +52,12 @@ const Places = () => {
     if (e.target.value.length == 0) {
       setMaxOffset(false);
       fetchPlaces(0);
-    } else if (e.target.value.length >= 3 && city != "") {
+    } else if (e.target.value.length >= 3 && city.name != "") {
       setOffset(0);
       const response = await axios.get(
-        `http://localhost:5000/api/places/search?city=${city}&limit=10&&query=${
-          e.target.value
-        }`
+        `http://localhost:5000/api/places/search?city=${
+          city.name
+        }&limit=10&&query=${e.target.value}`
       );
       setPlaces(response.data);
       setMaxOffset(true);

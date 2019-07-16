@@ -34,7 +34,7 @@ const Autocomplete = () => {
       lon: data.location.latlon.longitude
     };
     setSelectedCity(sel);
-    changeCity(sel.name);
+    changeCity({ name: sel.name, full_name: sel.full_name });
   };
   const renderSuggestion = suggestion => (
     <span>{suggestion.matching_full_name}</span>
