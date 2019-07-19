@@ -3,9 +3,13 @@ import { withRouter } from "react-router";
 import Button from "react-bootstrap/Button";
 import FormGroup from "react-bootstrap/FormGroup";
 import FormControl from "react-bootstrap/FormControl";
-import UseTextInput from "../hooks/UseTextInput";
 import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
 import GuideMap from "./GuideMap";
+import Autocomplete from "./Autocomplete";
+import Places from "./Places";
+import SelectedCities from "./SelectedCities";
+import UseTextInput from "../hooks/UseTextInput";
 import axios from "axios";
 import "../css/CreateGuide.css";
 
@@ -104,7 +108,11 @@ const CreateGuide = props => {
     <div>
       <h1>Create a guide</h1>
       <div className="create-guide">
-        <form onSubmit={create}>
+        <Form
+          onSubmit={e => {
+            e.preventDefault();
+          }}
+        >
           <FormGroup controlId="title">
             <Form.Label>Title</Form.Label>
             <FormControl
@@ -126,20 +134,37 @@ const CreateGuide = props => {
               type="text"
             />
           </FormGroup>
-          <FormGroup controlId="map">
-            <Form.Label>Add locations</Form.Label>
-            <GuideMap
-              addPoint={addPoint}
-              removePoint={removePoint}
-              edit={props.edit}
-              id={props.id}
-              input="true"
-            />
+          <FormGroup controlId="citiesAutocomplete">
+            <Form.Label>Add cities</Form.Label>
+            <Autocomplete />
           </FormGroup>
-          <Button block type="submit">
+          <FormGroup controlId="selectedCities">
+            <SelectedCities />
+          </FormGroup>
+          <Form.Row>
+            <Col>
+              <FormGroup controlId="map">
+                <Form.Label>Add locations</Form.Label>
+                <GuideMap
+                  addPoint={addPoint}
+                  removePoint={removePoint}
+                  edit={props.edit}
+                  id={props.id}
+                  input="true"
+                />
+              </FormGroup>
+            </Col>
+            <Col>
+              <FormGroup>
+                <Form.Label>Places</Form.Label>
+                <Places />
+              </FormGroup>
+            </Col>
+          </Form.Row>
+          <Button block type="button" onClick={create}>
             {props.edit === "true" ? "Edit" : "Create"}
           </Button>
-        </form>
+        </Form>
       </div>
     </div>
   );

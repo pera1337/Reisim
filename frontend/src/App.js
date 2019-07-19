@@ -11,48 +11,46 @@ import Guide from "./components/Guide";
 import UserProfile from "./components/UserProfile";
 import EditProfile from "./components/EditProfile";
 import "./App.css";
-import Sandbox from "./components/Sandbox";
 
 function App() {
   return (
     <div className="App">
       <UserProvider>
-        <NavB />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/guide/create" component={CreateGuide} />
-          <Route
-            exact
-            path="/guide/:id"
-            render={routeProps => <Guide id={routeProps.match.params.id} />}
-          />
-          <Route
-            exact
-            path="/guide/edit/:id"
-            render={routeProps => (
-              <CreateGuide id={routeProps.match.params.id} edit="true" />
-            )}
-          />
-          <Route
-            exact
-            path="/user/:id"
-            render={routeProps => (
-              <UserProfile id={routeProps.match.params.id} />
-            )}
-          />
-          <Route
-            exact
-            path="/user/edit/:id"
-            render={routeProps => (
-              <EditProfile id={routeProps.match.params.id} />
-            )}
-          />
-          <CityProvider>
-            <Route exact path="/sandbox" render={Sandbox} />
-          </CityProvider>
-        </Switch>
+        <CityProvider>
+          <NavB />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/guide/create" component={CreateGuide} />
+            <Route
+              exact
+              path="/guide/:id"
+              render={routeProps => <Guide id={routeProps.match.params.id} />}
+            />
+            <Route
+              exact
+              path="/guide/edit/:id"
+              render={routeProps => (
+                <CreateGuide id={routeProps.match.params.id} edit="true" />
+              )}
+            />
+            <Route
+              exact
+              path="/user/:id"
+              render={routeProps => (
+                <UserProfile id={routeProps.match.params.id} />
+              )}
+            />
+            <Route
+              exact
+              path="/user/edit/:id"
+              render={routeProps => (
+                <EditProfile id={routeProps.match.params.id} />
+              )}
+            />
+          </Switch>
+        </CityProvider>
       </UserProvider>
     </div>
   );
