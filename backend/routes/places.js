@@ -13,6 +13,7 @@ router.get("/", async (req, res) => {
     client_secret: process.env.CLIENT_SECRET,
     near,
     section: "sights",
+	/*query:"tourist",*/
     limit,
     offset,
     v: "20180323"

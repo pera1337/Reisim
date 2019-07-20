@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { CityContext } from "../contexts/CityContext";
+import { PlaceContext } from "../contexts/PlaceContext";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
@@ -11,6 +12,7 @@ import axios from "axios";
 
 const Places = () => {
   const { city, changeCity } = useContext(CityContext);
+  const { place, changePlace } = useContext(PlaceContext);
   const [query, setQuery] = UseTextInput("");
   const [offset, setOffset] = useState(0);
   const [places, setPlaces] = useState([]);
@@ -35,9 +37,7 @@ const Places = () => {
   }
 
   function removePlace(index) {
-    const newPlaces = [...places];
-    newPlaces.splice(index, 1);
-    setPlaces(newPlaces);
+    changePlace(places[index]);
   }
 
   function handleLeft() {

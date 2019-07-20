@@ -155,7 +155,7 @@ const CreateGuide = props => {
               </FormGroup>
             </Col>
             <Col>
-              <FormGroup>
+              <FormGroup style={{ float: "right" }}>
                 <Form.Label>Places</Form.Label>
                 <Places />
               </FormGroup>

@@ -8,6 +8,7 @@ import { Tile, Vector } from "ol/layer.js";
 import { toLonLat, fromLonLat, transform } from "ol/proj";
 import OSM from "ol/source/OSM";
 import axios from "axios";
+import { PlaceContext } from "../contexts/PlaceContext";
 
 class GuideMap extends React.Component {
   constructor(props) {

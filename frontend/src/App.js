@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext";
 import { CityProvider } from "./contexts/CityContext";
+import { PlaceProvider } from "./contexts/PlaceContext";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
@@ -16,41 +17,49 @@ function App() {
   return (
     <div className="App">
       <UserProvider>
-        <CityProvider>
-          <NavB />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/guide/create" component={CreateGuide} />
-            <Route
-              exact
-              path="/guide/:id"
-              render={routeProps => <Guide id={routeProps.match.params.id} />}
-            />
-            <Route
-              exact
-              path="/guide/edit/:id"
-              render={routeProps => (
-                <CreateGuide id={routeProps.match.params.id} edit="true" />
-              )}
-            />
-            <Route
-              exact
-              path="/user/:id"
-              render={routeProps => (
-                <UserProfile id={routeProps.match.params.id} />
-              )}
-            />
-            <Route
-              exact
-              path="/user/edit/:id"
-              render={routeProps => (
-                <EditProfile id={routeProps.match.params.id} />
-              )}
-            />
-          </Switch>
-        </CityProvider>
+        <NavB />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/guide/create">
+            <CityProvider>
+              <PlaceProvider>
+                <CreateGuide />
+              </PlaceProvider>
+            </CityProvider>
+          </Route>
+          <Route
+            exact
+            path="/guide/:id"
+            render={routeProps => <Guide id={routeProps.match.params.id} />}
+          />
+          <Route
+            exact
+            path="/guide/edit/:id"
+            render={routeProps => (
+              <CityProvider>
+                <PlaceProvider>
+                  <CreateGuide id={routeProps.match.params.id} edit="true" />
+                </PlaceProvider>
+              </CityProvider>
+            )}
+          />
+          <Route
+            exact
+            path="/user/:id"
+            render={routeProps => (
+              <UserProfile id={routeProps.match.params.id} />
+            )}
+          />
+          <Route
+            exact
+            path="/user/edit/:id"
+            render={routeProps => (
+              <EditProfile id={routeProps.match.params.id} />
+            )}
+          />
+        </Switch>
       </UserProvider>
     </div>
   );
