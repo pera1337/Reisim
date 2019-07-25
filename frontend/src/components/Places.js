@@ -10,7 +10,7 @@ import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "../css/Places.css";
 import axios from "axios";
 
-const Places = () => {
+const Places = ({ addLocation, removeLocation }) => {
   const { city, changeCity } = useContext(CityContext);
   const { place, changePlace } = useContext(PlaceContext);
   const [query, setQuery] = UseTextInput("");
@@ -85,7 +85,8 @@ const Places = () => {
           <ListGroup.Item
             action
             onDoubleClick={() => {
-              removePlace(index);
+              addLocation(element);
+              //removePlace(index);
             }}
             key={index}
           >

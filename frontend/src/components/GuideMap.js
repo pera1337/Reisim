@@ -8,17 +8,18 @@ import { Tile, Vector } from "ol/layer.js";
 import { toLonLat, fromLonLat, transform } from "ol/proj";
 import OSM from "ol/source/OSM";
 import axios from "axios";
-import { PlaceContext } from "../contexts/PlaceContext";
 
 class GuideMap extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       map: {},
-      num: 0,
-      locationNumber: 0,
+      //num: 0,
+      //locationNumber: 0,
       removedNums: []
     };
+    this.num = 0;
+    this.locationNumber = 0;
     this.addMarker.bind(this);
     this.handleMapClick.bind(this);
   }
@@ -26,14 +27,18 @@ class GuideMap extends React.Component {
   addMarker(point) {
     let argNum;
     if (this.state.removedNums.length == 0) {
-      this.setState({ num: this.state.num + 1 });
-      argNum = this.state.num;
+      //this.setState({ num: this.state.num + 1 });
+      this.num++;
+      //argNum = this.state.num;
+      argNum = this.num;
     } else {
       let stateCpy = [...this.state.removedNums];
       argNum = stateCpy.pop();
       this.setState({ removedNums: stateCpy });
     }
-    this.setState({ locationNumber: argNum });
+    //this.setState({ locationNumber: argNum });
+    //this.locationNumber++;
+    this.locationNumber = argNum;
     var clickedPointGeom = new Point(fromLonLat(point));
     var marker = new Feature({
       geometry: clickedPointGeom
@@ -138,12 +143,27 @@ class GuideMap extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextprops) {
+    let place = [];
+    if (this.props.place !== nextprops.place) {
+      console.log("nextprops.place :", nextprops.place);
+      place.push(nextprops.place.lng);
+      place.push(nextprops.place.lat);
+      this.addMarker(place);
+      //place.push(this.state.locationNumber);
+      place.push(this.locationNumber - 1);
+      this.props.addPoint(place);
+    }
+  }
+
   handleMapClick(event) {
     var clickedCoordinate = this.state.map.getCoordinateFromPixel(event.pixel);
 
     const point = toLonLat(clickedCoordinate);
+    console.log("point :", point);
     this.addMarker(point);
-    point.push(this.state.locationNumber - 1);
+    //point.push(this.state.locationNumber - 1);
+    point.push(this.locationNumber - 1);
     this.props.addPoint(point);
   }
   render() {

@@ -17,6 +17,7 @@ const CreateGuide = props => {
   const [title, setTitle] = UseTextInput("");
   const [description, setDescription] = UseTextInput("");
   const [points, setPoints] = useState([]);
+  const [location, setLocation] = useState({});
 
   useEffect(() => {
     async function populate() {
@@ -88,8 +89,19 @@ const CreateGuide = props => {
     add();
   }
 
+  function addLocation(loc) {
+    setLocation(loc);
+  }
+
   function addPoint(point) {
-    setPoints([...points, point]);
+    console.log("point :", point);
+    /*console.log("points :", points);
+    setPoints([...points, point]);*/
+    //console.log("point :", point);
+    setPoints(els => {
+      //console.log("els in add :", els);
+      return [...els, point];
+    });
   }
 
   function removePoint(point) {
@@ -102,6 +114,16 @@ const CreateGuide = props => {
       return v0 != p0 && v1 != p1;
     });
     setPoints(newPoints);
+    /*setPoints(els => {
+      //console.log("els in delete :", els);
+      els.filter(val => {
+        let v0 = Math.round(val[0] * 100) / 100;
+        let v1 = Math.round(val[1] * 100) / 100;
+        let p0 = Math.round(point[0] * 100) / 100;
+        let p1 = Math.round(point[0] * 100) / 100;
+        return v0 != p0 && v1 != p1;
+      });
+    });*/
   }
 
   return (
@@ -146,6 +168,7 @@ const CreateGuide = props => {
               <FormGroup controlId="map">
                 <Form.Label>Add locations</Form.Label>
                 <GuideMap
+                  place={location}
                   addPoint={addPoint}
                   removePoint={removePoint}
                   edit={props.edit}
@@ -157,7 +180,7 @@ const CreateGuide = props => {
             <Col>
               <FormGroup style={{ float: "right" }}>
                 <Form.Label>Places</Form.Label>
-                <Places />
+                <Places addLocation={addLocation} />
               </FormGroup>
             </Col>
           </Form.Row>
