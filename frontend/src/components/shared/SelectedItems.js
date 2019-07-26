@@ -12,24 +12,30 @@ function isEqual(prevProps, nextProps) {
 }
 
 const SelectedItems = React.memo(
-  ({ items, handleRemoveClick, handleClick }) => {
+  ({ items, handleRemoveClick = null, handleClick = null }) => {
     return (
       <div className="items-container">
         {items.length != 0
           ? items.map((element, index) => {
               return (
                 <div className="item-container" key={index}>
-                  <FontAwesomeIcon
-                    style={{ cursor: "pointer" }}
-                    icon={faTimesCircle}
-                    onClick={() => handleRemoveClick(index)}
-                  />
-                  <span
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleClick(element)}
-                  >
-                    {` ${element.name}`}
-                  </span>
+                  {handleRemoveClick ? (
+                    <FontAwesomeIcon
+                      style={{ cursor: "pointer" }}
+                      icon={faTimesCircle}
+                      onClick={() => handleRemoveClick(index)}
+                    />
+                  ) : null}
+                  {handleClick ? (
+                    <span
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleClick(element)}
+                    >
+                      {` ${element.name}`}
+                    </span>
+                  ) : (
+                    <span>{` ${element.name}`}</span>
+                  )}
                 </div>
               );
             })

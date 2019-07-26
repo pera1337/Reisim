@@ -11,6 +11,7 @@ import Places from "./Places";
 import SelectedCities from "./SelectedCities";
 import UseTextInput from "../hooks/UseTextInput";
 import axios from "axios";
+import { CityContext } from "../contexts/CityContext";
 import "../css/CreateGuide.css";
 
 const CreateGuide = props => {
@@ -18,6 +19,8 @@ const CreateGuide = props => {
   const [description, setDescription] = UseTextInput("");
   const [points, setPoints] = useState([]);
   const [location, setLocation] = useState({});
+  const [cities, setCities] = useState([]);
+  const { city, changeCity } = useContext(CityContext);
 
   useEffect(() => {
     async function populate() {
@@ -37,6 +40,9 @@ const CreateGuide = props => {
           p.push(point);
         });
         setPoints(p);
+        response.data.Cities.forEach(el => {
+          changeCity(el);
+        });
       }
     }
     populate();
@@ -65,7 +71,8 @@ const CreateGuide = props => {
             {
               title,
               description,
-              coords: postPoints
+              coords: postPoints,
+              cities
             },
             { headers }
           );
@@ -76,7 +83,8 @@ const CreateGuide = props => {
             {
               title,
               description,
-              coords: postPoints
+              coords: postPoints,
+              cities
             },
             { headers }
           );
@@ -126,6 +134,17 @@ const CreateGuide = props => {
     });*/
   }
 
+  function addCity(city) {
+    console.log("cities :", cities);
+    if (!cities.includes(city)) setCities([...cities, city]);
+  }
+
+  function removeCity(index) {
+    const newState = [...cities];
+    newState.splice(index, 1);
+    setCities(newState);
+  }
+
   return (
     <div>
       <h1>Create a guide</h1>
@@ -161,7 +180,7 @@ const CreateGuide = props => {
             <Autocomplete />
           </FormGroup>
           <FormGroup controlId="selectedCities">
-            <SelectedCities />
+            <SelectedCities addCity={addCity} removeCity={removeCity} />
           </FormGroup>
           <Form.Row>
             <Col>

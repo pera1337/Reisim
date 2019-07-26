@@ -25,7 +25,7 @@ let Location = sequelize.define("Location", {
   },
   lat: Sequelize.DECIMAL(10, 8),
   lng: Sequelize.DECIMAL(11, 8),
-  locationNumber:Sequelize.INTEGER,
+  locationNumber: Sequelize.INTEGER,
   guideId: Sequelize.INTEGER(11)
 });
 
@@ -48,7 +48,19 @@ let Guide = sequelize.define("Guide", {
 });
 
 let Rating = sequelize.define("Rating", {
-    rating: Sequelize.DECIMAL
+  rating: Sequelize.DECIMAL
+});
+
+let City = sequelize.define("City", {
+  id: {
+    type: Sequelize.INTEGER(11),
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  name: Sequelize.STRING,
+  full_name: Sequelize.STRING,
+  guideId: Sequelize.INTEGER(11)
 });
 
 Guide.hasMany(Location, { foreignKey: "guideId" });
@@ -78,7 +90,11 @@ Guide.belongsToMany(User, {
 
 Guide.belongsTo(User, { foreignKey: "userId" });
 
+Guide.hasMany(City, { foreignKey: "guideId" });
+City.belongsTo(Guide, { foreignKey: "guideId" });
+
 module.exports.User = User;
 module.exports.Location = Location;
 module.exports.Guide = Guide;
 module.exports.Rating = Rating;
+module.exports.City = City;

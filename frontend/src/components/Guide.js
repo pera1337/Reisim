@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import GuideMap from "./GuideMap";
+import SelectedItems from "./shared/SelectedItems";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +18,7 @@ const Guide = params => {
   const [avgRating, setAvgRating] = useState(0);
   const [numOfRatings, setNumOfRatings] = useState(0);
   const [coords, setCoords] = useState([]);
+  const [cities, setCities] = useState([]);
   const [userId, setUserId] = useState(-1);
   const [guideUser, setGuideUser] = useState({});
   const [show, setShow] = useState(false);
@@ -27,12 +29,14 @@ const Guide = params => {
         const response = await axios.get(
           `http://localhost:5000/api/guide/${params.id}`
         );
+        console.log("response.data :", response.data);
         const token = localStorage.getItem("token") || "";
         if (token) {
           const decoded = await jsonwebtoken.decode(token);
           setUserId(Number(decoded.id));
         }
         setGuide(response.data);
+        setCities(response.data.Cities);
         setAvgRating(response.data.avgRating);
         setNumOfRatings(response.data.numOfRatings);
         setGuideUser(response.data.User);
@@ -147,6 +151,7 @@ const Guide = params => {
           ""
         )}
       </p>
+      <SelectedItems items={cities} />
       <p>{guide.description}</p>
       {userId === guide.userId ? (
         <div>

@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { User, Location, Guide, Rating } = require("../models/models");
+const { User, Location, Guide, Rating, City } = require("../models/models");
 const auth = require("../middleware/auth");
 
 router.post("/new", auth, async (req, res) => {
   const { id } = req.user;
-  const { title, description, coords } = req.body;
+  const { title, description, coords, cities } = req.body;
   const user = await User.findOne({ where: { id } });
   if (!user) return res.status(401).send("User not found");
 
@@ -20,7 +20,15 @@ router.post("/new", auth, async (req, res) => {
       lat: element.lat,
       lng: element.lng,
       guideId: guide.id,
-	  locationNumber:element.num,
+      locationNumber: element.num
+    });
+  });
+
+  cities.forEach(async element => {
+    await City.create({
+      name: element.name,
+      full_name: element.full_name,
+      guideId: guide.id
     });
   });
 
@@ -30,8 +38,12 @@ router.post("/new", auth, async (req, res) => {
 router.get("/:id", async (req, res) => {
   const guide = await Guide.findOne({
     where: { id: req.params.id },
-    include: [{ model: Location, as: "Locations" }, { model: User, as: "User" }],
-	order:[[Location,"locationNumber"]],
+    include: [
+      { model: Location, as: "Locations" },
+      { model: User, as: "User" },
+      { model: City, as: "Cities" }
+    ],
+    order: [[Location, "locationNumber"]]
   });
   if (!guide) return res.status(404).send("Guide not found");
   res.send(guide);
@@ -39,7 +51,7 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   const user = req.user;
-  const { title, description, coords } = req.body;
+  const { title, description, coords, cities } = req.body;
   const guide = await Guide.findOne({ where: { id: req.params.id } });
   if (!guide) return res.status(404).send("Guide not found");
 
@@ -47,7 +59,11 @@ router.put("/:id", auth, async (req, res) => {
   let locations = await Location.findAll({
     where: { guideId: req.params.id }
   });
+  let cits = await City.findAll({
+    where: { guideId: req.params.id }
+  });
   if (!locations) return res.status(404).send("Locations not found");
+  if (!cits) cits = []; //a guide can have no cities
 
   let transaction;
   try {
@@ -62,7 +78,7 @@ router.put("/:id", auth, async (req, res) => {
       else {
         locations[i].lat = coords[i].lat;
         locations[i].lng = coords[i].lng;
-		locations[i].locationNumber = coords[i].num;
+        locations[i].locationNumber = coords[i].num;
         await locations[i].save({ transaction });
       }
     }
@@ -72,7 +88,27 @@ router.put("/:id", auth, async (req, res) => {
           lat: coords[i].lat,
           lng: coords[i].lng,
           guideId: guide.id,
-		  locationNumber:coords[i].num,
+          locationNumber: coords[i].num
+        },
+        { transaction }
+      );
+    }
+
+    i = 0;
+    for (i = 0; i < cits.length; i++) {
+      if (i >= cities.length) await cits[i].destroy({ transaction });
+      else {
+        cits[i].name = cities[i].name;
+        cits[i].full_name = cities[i].full_name;
+        await cits[i].save({ transaction });
+      }
+    }
+    for (i; i < cities.length; i++) {
+      await City.create(
+        {
+          name: cities[i].name,
+          full_name: cities[i].full_name,
+          guideId: guide.id
         },
         { transaction }
       );
@@ -160,8 +196,8 @@ router.get("/rated/:id", auth, async (req, res) => {
   const guideId = req.params.id;
   const guideRating = await Rating.findOne({ where: { userId, guideId } });
   if (!guideRating) return res.send({});
-  else{
-  res.send(guideRating);
+  else {
+    res.send(guideRating);
   }
 });
 
