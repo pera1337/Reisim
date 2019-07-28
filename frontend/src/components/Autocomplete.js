@@ -6,10 +6,10 @@ import axios from "axios";
 import "../css/Autocomplete.css";
 
 const Autocomplete = () => {
-  const { city, changeCity } = useContext(CityContext);
+  const { changeCity } = useContext(CityContext);
   const [sugestions, setSugestions] = useState([]);
   const [query, setQuery] = UseTextInput("");
-  const [selectedCity, setSelectedCity] = useState({});
+  const [, setSelectedCity] = useState({});
 
   async function getSugestions(value) {
     if (value.length >= 3) {

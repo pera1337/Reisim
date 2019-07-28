@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import "../../css/SelectedItems.css";
@@ -15,7 +15,7 @@ const SelectedItems = React.memo(
   ({ items, handleRemoveClick = null, handleClick = null }) => {
     return (
       <div className="items-container">
-        {items.length != 0
+        {items.length !== 0
           ? items.map((element, index) => {
               return (
                 <div className="item-container" key={index}>

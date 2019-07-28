@@ -5,7 +5,7 @@ import Point from "ol/geom/Point";
 import { Style, Text, Circle, Fill, Stroke } from "ol/style";
 import VectorSource from "ol/source/Vector";
 import { Tile, Vector } from "ol/layer.js";
-import { toLonLat, fromLonLat, transform } from "ol/proj";
+import { toLonLat, fromLonLat } from "ol/proj";
 import OSM from "ol/source/OSM";
 import axios from "axios";
 
@@ -26,7 +26,7 @@ class GuideMap extends React.Component {
 
   addMarker(point) {
     let argNum;
-    if (this.state.removedNums.length == 0) {
+    if (this.state.removedNums.length === 0) {
       //this.setState({ num: this.state.num + 1 });
       this.num++;
       //argNum = this.state.num;
@@ -134,7 +134,7 @@ class GuideMap extends React.Component {
       const response = await axios.get(
         `http://localhost:5000/api/guide/${this.props.id}`
       );
-      response.data.Locations.map(point => {
+      response.data.Locations.forEach(point => {
         const markerPoint = [];
         markerPoint.push(Number(point.lng));
         markerPoint.push(Number(point.lat));

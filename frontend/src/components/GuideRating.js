@@ -9,7 +9,7 @@ import jsonwebtoken from "jsonwebtoken";
 
 const GuideRating = ({ guideId, history, changeRating }) => {
   const [rating, setRating] = useState(0);
-  const [userId, setUserId] = useState(-1);
+  const [, setUserId] = useState(-1);
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     async function populate() {

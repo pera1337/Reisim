@@ -13,7 +13,7 @@ const Login = props => {
   const [email, setEmail] = UseTextInput("");
   const [password, setPassword] = UseTextInput("");
   const [error, setError] = useState("");
-  const { user, changeUser } = useContext(UserContext);
+  const { changeUser } = useContext(UserContext);
 
   async function login(e) {
     e.preventDefault();

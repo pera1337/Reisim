@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { CityContext } from "../contexts/CityContext";
-import { PlaceContext } from "../contexts/PlaceContext";
+//import { PlaceContext } from "../contexts/PlaceContext";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
@@ -10,9 +10,9 @@ import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "../css/Places.css";
 import axios from "axios";
 
-const Places = ({ addLocation, removeLocation }) => {
-  const { city, changeCity } = useContext(CityContext);
-  const { place, changePlace } = useContext(PlaceContext);
+const Places = ({ addLocation }) => {
+  const { city } = useContext(CityContext);
+  //const { changePlace } = useContext(PlaceContext);
   const [query, setQuery] = UseTextInput("");
   const [offset, setOffset] = useState(0);
   const [places, setPlaces] = useState([]);
@@ -26,7 +26,7 @@ const Places = ({ addLocation, removeLocation }) => {
 
   async function fetchPlaces(off) {
     const cityName = city.name;
-    if (cityName != "") {
+    if (cityName !== "") {
       const response = await axios.get(
         `http://localhost:5000/api/places/?city=${cityName}&limit=10&offset=${off}`
       );
@@ -36,9 +36,9 @@ const Places = ({ addLocation, removeLocation }) => {
     }
   }
 
-  function removePlace(index) {
+  /*function removePlace(index) {
     changePlace(places[index]);
-  }
+  }*/
 
   function handleLeft() {
     if (offset > 0) {
@@ -49,10 +49,10 @@ const Places = ({ addLocation, removeLocation }) => {
 
   async function searchVenue(e) {
     setQuery(e.target.value);
-    if (e.target.value.length == 0) {
+    if (e.target.value.length === 0) {
       setMaxOffset(false);
       fetchPlaces(0);
-    } else if (e.target.value.length >= 3 && city.name != "") {
+    } else if (e.target.value.length >= 3 && city.name !== "") {
       setOffset(0);
       const response = await axios.get(
         `http://localhost:5000/api/places/search?city=${

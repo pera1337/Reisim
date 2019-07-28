@@ -1,10 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import GuideList from "./shared/GuidesList";
 import axios from "axios";
 import jsonwebtoken from "jsonwebtoken";
-import "../css/Home.css";
 
 const UserProfile = params => {
   const [user, setUser] = useState({});
@@ -42,7 +41,7 @@ const UserProfile = params => {
     };
     if (isFollowing) {
       try {
-        const response = await axios.delete(
+        await axios.delete(
           `http://localhost:5000/api/account/unfollow/${user.id}`,
           { headers }
         );
@@ -52,7 +51,7 @@ const UserProfile = params => {
       }
     } else {
       try {
-        const response = await axios.post(
+        await axios.post(
           `http://localhost:5000/api/account/follow/${user.id}`,
           null,
           { headers }
@@ -69,7 +68,7 @@ const UserProfile = params => {
         <p>
           {user.firstName} {user.lastName}
         </p>
-        {userId !== user.id ? (
+        {userId !== -1 && userId !== user.id ? (
           <Button variant="success" onClick={followUser}>
             {isFollowing ? "Following" : "Follow"}
           </Button>
@@ -77,22 +76,7 @@ const UserProfile = params => {
           ""
         )}
       </div>
-      <div className="guides">
-        {guides.map((element, index) => {
-          return (
-            <div className="container" key={element.id}>
-              <div className="row">
-                <div className="col-lg-8 col-md-10 mx-auto">
-                  <Link className="guide-title" to={`/guide/${element.id}`}>
-                    {element.title}
-                  </Link>
-                </div>
-              </div>
-              <hr />
-            </div>
-          );
-        })}
-      </div>
+      <GuideList guides={guides} />
     </div>
   );
 };

@@ -20,7 +20,7 @@ const CreateGuide = props => {
   const [points, setPoints] = useState([]);
   const [location, setLocation] = useState({});
   const [cities, setCities] = useState([]);
-  const { city, changeCity } = useContext(CityContext);
+  const { changeCity } = useContext(CityContext);
 
   useEffect(() => {
     async function populate() {
@@ -32,7 +32,7 @@ const CreateGuide = props => {
         setTitle(guide.title);
         setDescription(guide.description);
         const p = [];
-        response.data.Locations.map(element => {
+        response.data.Locations.forEach(element => {
           const point = [];
           point.push(element.lng);
           point.push(element.lat);
@@ -53,7 +53,7 @@ const CreateGuide = props => {
     async function add() {
       try {
         const postPoints = [];
-        points.map(element => {
+        points.forEach(element => {
           var el = {
             lat: element[1],
             lng: element[0],
@@ -66,7 +66,7 @@ const CreateGuide = props => {
           "X-Auth-Token": token
         };
         if (props.edit === "true") {
-          const response = await axios.put(
+          await axios.put(
             `http://localhost:5000/api/guide/${props.id}`,
             {
               title,
@@ -78,7 +78,7 @@ const CreateGuide = props => {
           );
           props.history.push(`/guide/${props.id}`);
         } else {
-          const response = await axios.post(
+          await axios.post(
             "http://localhost:5000/api/guide/new",
             {
               title,
@@ -119,7 +119,7 @@ const CreateGuide = props => {
       let v1 = Math.round(val[1] * 100) / 100;
       let p0 = Math.round(point[0] * 100) / 100;
       let p1 = Math.round(point[0] * 100) / 100;
-      return v0 != p0 && v1 != p1;
+      return v0 !== p0 && v1 !== p1;
     });
     setPoints(newPoints);
     /*setPoints(els => {

@@ -24,7 +24,7 @@ const NavB = props => {
       <Link className="btn" to="/">
         Home
       </Link>
-      <Link className="btn" to="/sandbox">
+      <Link className="btn" to="/feed">
         Following
       </Link>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -18,3 +18,7 @@
 .created:hover {
   text-decoration: none;
 }
+
+.guide-created {
+  margin: 0;
+}

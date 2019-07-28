@@ -15,7 +15,7 @@ const EditProfile = props => {
   const [lastName, setLastName] = UseTextInput("");
   const [password, setPassword] = UseTextInput("");
   const [confirmPassword, setConfirmPassword] = UseTextInput("");
-  const { user, changeUser } = useContext(UserContext);
+  const { changeUser } = useContext(UserContext);
 
   useEffect(() => {
     async function populate() {

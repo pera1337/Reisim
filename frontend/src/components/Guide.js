@@ -17,7 +17,7 @@ const Guide = params => {
   const [guide, setGuide] = useState({});
   const [avgRating, setAvgRating] = useState(0);
   const [numOfRatings, setNumOfRatings] = useState(0);
-  const [coords, setCoords] = useState([]);
+  const [, setCoords] = useState([]);
   const [cities, setCities] = useState([]);
   const [userId, setUserId] = useState(-1);
   const [guideUser, setGuideUser] = useState({});
@@ -41,7 +41,7 @@ const Guide = params => {
         setNumOfRatings(response.data.numOfRatings);
         setGuideUser(response.data.User);
         var statePoints = [];
-        response.data.Locations.map(element => {
+        response.data.Locations.forEach(element => {
           const point = [];
           point.push(element.lng);
           point.push(element.lat);
@@ -72,10 +72,9 @@ const Guide = params => {
     const headers = {
       "X-Auth-Token": localStorage.getItem("token")
     };
-    const response = await axios.delete(
-      `http://localhost:5000/api/guide/${params.id}`,
-      { headers }
-    );
+    await axios.delete(`http://localhost:5000/api/guide/${params.id}`, {
+      headers
+    });
     params.history.push("/");
   }
 
@@ -97,13 +96,13 @@ const Guide = params => {
   }
 
   async function followUser() {
-    if (userId == -1) return params.history.push("/login");
+    if (userId === -1) return params.history.push("/login");
     const headers = {
       "x-auth-token": localStorage.getItem("token")
     };
     if (isFollowing) {
       try {
-        const response = await axios.delete(
+        await axios.delete(
           `http://localhost:5000/api/account/unfollow/${guide.userId}`,
           { headers }
         );
@@ -113,7 +112,7 @@ const Guide = params => {
       }
     } else {
       try {
-        const response = await axios.post(
+        await axios.post(
           `http://localhost:5000/api/account/follow/${guide.userId}`,
           null,
           { headers }
