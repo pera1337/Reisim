@@ -4,6 +4,7 @@ const { User, Guide } = require("../models/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
+const Sequelize = require("sequelize");
 
 router.post("/register", async (req, res) => {
   let { firstName, lastName, email, password } = req.body;
@@ -62,6 +63,31 @@ router.delete("/", async (req, res) => {
   const returnUser = user;
   await user.destroy();
   res.send(returnUser);
+});
+
+router.get("/feed", auth, async (req, res) => {
+  const userId = req.user.id;
+  const follower = await User.findOne({
+    where: { id: userId }
+  });
+  const users = await follower.getFollowing({
+    attributes: ["id"]
+  });
+  const userIds = [];
+  users.forEach(el => {
+    userIds.push(el.id);
+  });
+  const guides = await Guide.findAll({
+    where: { userId: { [Sequelize.Op.in]: userIds } },
+    include: {
+      model: User,
+      as: "User",
+      attributes: ["id", "firstName", "lastName"]
+    },
+    order: [["updatedAt", "DESC"]]
+  });
+
+  res.send(guides);
 });
 
 router.get("/:id", async (req, res) => {
