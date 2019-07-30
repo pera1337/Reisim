@@ -29,7 +29,6 @@ const Guide = params => {
         const response = await axios.get(
           `http://localhost:5000/api/guide/${params.id}`
         );
-        console.log("response.data :", response.data);
         const token = localStorage.getItem("token") || "";
         if (token) {
           const decoded = await jsonwebtoken.decode(token);

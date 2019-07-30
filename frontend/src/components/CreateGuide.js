@@ -102,7 +102,6 @@ const CreateGuide = props => {
   }
 
   function addPoint(point) {
-    console.log("point :", point);
     /*console.log("points :", points);
     setPoints([...points, point]);*/
     //console.log("point :", point);
@@ -135,7 +134,6 @@ const CreateGuide = props => {
   }
 
   function addCity(city) {
-    console.log("cities :", cities);
     if (!cities.includes(city)) setCities([...cities, city]);
   }
 

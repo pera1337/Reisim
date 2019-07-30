@@ -17,12 +17,15 @@ const GuideShort = ({ guide, displayAuthor }) => {
             <FontAwesomeIcon icon={faStar} />({guide.numOfRatings})
           </p>
           {displayAuthor ? (
-            <p className="guide-created">
-              Created by{" "}
-              <Link className="created" to={`/user/${guide.User.id}`}>
-                {guide.User.firstName} {guide.User.lastName}
-              </Link>
-            </p>
+            <div>
+              <p className="guide-created">
+                Created by{" "}
+                <Link className="created" to={`/user/${guide.User.id}`}>
+                  {guide.User.firstName} {guide.User.lastName}
+                </Link>
+              </p>
+              <p>{guide.createdAt.toString().substring(0, 10)}</p>
+            </div>
           ) : null}
         </div>
       </div>

@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from "react";
 import GuidesList from "./shared/GuidesList";
+import axios from "axios";
 
 const FollowingFeed = () => {
   const [guides, setGuides] = useState([]);
 
   useEffect(() => {
-    //get the feed and set state
+    async function populate() {
+      const token = localStorage.getItem("token");
+      const headers = {
+        "X-Auth-Token": token
+      };
+      const response = await axios.get(
+        `http://localhost:5000/api/account/feed`,
+        {
+          headers
+        }
+      );
+      setGuides(response.data);
+      console.log("response.data :", response.data);
+    }
+    populate();
   }, []);
 
   return (

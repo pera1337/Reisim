@@ -146,7 +146,6 @@ class GuideMap extends React.Component {
   componentWillReceiveProps(nextprops) {
     let place = [];
     if (this.props.place !== nextprops.place) {
-      console.log("nextprops.place :", nextprops.place);
       place.push(nextprops.place.lng);
       place.push(nextprops.place.lat);
       this.addMarker(place);
@@ -160,7 +159,6 @@ class GuideMap extends React.Component {
     var clickedCoordinate = this.state.map.getCoordinateFromPixel(event.pixel);
 
     const point = toLonLat(clickedCoordinate);
-    console.log("point :", point);
     this.addMarker(point);
     //point.push(this.state.locationNumber - 1);
     point.push(this.locationNumber - 1);

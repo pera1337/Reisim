@@ -6,7 +6,13 @@ const GuidesList = ({ guides, displayAuthor = false }) => {
   return (
     <div className="guides">
       {guides.map(element => {
-        return <GuideShort guide={element} displayAuthor={displayAuthor} />;
+        return (
+          <GuideShort
+            key={element.id}
+            guide={element}
+            displayAuthor={displayAuthor}
+          />
+        );
       })}
     </div>
   );
