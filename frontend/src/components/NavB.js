@@ -27,6 +27,9 @@ const NavB = props => {
       <Link className="btn" to="/feed">
         Following
       </Link>
+      <Link className="btn" to="/search">
+        Search
+      </Link>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto" />

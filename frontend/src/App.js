@@ -12,6 +12,7 @@ import Guide from "./components/Guide";
 import UserProfile from "./components/UserProfile";
 import EditProfile from "./components/EditProfile";
 import FollowingFeed from "./components/FollowingFeed";
+import SearchTest from "./components/SearchTest";
 import "./App.css";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/feed" component={FollowingFeed} />
+          <Route exact path="/search" component={SearchTest} />
           <Route exact path="/guide/create">
             <CityProvider>
               <PlaceProvider>
