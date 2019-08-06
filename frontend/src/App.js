@@ -12,8 +12,7 @@ import Guide from "./components/Guide";
 import UserProfile from "./components/UserProfile";
 import EditProfile from "./components/EditProfile";
 import FollowingFeed from "./components/FollowingFeed";
-import SearchTest from "./components/SearchTest";
-import "./App.css";
+import SearchResults from "./components/SearchResults";
 
 function App() {
   return (
@@ -25,7 +24,7 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/feed" component={FollowingFeed} />
-          <Route exact path="/search" component={SearchTest} />
+          <Route exact path="/search" component={SearchResults} />
           <Route exact path="/guide/create">
             <CityProvider>
               <PlaceProvider>

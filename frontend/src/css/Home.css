@@ -1,20 +1,10 @@
-.guide-title {
-  text-decoration: none;
-  font-weight: bold;
-  color: black;
-  transition: color 0.3s;
-  font-size: 30px;
+.home-container {
+  padding-top: 150px;
+  width: 50%;
+  margin: 0 auto;
+  position: relative;
 }
 
-.guide-title:hover {
-  color: lightskyblue;
-  text-decoration: none;
-}
-
-.guide-created {
-  font-style: italic;
-}
-
-.created:hover {
-  text-decoration: none;
-}
+/*.search-header {
+  text-align: center;
+}*/

@@ -27,9 +27,6 @@ const NavB = props => {
       <Link className="btn" to="/feed">
         Following
       </Link>
-      <Link className="btn" to="/search">
-        Search
-      </Link>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto" />
@@ -42,10 +39,12 @@ const NavB = props => {
               title={`Hello ${user.firstName}`}
               id="basic-nav-dropdown"
             >
+              <NavDropdown.Item href={`/user/${user.id}`}>
+                My Profile
+              </NavDropdown.Item>
               <NavDropdown.Item onClick={editProfile}>
                 Edit Profile
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Account</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
             </NavDropdown>

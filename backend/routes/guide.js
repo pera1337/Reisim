@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { User, Location, Guide, Rating, City } = require("../models/models");
 const auth = require("../middleware/auth");
+const Sequelize = require("sequelize");
 
 router.post("/new", auth, async (req, res) => {
   const { id } = req.user;
@@ -35,6 +36,40 @@ router.post("/new", auth, async (req, res) => {
   res.send(`Successfully created guide:${guide.title}`);
 });
 
+router.get("/search", async (req, res) => {
+  let { city, name, text, rating } = req.query;
+  if (!city) city = "";
+  if (!name) name = "";
+  if (!text) text = "";
+  const guides = await Guide.findAll({
+    include: [
+      { model: Location, as: "Locations" },
+      {
+        model: User,
+        as: "User",
+        where: {
+          [Sequelize.Op.or]: [
+            { firstName: { [Sequelize.Op.substring]: name } },
+            { lastName: { [Sequelize.Op.substring]: name } }
+          ]
+        }
+      },
+      { model: City, as: "Cities", where: { full_name: city } }
+    ],
+    where: {
+      [Sequelize.Op.or]: [
+        {
+          title: { [Sequelize.Op.substring]: `%${text}%` }
+        },
+        {
+          description: { [Sequelize.Op.substring]: `%${text}%` }
+        }
+      ],
+      avgRating: { [Sequelize.Op.gte]: rating }
+    }
+  });
+  res.send(guides);
+});
 router.get("/:id", async (req, res) => {
   const guide = await Guide.findOne({
     where: { id: req.params.id },
