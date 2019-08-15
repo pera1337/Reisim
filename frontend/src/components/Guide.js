@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import GuideRating from "./GuideRating";
+import LocationDetails from "./shared/LocationDetails";
 import axios from "axios";
 import "../css/Guide.css";
 import "../css/Home.css";
@@ -15,6 +16,7 @@ import jsonwebtoken from "jsonwebtoken";
 
 const Guide = params => {
   const [guide, setGuide] = useState({});
+  const [locations, setLocations] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [numOfRatings, setNumOfRatings] = useState(0);
   const [, setCoords] = useState([]);
@@ -39,6 +41,7 @@ const Guide = params => {
         setAvgRating(response.data.avgRating);
         setNumOfRatings(response.data.numOfRatings);
         setGuideUser(response.data.User);
+        setLocations(response.data.Locations);
         var statePoints = [];
         response.data.Locations.forEach(element => {
           const point = [];
@@ -179,6 +182,20 @@ const Guide = params => {
       )}
       <div style={{ padding: "30px" }}>
         <GuideMap edit="false" input="false" id={params.id} />
+      </div>
+      <div className="descriptions-container">
+        <h2>Descriptions</h2>
+        {locations
+          .filter(el => el.description)
+          .map(el => (
+            <div key={el.locationNumber} className="location-container">
+              <LocationDetails
+                place={el}
+                display={true}
+                changeField={() => {}}
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

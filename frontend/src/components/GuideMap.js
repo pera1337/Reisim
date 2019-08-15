@@ -100,9 +100,13 @@ class GuideMap extends React.Component {
         let m = map.forEachFeatureAtPixel(
           event.pixel,
           (feature, layer) => {
-            that.props.removePoint(
-              toLonLat(feature.getGeometry().flatCoordinates)
+            const featureCoords = toLonLat(
+              feature.getGeometry().flatCoordinates
             );
+            that.props.removePoint({
+              lng: featureCoords[0],
+              lat: featureCoords[1]
+            });
             let style = feature.getStyle();
             let text = style.getText();
             that.setState({
@@ -151,7 +155,13 @@ class GuideMap extends React.Component {
       this.addMarker(place);
       //place.push(this.state.locationNumber);
       place.push(this.locationNumber - 1);
-      this.props.addPoint(place);
+      // this.props.addPoint(place);
+      this.props.addPoint({
+        lat: nextprops.place.lat,
+        lng: nextprops.place.lng,
+        locationNumber: this.locationNumber - 1,
+        name: nextprops.place.name
+      });
     }
   }
 
@@ -162,7 +172,12 @@ class GuideMap extends React.Component {
     this.addMarker(point);
     //point.push(this.state.locationNumber - 1);
     point.push(this.locationNumber - 1);
-    this.props.addPoint(point);
+    // this.props.addPoint(point);
+    this.props.addPoint({
+      lat: point[1],
+      lng: point[0],
+      locationNumber: this.locationNumber - 1
+    });
   }
   render() {
     return <div ref="mapContainer"> </div>;

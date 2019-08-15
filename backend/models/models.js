@@ -26,7 +26,9 @@ let Location = sequelize.define("Location", {
   lat: Sequelize.DECIMAL(10, 8),
   lng: Sequelize.DECIMAL(11, 8),
   locationNumber: Sequelize.INTEGER,
-  guideId: Sequelize.INTEGER(11)
+  guideId: Sequelize.INTEGER(11),
+  name: Sequelize.STRING,
+  description: Sequelize.STRING
 });
 
 let Guide = sequelize.define("Guide", {

@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext";
 import { CityProvider } from "./contexts/CityContext";
 import { PlaceProvider } from "./contexts/PlaceContext";
+import { LocationsProvider } from "./contexts/LocationsContext";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
@@ -28,7 +29,9 @@ function App() {
           <Route exact path="/guide/create">
             <CityProvider>
               <PlaceProvider>
-                <CreateGuide />
+                <LocationsProvider>
+                  <CreateGuide />
+                </LocationsProvider>
               </PlaceProvider>
             </CityProvider>
           </Route>
@@ -43,7 +46,9 @@ function App() {
             render={routeProps => (
               <CityProvider>
                 <PlaceProvider>
-                  <CreateGuide id={routeProps.match.params.id} edit="true" />
+                  <LocationsProvider>
+                    <CreateGuide id={routeProps.match.params.id} edit="true" />
+                  </LocationsProvider>
                 </PlaceProvider>
               </CityProvider>
             )}

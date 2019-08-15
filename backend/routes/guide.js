@@ -17,12 +17,21 @@ router.post("/new", auth, async (req, res) => {
   });
 
   coords.forEach(async element => {
-    await Location.create({
+    let location = {
       lat: element.lat,
       lng: element.lng,
       guideId: guide.id,
-      locationNumber: element.num
-    });
+      locationNumber: element.locationNumber
+    };
+    if (element.name) location.name = element.name;
+    if (element.description) location.description = element.description;
+    // await Location.create({
+    //   lat: element.lat,
+    //   lng: element.lng,
+    //   guideId: guide.id,
+    //   locationNumber: element.num
+    // });
+    await Location.create(location);
   });
 
   cities.forEach(async element => {
@@ -59,10 +68,10 @@ router.get("/search", async (req, res) => {
     where: {
       [Sequelize.Op.or]: [
         {
-          title: { [Sequelize.Op.substring]: `%${text}%` }
+          title: { [Sequelize.Op.substring]: text }
         },
         {
-          description: { [Sequelize.Op.substring]: `%${text}%` }
+          description: { [Sequelize.Op.substring]: text }
         }
       ],
       avgRating: { [Sequelize.Op.gte]: rating }
@@ -113,20 +122,32 @@ router.put("/:id", auth, async (req, res) => {
       else {
         locations[i].lat = coords[i].lat;
         locations[i].lng = coords[i].lng;
-        locations[i].locationNumber = coords[i].num;
+        locations[i].locationNumber = coords[i].locationNumber;
+        if (coords[i].name) locations[i].name = coords[i].name;
+        if (coords[i].description)
+          locations[i].description = coords[i].description;
         await locations[i].save({ transaction });
       }
     }
     for (i; i < coords.length; i++) {
-      await Location.create(
-        {
-          lat: coords[i].lat,
-          lng: coords[i].lng,
-          guideId: guide.id,
-          locationNumber: coords[i].num
-        },
-        { transaction }
-      );
+      // await Location.create(
+      //   {
+      //     lat: coords[i].lat,
+      //     lng: coords[i].lng,
+      //     guideId: guide.id,
+      //     locationNumber: coords[i].num
+      //   },
+      //   { transaction }
+      // );
+      let loc = {
+        lat: coords[i].lat,
+        lng: coords[i].lng,
+        guideId: guide.id,
+        locationNumber: coords[i].locationNumber
+      };
+      if (coords[i].name) loc.name = coords[i].name;
+      if (coords[i].description) loc.description = coords[i].description;
+      await Location.create(loc, { transaction });
     }
 
     i = 0;
