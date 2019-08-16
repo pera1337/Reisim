@@ -19,7 +19,6 @@ import "../css/CreateGuide.css";
 const CreateGuide = props => {
   const [title, setTitle] = UseTextInput("");
   const [description, setDescription] = UseTextInput("");
-  // const [points, setPoints] = useState([]);
   const { locations, dispatch } = useContext(LocationsContext);
   const [location, setLocation] = useState({});
   const [cities, setCities] = useState([]);
@@ -34,17 +33,8 @@ const CreateGuide = props => {
         const guide = response.data;
         setTitle(guide.title);
         setDescription(guide.description);
-        // const p = [];
-        // response.data.Locations.forEach(element => {
-        //   const point = [];
-        //   point.push(element.lng);
-        //   point.push(element.lat);
-        //   point.push(element.locationNumber);
-        //   p.push(point);
-        // });
-        // setPoints(p); NEW CONTEXT
         response.data.Locations.forEach(element => {
-          dispatch({ type: "add", location: element }); //NEW CONTEXT
+          dispatch({ type: "add", location: element });
         });
         response.data.Cities.forEach(el => {
           changeCity(el);
@@ -58,24 +48,6 @@ const CreateGuide = props => {
     e.preventDefault();
     async function add() {
       try {
-        // const postPoints = [];
-        // points.forEach(element => {
-        //   var el = {
-        //     lat: element[1],
-        //     lng: element[0],
-        //     num: element[2]
-        //   };
-        //   postPoints.push(el);
-        // });
-        //------------------------------
-        // locations.forEach(element => {
-        //   var el = {
-        //     lat: element[1],
-        //     lng: element[0],
-        //     num: element[2]
-        //   };
-        //   postPoints.push(el);
-        // }); //NEW CONTEXT
         const token = localStorage.getItem("token");
         const headers = {
           "X-Auth-Token": token
@@ -86,7 +58,6 @@ const CreateGuide = props => {
             {
               title,
               description,
-              // coords: postPoints,
               coords: locations,
               cities
             },
@@ -99,7 +70,6 @@ const CreateGuide = props => {
             {
               title,
               description,
-              // coords: postPoints,
               coords: locations,
               cities
             },
@@ -118,40 +88,10 @@ const CreateGuide = props => {
     setLocation(loc);
   }
 
-  // function addPoint(point) {
-  //   /*console.log("points :", points);
-  //   setPoints([...points, point]);*/
-  //   //console.log("point :", point);
-  //   setPoints(els => {
-  //     //console.log("els in add :", els);
-  //     return [...els, point];
-  //   });
-  // } NEW CONTEXT COMMENT
   function addPoint(point) {
     dispatch({ type: "add", location: point });
   }
 
-  // function removePoint(point) {
-  //   let pointsCopy = [...points];
-  //   let newPoints = pointsCopy.filter(val => {
-  //     let v0 = Math.round(val[0] * 100) / 100;
-  //     let v1 = Math.round(val[1] * 100) / 100;
-  //     let p0 = Math.round(point[0] * 100) / 100;
-  //     let p1 = Math.round(point[0] * 100) / 100;
-  //     return v0 !== p0 && v1 !== p1;
-  //   });
-  //   setPoints(newPoints);
-  //   /*setPoints(els => {
-  //     //console.log("els in delete :", els);
-  //     els.filter(val => {
-  //       let v0 = Math.round(val[0] * 100) / 100;
-  //       let v1 = Math.round(val[1] * 100) / 100;
-  //       let p0 = Math.round(point[0] * 100) / 100;
-  //       let p1 = Math.round(point[0] * 100) / 100;
-  //       return v0 != p0 && v1 != p1;
-  //     });
-  //   });*/
-  // } NEW CONTEXT COMMENT
   function removePoint(point) {
     dispatch({ type: "remove-location", point });
   }
@@ -165,12 +105,6 @@ const CreateGuide = props => {
     newState.splice(index, 1);
     setCities(newState);
   }
-
-  // function changeField(name, index, value) {
-  //   let pointsCopy = [...points];
-  //   pointsCopy[index][name] = value;
-  //   setPoints(points);
-  // } NEW CONTEXT COMMENT
 
   return (
     <div>

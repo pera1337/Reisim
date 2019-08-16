@@ -25,12 +25,6 @@ router.post("/new", auth, async (req, res) => {
     };
     if (element.name) location.name = element.name;
     if (element.description) location.description = element.description;
-    // await Location.create({
-    //   lat: element.lat,
-    //   lng: element.lng,
-    //   guideId: guide.id,
-    //   locationNumber: element.num
-    // });
     await Location.create(location);
   });
 
@@ -130,15 +124,6 @@ router.put("/:id", auth, async (req, res) => {
       }
     }
     for (i; i < coords.length; i++) {
-      // await Location.create(
-      //   {
-      //     lat: coords[i].lat,
-      //     lng: coords[i].lng,
-      //     guideId: guide.id,
-      //     locationNumber: coords[i].num
-      //   },
-      //   { transaction }
-      // );
       let loc = {
         lat: coords[i].lat,
         lng: coords[i].lng,

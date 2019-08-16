@@ -129,7 +129,8 @@ const Guide = params => {
   return (
     <div
       style={{
-        height: "20%"
+        height: "20%",
+        padding: "60px"
       }}
     >
       <h1>{guide.title}</h1>
@@ -180,10 +181,10 @@ const Guide = params => {
       ) : (
         ""
       )}
-      <div style={{ padding: "30px" }}>
+      <div>
         <GuideMap edit="false" input="false" id={params.id} />
       </div>
-      <div className="descriptions-container">
+      <div>
         <h2>Descriptions</h2>
         {locations
           .filter(el => el.description)
