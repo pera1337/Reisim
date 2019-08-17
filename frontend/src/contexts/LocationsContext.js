@@ -22,7 +22,9 @@ function reducer(state, action) {
       return stateCpy;
     case "change-field":
       return state.map(el =>
-        el.num === action.num ? { ...el, [action.name]: action.value } : el
+        el.locationNumber === action.locationNumber
+          ? { ...el, [action.name]: action.value }
+          : el
       );
     case "remove-location":
       return state.filter(val => {

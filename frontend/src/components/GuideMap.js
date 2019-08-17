@@ -5,9 +5,11 @@ import Point from "ol/geom/Point";
 import { Style, Text, Circle, Fill, Stroke } from "ol/style";
 import VectorSource from "ol/source/Vector";
 import { Tile, Vector } from "ol/layer.js";
+import Overlay from "ol/Overlay.js";
 import { toLonLat, fromLonLat } from "ol/proj";
 import OSM from "ol/source/OSM";
 import axios from "axios";
+import "../css/GuideMap.css";
 
 class GuideMap extends React.Component {
   constructor(props) {
@@ -24,7 +26,7 @@ class GuideMap extends React.Component {
     this.handleMapClick.bind(this);
   }
 
-  addMarker(point) {
+  addMarker(point, name = "") {
     let argNum;
     if (this.state.removedNums.length === 0) {
       //this.setState({ num: this.state.num + 1 });
@@ -41,7 +43,8 @@ class GuideMap extends React.Component {
     this.locationNumber = argNum;
     var clickedPointGeom = new Point(fromLonLat(point));
     var marker = new Feature({
-      geometry: clickedPointGeom
+      geometry: clickedPointGeom,
+      name
     });
 
     let image = new Circle({
@@ -79,20 +82,56 @@ class GuideMap extends React.Component {
         features: []
       })
     });
-
-    var map = new Map({
-      target: this.refs.mapContainer,
-      layers: [
-        new Tile({
-          source: new OSM()
-        }),
-        featuresLayer
-      ],
-      view: new View({
-        center: [0, 0],
-        zoom: 2
-      })
-    });
+    let container;
+    let content;
+    let closer;
+    let overlay;
+    let map;
+    if (this.props.input === "false") {
+      container = document.getElementById("popup");
+      content = document.getElementById("popup-content");
+      closer = document.getElementById("popup-closer");
+      overlay = new Overlay({
+        element: container,
+        autoPan: true,
+        autoPanAnimation: {
+          duration: 250
+        }
+      });
+      closer.onclick = function() {
+        overlay.setPosition(undefined);
+        closer.blur();
+        return false;
+      };
+      map = new Map({
+        target: this.refs.mapContainer,
+        layers: [
+          new Tile({
+            source: new OSM()
+          }),
+          featuresLayer
+        ],
+        overlays: [overlay],
+        view: new View({
+          center: [0, 0],
+          zoom: 2
+        })
+      });
+    } else {
+      map = new Map({
+        target: this.refs.mapContainer,
+        layers: [
+          new Tile({
+            source: new OSM()
+          }),
+          featuresLayer
+        ],
+        view: new View({
+          center: [0, 0],
+          zoom: 2
+        })
+      });
+    }
 
     var that = this;
     if (this.props.edit === "true" || this.props.input === "true") {
@@ -122,15 +161,29 @@ class GuideMap extends React.Component {
           that.handleMapClick(event);
         }
       });
-
-      map.on("pointermove", function(evt) {
-        map.getTargetElement().style.cursor = map.hasFeatureAtPixel(evt.pixel, {
-          hitTolerance: 6
-        })
-          ? "pointer"
-          : "";
+    } else {
+      map.on("click", function(event) {
+        let m = map.forEachFeatureAtPixel(
+          event.pixel,
+          (feature, layer) => {
+            if (feature.get("name")) {
+              var coordinate = event.coordinate;
+              content.innerHTML = feature.get("name");
+              overlay.setPosition(coordinate);
+            }
+            return true;
+          },
+          { hitTolerance: 6 }
+        );
       });
     }
+    map.on("pointermove", function(evt) {
+      map.getTargetElement().style.cursor = map.hasFeatureAtPixel(evt.pixel, {
+        hitTolerance: 6
+      })
+        ? "pointer"
+        : "";
+    });
     this.setState({
       map: map
     });
@@ -142,7 +195,9 @@ class GuideMap extends React.Component {
         const markerPoint = [];
         markerPoint.push(Number(point.lng));
         markerPoint.push(Number(point.lat));
-        this.addMarker(markerPoint);
+        let name = "";
+        if (point.name) name = point.name;
+        this.addMarker(markerPoint, name);
       });
     }
   }
@@ -180,7 +235,17 @@ class GuideMap extends React.Component {
     });
   }
   render() {
-    return <div ref="mapContainer"> </div>;
+    return (
+      <div>
+        <div ref="mapContainer" id="map" />
+        {this.props.input === "false" ? (
+          <div id="popup" className="ol-popup">
+            <a href="#" id="popup-closer" className="ol-popup-closer" />
+            <div id="popup-content" />
+          </div>
+        ) : null}
+      </div>
+    );
   }
 }
 

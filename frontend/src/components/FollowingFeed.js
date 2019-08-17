@@ -18,7 +18,6 @@ const FollowingFeed = () => {
         }
       );
       setGuides(response.data);
-      console.log("response.data :", response.data);
     }
     populate();
   }, []);

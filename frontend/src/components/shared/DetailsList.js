@@ -5,8 +5,8 @@ import LocationDetails from "./LocationDetails";
 const DetailsList = () => {
   const { locations, dispatch } = useContext(LocationsContext);
 
-  function changeField(num, name, value) {
-    dispatch({ type: "change-field", num, name, value });
+  function changeField(locationNumber, name, value) {
+    dispatch({ type: "change-field", locationNumber, name, value });
   }
   return (
     <div>
