@@ -13,6 +13,7 @@
 
 .guide-created {
   font-style: italic;
+  color: #868e96;
 }
 
 .created:hover {
@@ -21,4 +22,7 @@
 
 .guide-created {
   margin: 0;
+}
+.row-container {
+  background-color: white;
 }

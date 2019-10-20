@@ -4,8 +4,12 @@ import Button from "react-bootstrap/Button";
 import FormGroup from "react-bootstrap/FormGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import GuideMap from "./GuideMap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 import Autocomplete from "./Autocomplete";
 import Places from "./Places";
 import SelectedCities from "./SelectedCities";
@@ -107,7 +111,7 @@ const CreateGuide = props => {
   }
 
   return (
-    <div>
+    <div className="create-guide-container">
       <h1>Create a guide</h1>
       <div className="create-guide">
         <Form
@@ -164,7 +168,26 @@ const CreateGuide = props => {
               </FormGroup>
             </Col>
           </Form.Row>
-          <DetailsList />
+          {locations.length > 0 ? (
+            <FormGroup>
+              <Form.Label>Descriptions</Form.Label>
+              <Accordion defaultActiveKey="0">
+                <Card>
+                  <Accordion.Toggle as={Card.Header} eventKey="0">
+                    <FontAwesomeIcon
+                      style={{ float: "right" }}
+                      size="lg"
+                      icon={faAngleDoubleDown}
+                    />
+                  </Accordion.Toggle>
+                  <Accordion.Collapse eventKey="0">
+                    <DetailsList />
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
+            </FormGroup>
+          ) : null}
+
           <Button block type="button" onClick={create}>
             {props.edit === "true" ? "Edit" : "Create"}
           </Button>

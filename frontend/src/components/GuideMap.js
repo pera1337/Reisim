@@ -16,8 +16,6 @@ class GuideMap extends React.Component {
     super(props);
     this.state = {
       map: {},
-      //num: 0,
-      //locationNumber: 0,
       removedNums: []
     };
     this.num = 0;
@@ -29,17 +27,13 @@ class GuideMap extends React.Component {
   addMarker(point, name = "") {
     let argNum;
     if (this.state.removedNums.length === 0) {
-      //this.setState({ num: this.state.num + 1 });
       this.num++;
-      //argNum = this.state.num;
       argNum = this.num;
     } else {
       let stateCpy = [...this.state.removedNums];
       argNum = stateCpy.pop();
       this.setState({ removedNums: stateCpy });
     }
-    //this.setState({ locationNumber: argNum });
-    //this.locationNumber++;
     this.locationNumber = argNum;
     var clickedPointGeom = new Point(fromLonLat(point));
     var marker = new Feature({
@@ -208,9 +202,7 @@ class GuideMap extends React.Component {
       place.push(nextprops.place.lng);
       place.push(nextprops.place.lat);
       this.addMarker(place);
-      //place.push(this.state.locationNumber);
       place.push(this.locationNumber - 1);
-      // this.props.addPoint(place);
       this.props.addPoint({
         lat: nextprops.place.lat,
         lng: nextprops.place.lng,
@@ -225,9 +217,7 @@ class GuideMap extends React.Component {
 
     const point = toLonLat(clickedCoordinate);
     this.addMarker(point);
-    //point.push(this.state.locationNumber - 1);
     point.push(this.locationNumber - 1);
-    // this.props.addPoint(point);
     this.props.addPoint({
       lat: point[1],
       lng: point[0],

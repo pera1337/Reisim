@@ -20,18 +20,21 @@ const NavB = props => {
     props.history.push(`/user/edit/${user.id}`);
   }
   return (
-    <Navbar expand="lg">
+    <Navbar className="main-nav" expand="lg" variant="dark">
       <Link className="btn" to="/">
         Home
       </Link>
       <Link className="btn" to="/feed">
         Following
       </Link>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Link className="btn" to="/sandbox">
+        Sandbox
+      </Link>
+      <Navbar.Toggle id="nav-toggle" aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto" />
         {user ? (
-          <>
+          <Nav>
             <Link className="btn" to="/guide/create">
               Create a guide
             </Link>
@@ -48,16 +51,16 @@ const NavB = props => {
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
             </NavDropdown>
-          </>
+          </Nav>
         ) : (
-          <div>
+          <Nav>
             <Link className="btn" to="/register">
               Register
             </Link>
             <Link className="btn" to="/login">
               Login
             </Link>
-          </div>
+          </Nav>
         )}
       </Navbar.Collapse>
     </Navbar>

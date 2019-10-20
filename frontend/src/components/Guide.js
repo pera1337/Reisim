@@ -55,9 +55,7 @@ const Guide = params => {
             "X-Auth-Token": localStorage.getItem("token")
           };
           const result = await axios.get(
-            `http://localhost:5000/api/account/isfollowing/${
-              response.data.User.id
-            }`,
+            `http://localhost:5000/api/account/isfollowing/${response.data.User.id}`,
             { headers }
           );
           setIsFollowing(result.data);
@@ -130,7 +128,10 @@ const Guide = params => {
     <div
       style={{
         height: "20%",
-        padding: "60px"
+        margin: "20px 60px",
+        padding: "10px",
+        backgroundColor: "white",
+        textAlign: "center"
       }}
     >
       <h1>{guide.title}</h1>

@@ -6,3 +6,8 @@
   margin: 0 auto;
   max-width: 1000px;
 }
+.create-guide-container {
+  background-color: white;
+  margin: 30px;
+  text-align: center;
+}

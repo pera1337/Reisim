@@ -54,17 +54,15 @@ const CitySearch = ({ onSelected, clearAfterSelected = true }) => {
   };
 
   return (
-    <div>
-      <Autosuggest
-        suggestions={sugestions}
-        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={onSuggestionsClearRequested}
-        onSuggestionSelected={onSuggestionSelected}
-        getSuggestionValue={getSugestionValue}
-        renderSuggestion={renderSuggestion}
-        inputProps={inputProps}
-      />
-    </div>
+    <Autosuggest
+      suggestions={sugestions}
+      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+      onSuggestionsClearRequested={onSuggestionsClearRequested}
+      onSuggestionSelected={onSuggestionSelected}
+      getSuggestionValue={getSugestionValue}
+      renderSuggestion={renderSuggestion}
+      inputProps={inputProps}
+    />
   );
 };
 

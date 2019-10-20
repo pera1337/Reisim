@@ -14,10 +14,11 @@ import UserProfile from "./components/UserProfile";
 import EditProfile from "./components/EditProfile";
 import FollowingFeed from "./components/FollowingFeed";
 import SearchResults from "./components/SearchResults";
+import Sandbox from "./components/Sandbox";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundColor: "rgba(52, 52, 52, 0.1)" }}>
       <UserProvider>
         <NavB />
         <Switch>
@@ -26,6 +27,7 @@ function App() {
           <Route exact path="/register" component={Register} />
           <Route exact path="/feed" component={FollowingFeed} />
           <Route exact path="/search" component={SearchResults} />
+          <Route exact path="/sandbox" component={Sandbox} />
           <Route exact path="/guide/create">
             <CityProvider>
               <PlaceProvider>

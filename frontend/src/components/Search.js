@@ -35,20 +35,22 @@ const Search = props => {
   }
 
   return (
-    <div className="search-container">
-      <Form
-        onSubmit={Send}
-        onKeyPress={e => {
-          if (e.key === "Enter") e.preventDefault();
-        }}
-      >
-        <Form.Row>
+    <Form
+      onSubmit={Send}
+      onKeyPress={e => {
+        if (e.key === "Enter") e.preventDefault();
+      }}
+    >
+      <Form.Row>
+        <Col lg={9}>
           <Form.Group controlId="formGridCity">
             <CitySearch onSelected={selectCity} clearAfterSelected={false} />
           </Form.Group>
+        </Col>
+        <Col lg={1}>
           <Form.Group controlId="formGridSearch">
             <Button
-              style={{ width: "40px" }}
+              style={{ width: "100%", margin: 0 }}
               onClick={() => setShowAdvanced(!showAdvanced)}
               block
               type="button"
@@ -56,59 +58,61 @@ const Search = props => {
               <FontAwesomeIcon icon={faArrowDown} />
             </Button>
           </Form.Group>
+        </Col>
+        <Col lg={2}>
           <Form.Group controlId="formGridSearch">
-            <Button style={{ width: "80px" }} type="submit">
+            <Button style={{ width: "100%", margin: "0" }} type="submit">
               Search
             </Button>
           </Form.Group>
-        </Form.Row>
-        {showAdvanced ? (
-          <div className="advanced-container">
-            <FormGroup controlId="text">
-              <Form.Label>Text</Form.Label>
-              <FormControl
-                placeholder="Enter a text"
-                value={text}
-                onChange={setText}
-                autoFocus
-              />
-            </FormGroup>
-            <Form.Row>
-              <Col lg={8}>
-                <FormGroup controlId="authorName">
-                  <Form.Label>Author name</Form.Label>
-                  <FormControl
-                    name="author"
-                    placeholder="Author name"
-                    value={author}
-                    onChange={setAuthor}
-                  />
-                </FormGroup>
-              </Col>
-              <Col>
-                <FormGroup controlId="minRating">
-                  <Form.Label>Minimum rating</Form.Label>
-                  <FormControl
-                    name="rating"
-                    as="select"
-                    onChange={selectRating}
-                    defaultValue={-1}
-                  >
-                    <option value="-1" disabled hidden>
-                      Select a rating
-                    </option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                  </FormControl>
-                </FormGroup>
-              </Col>
-            </Form.Row>
-          </div>
-        ) : null}
-      </Form>
-    </div>
+        </Col>
+      </Form.Row>
+      {showAdvanced ? (
+        <div className="advanced-container">
+          <FormGroup controlId="text">
+            <Form.Label>Text</Form.Label>
+            <FormControl
+              placeholder="Enter a text"
+              value={text}
+              onChange={setText}
+              autoFocus
+            />
+          </FormGroup>
+          <Form.Row>
+            <Col lg={8}>
+              <FormGroup controlId="authorName">
+                <Form.Label>Author name</Form.Label>
+                <FormControl
+                  name="author"
+                  placeholder="Author name"
+                  value={author}
+                  onChange={setAuthor}
+                />
+              </FormGroup>
+            </Col>
+            <Col>
+              <FormGroup controlId="minRating">
+                <Form.Label>Minimum rating</Form.Label>
+                <FormControl
+                  name="rating"
+                  as="select"
+                  onChange={selectRating}
+                  defaultValue={-1}
+                >
+                  <option value="-1" disabled hidden>
+                    Select a rating
+                  </option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                  <option value={4}>4</option>
+                  <option value={5}>5</option>
+                </FormControl>
+              </FormGroup>
+            </Col>
+          </Form.Row>
+        </div>
+      ) : null}
+    </Form>
   );
 };
 

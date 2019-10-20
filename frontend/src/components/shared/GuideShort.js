@@ -2,13 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 import "../../css/GuideShort.css";
 
 const GuideShort = ({ guide, displayAuthor }) => {
   return (
     <div className="container" key={guide.id}>
       <div className="row">
-        <div className="col-lg-8 col-md-10 mx-auto">
+        <div className="row-container col-lg-9 col-md-10 mx-auto">
           <Link className="guide-title" to={`/guide/${guide.id}`}>
             {guide.title}
           </Link>
@@ -24,12 +25,21 @@ const GuideShort = ({ guide, displayAuthor }) => {
                   {guide.User.firstName} {guide.User.lastName}
                 </Link>
               </p>
-              <p>{guide.createdAt.toString().substring(0, 10)}</p>
             </div>
           ) : null}
+          <p className="guide-created">
+            {moment(
+              guide.createdAt
+                .toString()
+                .substring(0, 10)
+                .split("-")
+                .join(""),
+              "YYYYMMDD"
+            ).fromNow()}
+          </p>
+          <hr />
         </div>
       </div>
-      <hr />
     </div>
   );
 };

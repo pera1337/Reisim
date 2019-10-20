@@ -93,7 +93,8 @@ router.get("/feed", auth, async (req, res) => {
 router.get("/:id", async (req, res) => {
   const user = await User.findOne({
     where: { id: req.params.id },
-    include: { model: Guide, as: "Guides" }
+    include: { model: Guide, as: "Guides" },
+	order: [[Guide,"updatedAt", "DESC"]]
   });
   if (!user) return res.status(401).send("User not found");
 
