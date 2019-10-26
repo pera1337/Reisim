@@ -55,9 +55,7 @@ const Places = ({ addLocation }) => {
     } else if (e.target.value.length >= 3 && city.name !== "") {
       setOffset(0);
       const response = await axios.get(
-        `http://localhost:5000/api/places/search?city=${
-          city.name
-        }&limit=10&&query=${e.target.value}`
+        `http://localhost:5000/api/places/search?city=${city.name}&limit=10&&query=${e.target.value}`
       );
       setPlaces(response.data);
       setMaxOffset(true);
@@ -80,7 +78,7 @@ const Places = ({ addLocation }) => {
         value={query}
         onChange={searchVenue}
       />
-      <ListGroup style={{ width: "25em", padding: "5px" }}>
+      <ListGroup>
         {places.map((element, index) => (
           <ListGroup.Item
             action

@@ -6,3 +6,14 @@
   font-weight: bold;
   padding: 10px;
 }
+@media only screen and (max-width: 991px) {
+  .bottom {
+    position: absolute;
+    top: 295px;
+    left: 0;
+    width: 100%;
+  }
+  .advanced-container {
+    margin-top: -16px;
+  }
+}

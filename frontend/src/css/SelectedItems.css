@@ -1,7 +1,6 @@
 .items-container {
   min-height: 50px;
   min-width: 50px;
-  width: 500px;
   border: 1px solid #aaaaaa;
   border-radius: 10px;
 }

@@ -15,7 +15,7 @@ const DetailsList = () => {
           <div
             key={element.locationNumber}
             style={{
-              border: "1px solid #aaaaaa",
+              border: "1px solid #ced4da",
               padding: "5px",
               margin: "10px",
               borderRadius: "10px"

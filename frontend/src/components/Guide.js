@@ -131,7 +131,8 @@ const Guide = params => {
         margin: "20px 60px",
         padding: "10px",
         backgroundColor: "white",
-        textAlign: "center"
+        textAlign: "center",
+        boxShadow: "0px 0px 5px 0px rgba(79, 77, 79, 0.6)"
       }}
     >
       <h1>{guide.title}</h1>

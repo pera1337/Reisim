@@ -35,8 +35,7 @@ router.post("/new", auth, async (req, res) => {
       guideId: guide.id
     });
   });
-
-  res.send(`Successfully created guide:${guide.title}`);
+  res.send({ id: guide.dataValues.id });
 });
 
 router.get("/search", async (req, res) => {

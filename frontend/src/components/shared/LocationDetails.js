@@ -41,6 +41,8 @@ const LocationDetails = ({ place, display = false, changeField }) => {
           <FormGroup>
             <Form.Label>Description</Form.Label>
             <FormControl
+              as="textarea"
+              rows="4"
               value={description}
               onChange={e => {
                 setDescription(e);

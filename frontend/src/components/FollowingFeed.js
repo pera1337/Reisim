@@ -23,7 +23,11 @@ const FollowingFeed = () => {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        margin: "10px"
+      }}
+    >
       <GuidesList guides={guides} displayAuthor={true} />
     </div>
   );

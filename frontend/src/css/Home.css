@@ -1,5 +1,5 @@
 .home-container {
-  padding-top: 150px;
+  padding-top: 13.5%;
   width: 50%;
   margin: 0 auto;
 }
@@ -8,9 +8,9 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-size: cover;
-  overflow: auto;
+  overflow: hidden;
   z-index: -1000;
   background-image: linear-gradient(
       rgba(21, 25, 29, 0.7),
@@ -22,4 +22,10 @@
 .search-header {
   color: white;
   text-align: center;
+}
+
+@media only screen and (max-height: 768px) {
+  .image-container {
+    height: 130vh;
+  }
 }

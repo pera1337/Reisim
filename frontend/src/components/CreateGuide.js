@@ -69,7 +69,7 @@ const CreateGuide = props => {
           );
           props.history.push(`/guide/${props.id}`);
         } else {
-          await axios.post(
+          const result = await axios.post(
             "http://localhost:5000/api/guide/new",
             {
               title,
@@ -79,7 +79,7 @@ const CreateGuide = props => {
             },
             { headers }
           );
-          props.history.push("/");
+          props.history.push(`/guide/${result.data.id}`);
         }
       } catch (e) {
         console.log("e :", e);
@@ -113,86 +113,92 @@ const CreateGuide = props => {
   return (
     <div className="create-guide-container">
       <h1>Create a guide</h1>
-      <div className="create-guide">
-        <Form
-          onSubmit={e => {
-            e.preventDefault();
-          }}
-        >
-          <FormGroup controlId="title">
-            <Form.Label>Title</Form.Label>
-            <FormControl
-              placeholder="Enter a title"
-              autoFocus
-              type="text"
-              value={title}
-              onChange={setTitle}
-            />
-          </FormGroup>
-          <FormGroup controlId="description">
-            <Form.Label>Description</Form.Label>
-            <FormControl
-              as="textarea"
-              rows="6"
-              placeholder="Enter a description"
-              value={description}
-              onChange={setDescription}
-              type="text"
-            />
-          </FormGroup>
-          <FormGroup controlId="citiesAutocomplete">
-            <Form.Label>Add cities</Form.Label>
-            <Autocomplete />
-          </FormGroup>
-          <FormGroup controlId="selectedCities">
-            <SelectedCities addCity={addCity} removeCity={removeCity} />
-          </FormGroup>
-          <Form.Row>
-            <Col>
-              <FormGroup controlId="map">
-                <Form.Label>Add locations</Form.Label>
-                <GuideMap
-                  place={location}
-                  addPoint={addPoint}
-                  removePoint={removePoint}
-                  edit={props.edit}
-                  id={props.id}
-                  input="true"
-                />
-              </FormGroup>
-            </Col>
-            <Col>
-              <FormGroup style={{ float: "right" }}>
-                <Form.Label>Places</Form.Label>
-                <Places addLocation={addLocation} />
-              </FormGroup>
-            </Col>
-          </Form.Row>
-          {locations.length > 0 ? (
-            <FormGroup>
-              <Form.Label>Descriptions</Form.Label>
-              <Accordion defaultActiveKey="0">
-                <Card>
-                  <Accordion.Toggle as={Card.Header} eventKey="0">
-                    <FontAwesomeIcon
-                      style={{ float: "right" }}
-                      size="lg"
-                      icon={faAngleDoubleDown}
-                    />
-                  </Accordion.Toggle>
-                  <Accordion.Collapse eventKey="0">
-                    <DetailsList />
-                  </Accordion.Collapse>
-                </Card>
-              </Accordion>
+      <Form
+        onSubmit={e => {
+          e.preventDefault();
+        }}
+      >
+        <FormGroup controlId="title">
+          <Form.Label>Title</Form.Label>
+          <FormControl
+            placeholder="Enter a title"
+            autoFocus
+            type="text"
+            value={title}
+            onChange={setTitle}
+          />
+        </FormGroup>
+        <FormGroup controlId="description">
+          <Form.Label>Description</Form.Label>
+          <FormControl
+            as="textarea"
+            rows="6"
+            placeholder="Enter a description"
+            value={description}
+            onChange={setDescription}
+            type="text"
+          />
+        </FormGroup>
+        <Form.Row>
+          <Col lg={6}>
+            <FormGroup controlId="citiesAutocomplete">
+              <Form.Label>Add cities</Form.Label>
+              <Autocomplete />
             </FormGroup>
-          ) : null}
+          </Col>
+          <Col lg={6}>
+            <FormGroup controlId="selectedCities">
+              <div className="selected">
+                <SelectedCities addCity={addCity} removeCity={removeCity} />
+              </div>
+            </FormGroup>
+          </Col>
+        </Form.Row>
+        <Form.Row>
+          <Col lg={8}>
+            <FormGroup controlId="map">
+              <Form.Label>Add locations</Form.Label>
+              <GuideMap
+                place={location}
+                addPoint={addPoint}
+                removePoint={removePoint}
+                edit={props.edit}
+                id={props.id}
+                input="true"
+              />
+            </FormGroup>
+          </Col>
+          <Col lg={4}>
+            <FormGroup>
+              <Form.Label>Places</Form.Label>
+              <Places addLocation={addLocation} />
+            </FormGroup>
+          </Col>
+        </Form.Row>
+        {locations.length > 0 ? (
+          <FormGroup>
+            <Form.Label>Descriptions</Form.Label>
+            <Accordion defaultActiveKey="0">
+              <Card>
+                <Accordion.Toggle as={Card.Header} eventKey="0">
+                  <FontAwesomeIcon
+                    style={{ float: "right" }}
+                    size="lg"
+                    icon={faAngleDoubleDown}
+                  />
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey="0">
+                  <DetailsList />
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          </FormGroup>
+        ) : null}
 
-          <Button block type="button" onClick={create}>
-            {props.edit === "true" ? "Edit" : "Create"}
-          </Button>
-        </Form>
-      </div>
+        <Button block type="button" onClick={create}>
+          {props.edit === "true" ? "Edit" : "Create"}
+        </Button>
+      </Form>
     </div>
   );
 };

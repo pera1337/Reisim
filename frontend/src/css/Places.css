@@ -1,12 +1,14 @@
 .places-container {
   position: relative;
   min-height: 100px;
-  border: 1px solid lightslategray;
+  border: 1px solid #ced4da;
   border-radius: 10px;
+  padding: 7px;
 }
 
 .left-arrow {
   margin-top: 10px;
+  margin-bottom: 5px;
   position: absolute;
   left: 10px;
   width: 60px;
@@ -19,13 +21,12 @@
 
 .right-arrow {
   margin-top: 10px;
+  margin-bottom: 5px;
   position: absolute;
   right: 10px;
   width: 60px;
   bottom: 0;
 }
-
 .search {
-  width: 380px;
-  margin-left: 10px;
+  margin-bottom: 5px;
 }

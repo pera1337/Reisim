@@ -1,3 +1,5 @@
 .guides {
-  margin: 10px;
+  margin: 10px 30px;
+  box-shadow: 0px 0px 5px 0px rgba(79, 77, 79, 0.6);
+  background-color: white;
 }

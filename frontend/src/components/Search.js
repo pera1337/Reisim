@@ -61,7 +61,11 @@ const Search = props => {
         </Col>
         <Col lg={2}>
           <Form.Group controlId="formGridSearch">
-            <Button style={{ width: "100%", margin: "0" }} type="submit">
+            <Button
+              style={{ width: "100%", margin: "0" }}
+              type="submit"
+              className={showAdvanced ? "bottom" : ""}
+            >
               Search
             </Button>
           </Form.Group>

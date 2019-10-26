@@ -7,7 +7,7 @@
 }
 
 .guide-title:hover {
-  color: lightskyblue;
+  color: rgb(80, 155, 202);
   text-decoration: none;
 }
 
@@ -22,7 +22,4 @@
 
 .guide-created {
   margin: 0;
-}
-.row-container {
-  background-color: white;
 }
