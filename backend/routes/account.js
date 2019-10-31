@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, Guide } = require("../models/models");
+const { User, Guide, SocialLinks } = require("../models/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
@@ -93,12 +93,50 @@ router.get("/feed", auth, async (req, res) => {
 router.get("/:id", async (req, res) => {
   const user = await User.findOne({
     where: { id: req.params.id },
-    include: { model: Guide, as: "Guides" },
-	order: [[Guide,"updatedAt", "DESC"]]
+    include: [
+      { model: Guide, as: "Guides" },
+      { model: SocialLinks, as: "SocialLinks" }
+    ],
+    order: [[Guide, "updatedAt", "DESC"]]
   });
   if (!user) return res.status(401).send("User not found");
 
   res.send(user);
+});
+
+router.put("/description", async (req, res) => {
+  const { profileDescription, links, userId } = req.body;
+  const user = await User.findOne({ where: { id: req.params.id } });
+  let socialLinks = SocialLinks.fineAll({ where: { userId: userId } });
+
+  let transaction;
+  try {
+    transaction = await sequelize.transaction();
+    user.profileDescription = profileDescription;
+    let i = 0;
+    for (i = 0; i < socialLinks.length; i++) {
+      if (i >= links.length) await socialLinks[i].destroy({ transaction });
+      else {
+        socialLinks[i].title = links[i].title;
+        socialLinks[i].linkTo = links[i].linkTo;
+        await socialLinks[i].save({ transaction });
+      }
+    }
+    for (i; i < links.length; i++) {
+      let soc = {
+        title: links[i].title,
+        linkTo: links[i].linkTo,
+        userId
+      };
+      await SocialLinks.create(soc, { transaction });
+    }
+  } catch (err) {
+    if (err) {
+      await transaction.rollback();
+      console.log("err :", err);
+      res.status(500).send("Something went wrong");
+    }
+  }
 });
 
 router.post("/login", async (req, res) => {

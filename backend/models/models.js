@@ -13,7 +13,23 @@ let User = sequelize.define("User", {
   email: {
     type: Sequelize.STRING,
     unique: true
+  },
+  profileDescription: {
+    type: Sequelize.STRING,
+    allowNull: true
   }
+});
+
+let ProfileSocialLinks = sequelize.define("SocialLink", {
+  id: {
+    type: Sequelize.INTEGER(11),
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  title: Sequelize.STRING,
+  linkTo: Sequelize.STRING,
+  userId: Sequelize.INTEGER(11)
 });
 
 let Location = sequelize.define("Location", {
@@ -89,6 +105,8 @@ Guide.belongsToMany(User, {
   as: "RatingGuide",
   foreignKey: "guideId"
 });
+User.hasMany(ProfileSocialLinks, { foreignKey: "userId" });
+ProfileSocialLinks.belongsTo(User, { foreignKey: "userId" });
 
 Guide.belongsTo(User, { foreignKey: "userId" });
 
@@ -100,3 +118,4 @@ module.exports.Location = Location;
 module.exports.Guide = Guide;
 module.exports.Rating = Rating;
 module.exports.City = City;
+module.exports.SocialLinks = ProfileSocialLinks;
