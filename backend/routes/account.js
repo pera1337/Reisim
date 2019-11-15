@@ -18,7 +18,8 @@ router.post("/register", async (req, res) => {
     firstName,
     lastName,
     email,
-    password
+    password,
+	profileDescription:""
   });
 
   const sendUser = {
@@ -97,6 +98,7 @@ router.get("/:id", async (req, res) => {
       { model: Guide, as: "Guides" },
       { model: SocialLinks, as: "SocialLinks" }
     ],
+	attributes: { exclude: ["password"] },
     order: [[Guide, "updatedAt", "DESC"]]
   });
   if (!user) return res.status(401).send("User not found");
@@ -104,15 +106,34 @@ router.get("/:id", async (req, res) => {
   res.send(user);
 });
 
-router.put("/description", async (req, res) => {
-  const { profileDescription, links, userId } = req.body;
-  const user = await User.findOne({ where: { id: req.params.id } });
-  let socialLinks = SocialLinks.fineAll({ where: { userId: userId } });
+router.put("/description",auth, async (req, res) => {
+  const { profileDescription} = req.body;
+  const userId = req.user.id;
+  const user = await User.findOne({ where: { id: userId } });
+  if(!user) return res.status(404).send("User not found");
+  user.profileDescription = profileDescription;
+  await user.save();
+  res.send(user);
+});
+
+router.get("/description/:id",async(req,res)=>{
+	const userId = req.params.id;
+  const user = await User.findOne({ where: { id: userId } });
+  if(!user) return res.status(404).send("User not found");
+  res.send(user.profileDescription);
+});
+
+router.put("/soclinks",auth, async (req, res) => {
+  const {links} = req.body;
+  const userId = req.user.id;
+  const user = await User.findOne({ where: { id: userId } });
+  if(!user) return res.status(404).send("User not found");
+  let socialLinks = await SocialLinks.findAll({ where: { userId: userId } });
+  if(!socialLinks) socialLinks = [];
 
   let transaction;
   try {
     transaction = await sequelize.transaction();
-    user.profileDescription = profileDescription;
     let i = 0;
     for (i = 0; i < socialLinks.length; i++) {
       if (i >= links.length) await socialLinks[i].destroy({ transaction });
@@ -137,6 +158,7 @@ router.put("/description", async (req, res) => {
       res.status(500).send("Something went wrong");
     }
   }
+  res.send(socialLinks);
 });
 
 router.post("/login", async (req, res) => {

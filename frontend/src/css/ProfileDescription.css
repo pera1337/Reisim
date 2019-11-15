@@ -1,8 +1,8 @@
 .description-container {
   /*border: 1px solid rgba(0, 0, 0, 0.205);*/
   border-radius: 5px;
-  text-align: center;
   background-color: white;
   margin: 7px;
+  padding: 0 1.25rem;
   box-shadow: 0px 0px 5px 0px rgba(79, 77, 79, 0.6);
 }

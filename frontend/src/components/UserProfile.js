@@ -28,11 +28,13 @@ const UserProfile = params => {
       const headers = {
         "X-Auth-Token": localStorage.getItem("token")
       };
-      const response = await axios.get(
-        `http://localhost:5000/api/account/isfollowing/${result.data.id}`,
-        { headers }
-      );
-      setIsFollowing(response.data);
+      if (user.id !== userId) {
+        const response = await axios.get(
+          `http://localhost:5000/api/account/isfollowing/${result.data.id}`,
+          { headers }
+        );
+        setIsFollowing(response.data);
+      }
     };
     populate();
   }, []);
