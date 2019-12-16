@@ -6,31 +6,3 @@
 .btn {
   color: white;
 }
-.btn:hover {
-  color: darkgray;
-}
-.main-nav {
-  background-color: #046b94;
-}
-
-#nav-toggle {
-  border-color: rgba(255, 255, 255, 0.7);
-}
-
-.dropdown {
-  text-align: center;
-}
-
-.navbar-dark .navbar-nav .nav-link {
-  color: white;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover {
-  color: darkgray;
-}
-
-.dropdown-menu {
-  min-width: 0;
-  max-width: 9rem;
-  margin: 0 auto;
-}

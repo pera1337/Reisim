@@ -1,7 +1,5 @@
 .home-container {
   padding-top: 13.5%;
-  width: 50%;
-  margin: 0 auto;
 }
 .image-container {
   position: absolute;
@@ -22,10 +20,14 @@
 .search-header {
   color: white;
   text-align: center;
+  font-size: 2.75rem;
 }
 
 @media only screen and (max-width: 768px) {
   .image-container {
     height: 130vh;
+  }
+  .search-header {
+    font-size: 2.2rem;
   }
 }

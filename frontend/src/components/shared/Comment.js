@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faReply } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
-import Button from "react-bootstrap/Button";
+// import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import "../../css/Comment.css";
 import AddComment from "../AddComment";
@@ -24,14 +24,14 @@ const Comment = ({ comment }) => {
         <br />
         <hr />
         <p className="comment-text">{comment.text}</p>
-        <Button
+        {/* <Button
           variant="light"
           onClick={() => {
             setReply(!reply);
           }}
         >
           Reply <FontAwesomeIcon icon={faReply} />
-        </Button>
+        </Button> */}
       </div>
       {reply ? <AddComment /> : null}
     </div>

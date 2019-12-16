@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import GuideList from "./shared/GuidesList";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+// import Row from "react-bootstrap/Row";
+// import Col from "react-bootstrap/Col";
 import ProfileDescription from "./ProfileDescription";
 import axios from "axios";
 import jsonwebtoken from "jsonwebtoken";
@@ -67,19 +67,22 @@ const UserProfile = params => {
     }
   }
   return (
-    <Row>
-      <Col lg={3}>
-        <ProfileDescription
-          user={user}
-          currentUserId={userId}
-          isFollowing={isFollowing}
-          followUser={followUser}
-        />
-      </Col>
-      <Col lg={9}>
-        <GuideList guides={guides} />
-      </Col>
-    </Row>
+    <div>
+      <h1>UP</h1>
+    </div>
+    // <Row>
+    //   <Col lg={3}>
+    //     <ProfileDescription
+    //       user={user}
+    //       currentUserId={userId}
+    //       isFollowing={isFollowing}
+    //       followUser={followUser}
+    //     />
+    //   </Col>
+    //   <Col lg={9}>
+    //     <GuideList guides={guides} />
+    //   </Col>
+    // </Row>
   );
 };
 

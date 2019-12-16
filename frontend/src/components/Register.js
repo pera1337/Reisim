@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import Button from "react-bootstrap/Button";
-import FormGroup from "react-bootstrap/FormGroup";
-import FormControl from "react-bootstrap/FormControl";
+// import Button from "react-bootstrap/Button";
+// import FormGroup from "react-bootstrap/FormGroup";
+// import FormControl from "react-bootstrap/FormControl";
 import UseTextInput from "../hooks/UseTextInput";
-import Form from "react-bootstrap/Form";
+// import Form from "react-bootstrap/Form";
 import "../css/Register.css";
 import axios from "axios";
 import { UserContext } from "../contexts/UserContext";
@@ -40,7 +40,7 @@ const Register = props => {
   return (
     <div className="Register">
       <h1>Register</h1>
-      <form onSubmit={register}>
+      {/* <form onSubmit={register}>
         <FormGroup controlId="email">
           <Form.Label>Email address</Form.Label>
           <FormControl
@@ -90,7 +90,7 @@ const Register = props => {
         <Button block type="submit">
           Register
         </Button>
-      </form>
+      </form> */}
     </div>
   );
 };

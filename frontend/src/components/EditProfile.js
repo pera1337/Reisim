@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import FormGroup from "react-bootstrap/FormGroup";
-import FormControl from "react-bootstrap/FormControl";
+// import Button from "react-bootstrap/Button";
+// import FormGroup from "react-bootstrap/FormGroup";
+// import FormControl from "react-bootstrap/FormControl";
 import UseTextInput from "../hooks/UseTextInput";
-import Form from "react-bootstrap/Form";
+// import Form from "react-bootstrap/Form";
 import "../css/Register.css";
 import axios from "axios";
 import { UserContext } from "../contexts/UserContext";
@@ -48,7 +48,7 @@ const EditProfile = props => {
   }
   return (
     <div className="Register">
-      <form onSubmit={editProfile}>
+      {/* <form onSubmit={editProfile}>
         <FormGroup controlId="firstName">
           <Form.Label>FirstName</Form.Label>
           <FormControl
@@ -88,7 +88,7 @@ const EditProfile = props => {
         <Button block type="submit">
           Register
         </Button>
-      </form>
+      </form> */}
     </div>
   );
 };

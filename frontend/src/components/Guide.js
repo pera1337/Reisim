@@ -3,8 +3,8 @@ import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import GuideMap from "./GuideMap";
 import SelectedItems from "./shared/SelectedItems";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+// import Button from "react-bootstrap/Button";
+// import Modal from "react-bootstrap/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import GuideRating from "./GuideRating";
@@ -140,7 +140,7 @@ const Guide = params => {
         {avgRating}
         <FontAwesomeIcon icon={faStar} />({numOfRatings})
       </p>
-      <GuideRating changeRating={changeRating} guideId={guide.id} />
+      {/* <GuideRating changeRating={changeRating} guideId={guide.id} />
       <p className="guide-created">
         Created by{" "}
         <Link className="created" to={`/user/${guideUser.id}`}>
@@ -182,8 +182,8 @@ const Guide = params => {
         </div>
       ) : (
         ""
-      )}
-      <div>
+      )} */}
+      {/* <div>
         <GuideMap edit="false" input="false" id={params.id} />
       </div>
       <div>
@@ -199,7 +199,7 @@ const Guide = params => {
               />
             </div>
           ))}
-      </div>
+      </div> */}
     </div>
   );
 };

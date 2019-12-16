@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { CityContext } from "../contexts/CityContext";
 //import { PlaceContext } from "../contexts/PlaceContext";
-import ListGroup from "react-bootstrap/ListGroup";
-import Button from "react-bootstrap/Button";
-import FormControl from "react-bootstrap/FormControl";
+// import ListGroup from "react-bootstrap/ListGroup";
+// import Button from "react-bootstrap/Button";
+// import FormControl from "react-bootstrap/FormControl";
 import UseTextInput from "../hooks/UseTextInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -70,7 +70,7 @@ const Places = ({ addLocation }) => {
   }
   return (
     <div className="places-container">
-      <FormControl
+      {/* <FormControl
         className="search"
         placeholder="Search for a venue"
         autoFocus
@@ -99,7 +99,7 @@ const Places = ({ addLocation }) => {
         <Button onClick={handleRight} className="right-arrow">
           <FontAwesomeIcon icon={faArrowRight} />
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };

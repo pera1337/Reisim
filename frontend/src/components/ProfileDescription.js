@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
+// import Button from "react-bootstrap/Button";
 import "../css/ProfileDescription.css";
 import Description from "./Description";
 import SocialLinks from "./SocialLinks";
@@ -16,13 +16,13 @@ const ProfileDescription = ({
       <h2 style={{ textAlign: "center" }}>
         {user.firstName} {user.lastName}
       </h2>
-      {currentUserId !== -1 && currentUserId !== user.id ? (
+      {/* {currentUserId !== -1 && currentUserId !== user.id ? (
         <Button variant="success" onClick={followUser}>
           {isFollowing ? "Following" : "Follow"}
         </Button>
       ) : (
         ""
-      )}
+      )} */}
       <Description
         profileDescription={user.profileDescription}
         id={user.id}

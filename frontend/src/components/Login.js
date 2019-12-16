@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
-import Button from "react-bootstrap/Button";
-import FormGroup from "react-bootstrap/FormGroup";
-import FormControl from "react-bootstrap/FormControl";
+// import Button from "react-bootstrap/Button";
+// import FormGroup from "react-bootstrap/FormGroup";
+// import FormControl from "react-bootstrap/FormControl";
 import UseTextInput from "../hooks/UseTextInput";
-import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
+// import Form from "react-bootstrap/Form";
+// import Alert from "react-bootstrap/Alert";
 import "../css/Login.css";
 import axios from "axios";
 import { UserContext } from "../contexts/UserContext";
@@ -39,7 +39,7 @@ const Login = props => {
   return (
     <div className="Login">
       <h1>Login</h1>
-      <form onSubmit={login}>
+      {/* <form onSubmit={login}>
         <FormGroup controlId="email">
           <Form.Label>Email address</Form.Label>
           <FormControl
@@ -72,7 +72,7 @@ const Login = props => {
             <p>{error}</p>
           </Alert>
         )}
-      </form>
+      </form> */}
     </div>
   );
 };

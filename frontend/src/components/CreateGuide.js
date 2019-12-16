@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router";
-import Button from "react-bootstrap/Button";
-import FormGroup from "react-bootstrap/FormGroup";
-import FormControl from "react-bootstrap/FormControl";
-import Form from "react-bootstrap/Form";
-import Accordion from "react-bootstrap/Accordion";
-import Card from "react-bootstrap/Card";
-import Col from "react-bootstrap/Col";
+// import Button from "react-bootstrap/Button";
+// import FormGroup from "react-bootstrap/FormGroup";
+// import FormControl from "react-bootstrap/FormControl";
+// import Form from "react-bootstrap/Form";
+// import Accordion from "react-bootstrap/Accordion";
+// import Card from "react-bootstrap/Card";
+// import Col from "react-bootstrap/Col";
 import GuideMap from "./GuideMap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
@@ -113,7 +113,7 @@ const CreateGuide = props => {
   return (
     <div className="create-guide-container">
       <h1>Create a guide</h1>
-      <Form
+      {/* <Form
         onSubmit={e => {
           e.preventDefault();
         }}
@@ -198,7 +198,7 @@ const CreateGuide = props => {
         <Button block type="button" onClick={create}>
           {props.edit === "true" ? "Edit" : "Create"}
         </Button>
-      </Form>
+      </Form> */}
     </div>
   );
 };
