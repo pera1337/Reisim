@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 // import Form from "react-bootstrap/Form";
 // import Button from "react-bootstrap/Button";
 // import Col from "react-bootstrap/Col";
@@ -8,6 +12,7 @@ import CitySearch from "./shared/CitySearch";
 // import FormControl from "react-bootstrap/FormControl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import UseTextInput from "../hooks/UseTextInput";
 import "../css/Search.css";
 
@@ -35,9 +40,97 @@ const Search = props => {
   }
 
   return (
-    <div>
-      <h1>Search</h1>
-    </div>
+    <form
+      className="search-form"
+      onSubmit={Send}
+      onKeyPress={e => {
+        if (e.key === "Enter") e.preventDefault();
+      }}
+    >
+      <Grid container justify="center" spacing={1} direction="column">
+        <Grid container item justify="center" alignItems="center" spacing={1}>
+          <Grid item xs={10} sm={10}>
+            <CitySearch onSelected={selectCity} clearAfterSelected={false} />
+          </Grid>
+          <Grid item xs={6} sm={1}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              fullWidth
+              onClick={() => setShowAdvanced(!showAdvanced)}
+            >
+              <FontAwesomeIcon icon={showAdvanced ? faArrowUp : faArrowDown} />
+            </Button>
+          </Grid>
+          <Grid item xs={6} sm={1}>
+            <Button
+              type="submit"
+              size="medium"
+              variant="contained"
+              color="primary"
+            >
+              Search
+            </Button>
+          </Grid>
+        </Grid>
+        {showAdvanced && (
+          <div className="advanced-container">
+            <Grid
+              container
+              item
+              spacing={2}
+              justify="center"
+              direction="column"
+            >
+              <Grid item>
+                <TextField
+                  label="Text"
+                  fullWidth
+                  placeholder="Enter a text"
+                  value={text}
+                  onChange={setText}
+                />
+              </Grid>
+              <Grid container item justify="flex-start" spacing={2}>
+                <Grid item md={8}>
+                  <TextField
+                    label="Author"
+                    placeholder="Author name"
+                    fullWidth
+                    value={author}
+                    onChange={setAuthor}
+                  />
+                </Grid>
+                <Grid item md={4}>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Rating"
+                    onChange={selectRating}
+                    defaultValue={-1}
+                    helperText="Select a minimum rating"
+                  >
+                    <MenuItem key={2} value={2}>
+                      2
+                    </MenuItem>
+                    <MenuItem key={3} value={3}>
+                      3
+                    </MenuItem>
+                    <MenuItem key={4} value={4}>
+                      4
+                    </MenuItem>
+                    <MenuItem key={5} value={5}>
+                      5
+                    </MenuItem>
+                  </TextField>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+        )}
+      </Grid>
+    </form>
     // <Form
     //   onSubmit={Send}
     //   onKeyPress={e => {
