@@ -6,11 +6,14 @@
   font-weight: bold;
   padding: 10px;
 }
+.search-form {
+  margin: 0 10px;
+}
 
-@media only screen and (max-width: 991px) {
+@media only screen and (max-width: 599px) {
   .bottom {
     position: absolute;
-    top: 295px;
+    top: 255px;
     left: 0;
     width: 100%;
   }
