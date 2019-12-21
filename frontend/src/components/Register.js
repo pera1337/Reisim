@@ -1,12 +1,15 @@
 import React, { useContext } from "react";
-// import Button from "react-bootstrap/Button";
-// import FormGroup from "react-bootstrap/FormGroup";
-// import FormControl from "react-bootstrap/FormControl";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import Container from "@material-ui/core/Container";
+import { Grid, Avatar } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
 import UseTextInput from "../hooks/UseTextInput";
-// import Form from "react-bootstrap/Form";
-import "../css/Register.css";
-import axios from "axios";
 import { UserContext } from "../contexts/UserContext";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Register = props => {
   const [email, setEmail] = UseTextInput("");
@@ -38,60 +41,107 @@ const Register = props => {
     }
   }
   return (
-    <div className="Register">
-      <h1>Register</h1>
-      {/* <form onSubmit={register}>
-        <FormGroup controlId="email">
-          <Form.Label>Email address</Form.Label>
-          <FormControl
-            placeholder="Enter an email adress"
-            autoFocus
-            type="email"
-            value={email}
-            onChange={setEmail}
-          />
-        </FormGroup>
-        <FormGroup controlId="firstName">
-          <Form.Label>FirstName</Form.Label>
-          <FormControl
-            placeholder="First Name"
-            autoFocus
-            value={firstName}
-            onChange={setFirstName}
-          />
-        </FormGroup>
-        <FormGroup controlId="lastName">
-          <Form.Label>LastName</Form.Label>
-          <FormControl
-            placeholder="Last Name"
-            autoFocus
-            value={lastName}
-            onChange={setLastName}
-          />
-        </FormGroup>
-        <FormGroup controlId="password">
-          <Form.Label>Password</Form.Label>
-          <FormControl
-            placeholder="Enter your password"
-            value={password}
-            onChange={setPassword}
-            type="password"
-          />
-        </FormGroup>
-        <FormGroup controlId="confirmPassword">
-          <Form.Label>Confirm Password</Form.Label>
-          <FormControl
-            placeholder="Confirm your password"
-            value={confirmPassword}
-            onChange={setConfirmPassword}
-            type="password"
-          />
-        </FormGroup>
-        <Button block type="submit">
-          Register
-        </Button>
-      </form> */}
-    </div>
+    <Container
+      component="main"
+      style={{ borderRadius: "15px", marginTop: "25px" }}
+      color="#3f51b5"
+      maxWidth="xs"
+    >
+      <Paper
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "10px"
+        }}
+      >
+        <Avatar style={{ backgroundColor: "#3f51b5" }}>
+          <FontAwesomeIcon icon={faLock} />
+        </Avatar>
+        <h2 style={{ textAlign: "center" }}>Register</h2>
+        <form style={{ width: "100%" }} onSubmit={register}>
+          <Grid spacing={1} container>
+            <Grid item xs={12}>
+              <TextField
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="E-mail address"
+                placeholder="Enter an e-mail address"
+                value={email}
+                onChange={setEmail}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="First name"
+                placeholder="Enter a first name"
+                value={firstName}
+                onChange={setFirstName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="Last name"
+                placeholder="Enter a last name"
+                value={lastName}
+                onChange={setLastName}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="Password"
+                placeholder="Enter a password"
+                type="password"
+                value={password}
+                onChange={setPassword}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="Confirm password"
+                placeholder="Confirm your password"
+                type="password"
+                value={confirmPassword}
+                onChange={setConfirmPassword}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                color="primary"
+                variant="contained"
+                type="submit"
+              >
+                Register
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid style={{ marginTop: "8px" }} container justify="center">
+            <Grid item>
+              <Link to="/login">Already have an account? Login</Link>>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </Container>
   );
 };
 

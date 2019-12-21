@@ -60,21 +60,21 @@ const Login = props => {
           <FontAwesomeIcon icon={faLock} />
         </Avatar>
         <h2 style={{ textAlign: "center" }}>Login</h2>
-        <form onSubmit={login}>
+        <form style={{ width: "100%" }} onSubmit={login}>
           <Grid
-            spacing={3}
+            spacing={2}
             container
             justify="center"
-            alignItems="center"
+            alignItems="stretch"
             direction="column"
           >
-            <Grid item xs={12}>
+            <Grid item>
               <TextField
                 required
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                label="E-mail"
+                label="E-mail address"
                 placeholder="Enter an e-mail address"
                 value={email}
                 onChange={setEmail}
@@ -93,7 +93,7 @@ const Login = props => {
                 onChange={setPassword}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item>
               <Button
                 fullWidth
                 color="primary"
@@ -103,7 +103,7 @@ const Login = props => {
                 Login
               </Button>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item style={{ alignSelf: "center" }}>
               <Link to="/register">Dont have an account? Register</Link>
             </Grid>
           </Grid>
@@ -127,7 +127,7 @@ const Login = props => {
               {`  ${error}`}
             </span>
           }
-          style={{ backgroundColor: "red" }}
+          style={{ backgroundColor: "#d62e22" }}
           action={[
             <IconButton onClick={closeError}>
               <FontAwesomeIcon icon={faTimes} color="white" />

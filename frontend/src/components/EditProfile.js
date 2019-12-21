@@ -5,7 +5,6 @@ import { withRouter } from "react-router-dom";
 // import FormControl from "react-bootstrap/FormControl";
 import UseTextInput from "../hooks/UseTextInput";
 // import Form from "react-bootstrap/Form";
-import "../css/Register.css";
 import axios from "axios";
 import { UserContext } from "../contexts/UserContext";
 
@@ -47,7 +46,7 @@ const EditProfile = props => {
     }
   }
   return (
-    <div className="Register">
+    <div>
       {/* <form onSubmit={editProfile}>
         <FormGroup controlId="firstName">
           <Form.Label>FirstName</Form.Label>

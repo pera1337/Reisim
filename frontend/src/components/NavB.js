@@ -112,7 +112,12 @@ const NavB = props => {
                 <Button component={Link} color="inherit" to="/register">
                   Register
                 </Button>
-                <Button component={Link} color="inherit" to="/login">
+                <Button
+                  component={Link}
+                  color="inherit"
+                  variant="outlined"
+                  to="/login"
+                >
                   Login
                 </Button>
               </div>
