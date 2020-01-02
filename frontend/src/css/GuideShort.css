@@ -1,23 +1,22 @@
 .guide-title {
-  text-decoration: none;
   font-weight: bold;
-  color: black;
   transition: color 0.3s;
   font-size: 30px;
 }
 
 .guide-title:hover {
   color: rgb(80, 155, 202);
-  text-decoration: none;
 }
 
 .guide-created {
   font-style: italic;
   color: #868e96;
 }
-
+.created {
+  transition: color 0.3s;
+}
 .created:hover {
-  text-decoration: none;
+  color: rgb(80, 155, 202);
 }
 
 .guide-created {
