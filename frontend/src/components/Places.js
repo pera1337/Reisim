@@ -1,14 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { CityContext } from "../contexts/CityContext";
-//import { PlaceContext } from "../contexts/PlaceContext";
-// import ListGroup from "react-bootstrap/ListGroup";
-// import Button from "react-bootstrap/Button";
-// import FormControl from "react-bootstrap/FormControl";
 import UseTextInput from "../hooks/UseTextInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import "../css/Places.css";
 import axios from "axios";
+import { InputBase, List, ListItem, Button, Grid } from "@material-ui/core";
+import "../css/Places.css";
 
 const Places = ({ addLocation }) => {
   const { city } = useContext(CityContext);
@@ -41,7 +38,10 @@ const Places = ({ addLocation }) => {
   }*/
 
   function handleLeft() {
-    if (offset > 0) {
+    if (places.length > 10) {
+      setOffset(offset - 10);
+      if (maxOffset) setMaxOffset(false);
+    } else {
       fetchPlaces(offset - 10);
       setOffset(offset - 10);
     }
@@ -55,51 +55,65 @@ const Places = ({ addLocation }) => {
     } else if (e.target.value.length >= 3 && city.name !== "") {
       setOffset(0);
       const response = await axios.get(
-        `http://localhost:5000/api/places/search?city=${city.name}&limit=10&&query=${e.target.value}`
+        `http://localhost:5000/api/places/search?city=${city.name}&limit=50&query=${e.target.value}`
       );
       setPlaces(response.data);
-      setMaxOffset(true);
     }
   }
 
   function handleRight() {
-    if (!maxOffset) {
+    if (places.length > 10) {
+      if (offset === 30) {
+        setOffset(offset + 10);
+        setMaxOffset(true);
+      } else setOffset(offset + 10);
+    } else {
       fetchPlaces(offset + 10);
       setOffset(offset + 10);
     }
   }
+
+  const renderPlacesList = () => {
+    let displayPlaces = [];
+    if (places.length > 10) displayPlaces = places.slice(offset, offset + 10);
+    else displayPlaces = places;
+    return displayPlaces.map((element, index) => (
+      <ListItem
+        button
+        onDoubleClick={() => {
+          addLocation(element);
+        }}
+        key={index}
+      >
+        {element.name}
+      </ListItem>
+    ));
+  };
+
   return (
     <div className="places-container">
-      {/* <FormControl
-        className="search"
-        placeholder="Search for a venue"
-        autoFocus
-        type="text"
-        value={query}
-        onChange={searchVenue}
-      />
-      <ListGroup>
-        {places.map((element, index) => (
-          <ListGroup.Item
-            action
-            onDoubleClick={() => {
-              addLocation(element);
-              //removePlace(index);
-            }}
-            key={index}
-          >
-            {element.name}
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
-      <div className="arrow-container">
-        <Button onClick={handleLeft} className="left-arrow">
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </Button>
-        <Button onClick={handleRight} className="right-arrow">
-          <FontAwesomeIcon icon={faArrowRight} />
-        </Button>
-      </div> */}
+      <div>
+        <InputBase
+          fullWidth
+          className="search-text"
+          value={query}
+          onChange={searchVenue}
+          placeholder="Search…"
+        />
+      </div>
+      <List>{renderPlacesList()}</List>
+      <Grid container justify="space-evenly">
+        <Grid item>
+          <Button disabled={!offset} onClick={handleLeft}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button disabled={maxOffset} onClick={handleRight}>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </Button>
+        </Grid>
+      </Grid>
     </div>
   );
 };

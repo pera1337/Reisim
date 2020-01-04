@@ -1,5 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 // import Button from "react-bootstrap/Button";
 // import FormGroup from "react-bootstrap/FormGroup";
 // import FormControl from "react-bootstrap/FormControl";
@@ -113,6 +116,61 @@ const CreateGuide = props => {
   return (
     <div className="create-guide-container">
       <h1>Create a guide</h1>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+        }}
+      >
+        <TextField
+          required
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          label="Title"
+          placeholder="Enter a title"
+          value={title}
+          onChange={setTitle}
+        />
+        <TextField
+          required
+          multiline
+          rows={6}
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          label="Description"
+          placeholder="Enter a description"
+          value={description}
+          onChange={setDescription}
+        />
+        <Grid spacing={2} container>
+          <Grid justify="center" spacing={2} container direction="column" item>
+            <Grid md={6} item>
+              <Autocomplete />
+            </Grid>
+            <Grid md={6} item>
+              <div className="selected">
+                <SelectedCities addCity={addCity} removeCity={removeCity} />
+              </div>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} direction="row" item>
+            <Grid sm={12} md={8} item>
+              <GuideMap
+                place={location}
+                addPoint={addPoint}
+                removePoint={removePoint}
+                edit={props.edit}
+                id={props.id}
+                input="true"
+              />
+            </Grid>
+            <Grid sm={12} md={4} item>
+              <Places addLocation={addLocation} />
+            </Grid>
+          </Grid>
+        </Grid>
+      </form>
       {/* <Form
         onSubmit={e => {
           e.preventDefault();

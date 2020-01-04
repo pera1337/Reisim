@@ -4,7 +4,7 @@
 .create-guide-container {
   background-color: white;
   box-shadow: 0px 0px 5px 0px rgba(79, 77, 79, 0.6);
-  margin: 30px;
+  margin: 40px;
   padding: 20px;
 }
 
@@ -12,8 +12,8 @@ h1 {
   text-align: center;
 }
 
-@media (min-width: 992px) {
+/*@media (min-width: 992px) {
   .selected {
     margin-top: 24px;
   }
-}
+}*/
