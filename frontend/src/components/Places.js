@@ -4,7 +4,14 @@ import UseTextInput from "../hooks/UseTextInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { InputBase, List, ListItem, Button, Grid } from "@material-ui/core";
+import {
+  InputBase,
+  List,
+  ListItem,
+  Button,
+  Grid,
+  TextField
+} from "@material-ui/core";
 import "../css/Places.css";
 
 const Places = ({ addLocation }) => {
@@ -93,9 +100,10 @@ const Places = ({ addLocation }) => {
   return (
     <div className="places-container">
       <div>
-        <InputBase
+        <TextField
           fullWidth
-          className="search-text"
+          variant="outlined"
+          size="small"
           value={query}
           onChange={searchVenue}
           placeholder="Search…"

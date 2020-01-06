@@ -9,7 +9,7 @@ const DetailsList = () => {
     dispatch({ type: "change-field", locationNumber, name, value });
   }
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       {locations.map(element => {
         return (
           <div

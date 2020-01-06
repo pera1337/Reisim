@@ -3,6 +3,9 @@ import { withRouter } from "react-router";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 // import Button from "react-bootstrap/Button";
 // import FormGroup from "react-bootstrap/FormGroup";
 // import FormControl from "react-bootstrap/FormControl";
@@ -22,6 +25,7 @@ import axios from "axios";
 import { CityContext } from "../contexts/CityContext";
 import { LocationsContext } from "../contexts/LocationsContext";
 import "../css/CreateGuide.css";
+import { Typography } from "@material-ui/core";
 
 const CreateGuide = props => {
   const [title, setTitle] = UseTextInput("");
@@ -146,16 +150,18 @@ const CreateGuide = props => {
         <Grid spacing={2} container>
           <Grid justify="center" spacing={2} container direction="column" item>
             <Grid md={6} item>
+              <span className="label">Add a city</span>
               <Autocomplete />
             </Grid>
             <Grid md={6} item>
               <div className="selected">
+                <span className="label">Cities</span>
                 <SelectedCities addCity={addCity} removeCity={removeCity} />
               </div>
             </Grid>
           </Grid>
           <Grid container spacing={2} direction="row" item>
-            <Grid sm={12} md={8} item>
+            <Grid xs={12} md={8} item>
               <GuideMap
                 place={location}
                 addPoint={addPoint}
@@ -165,11 +171,37 @@ const CreateGuide = props => {
                 input="true"
               />
             </Grid>
-            <Grid sm={12} md={4} item>
+            <Grid xs={12} md={4} item>
+              <span className="label">Places</span>
               <Places addLocation={addLocation} />
             </Grid>
           </Grid>
         </Grid>
+        {locations.length > 0 && (
+          <ExpansionPanel
+            style={{ marginTop: "16px", border: "1px solid #ced4da" }}
+          >
+            <ExpansionPanelSummary
+              expandIcon={
+                <FontAwesomeIcon size="sm" icon={faAngleDoubleDown} />
+              }
+            >
+              <Typography>Location Details</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <DetailsList />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        )}
+        <Button
+          style={{ marginTop: "16px", textAlign: "center" }}
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={create}
+        >
+          {props.edit === "true" ? "Edit" : "Create"}
+        </Button>
       </form>
       {/* <Form
         onSubmit={e => {

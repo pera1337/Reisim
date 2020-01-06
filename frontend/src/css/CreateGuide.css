@@ -12,6 +12,10 @@ h1 {
   text-align: center;
 }
 
+.label {
+  font-weight: bold;
+  font-size: 1rem;
+}
 /*@media (min-width: 992px) {
   .selected {
     margin-top: 24px;
