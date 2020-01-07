@@ -1,6 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
+import Chip from "@material-ui/core/Chip";
 import "../../css/SelectedItems.css";
 
 function isEqual(prevProps, nextProps) {
@@ -15,31 +14,19 @@ const SelectedItems = React.memo(
   ({ items, handleRemoveClick = null, handleClick = null }) => {
     return (
       <div className="items-container">
-        {items.length !== 0
-          ? items.map((element, index) => {
-              return (
-                <div className="item-container" key={index}>
-                  {handleRemoveClick ? (
-                    <FontAwesomeIcon
-                      style={{ cursor: "pointer" }}
-                      icon={faTimesCircle}
-                      onClick={() => handleRemoveClick(index)}
-                    />
-                  ) : null}
-                  {handleClick ? (
-                    <span
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleClick(element)}
-                    >
-                      {` ${element.name}`}
-                    </span>
-                  ) : (
-                    <span>{` ${element.name}`}</span>
-                  )}
-                </div>
-              );
-            })
-          : null}
+        {items.length > 0 &&
+          items.map((element, index) => {
+            return (
+              <Chip
+                style={{ margin: "3px 2px" }}
+                color="primary"
+                label={`${element.name}`}
+                clickable={handleClick}
+                onClick={() => handleClick(element)}
+                onDelete={() => handleRemoveClick(index)}
+              />
+            );
+          })}
       </div>
     );
   },

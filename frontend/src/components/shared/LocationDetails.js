@@ -1,9 +1,5 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-// import FormGroup from "react-bootstrap/FormGroup";
-// import FormControl from "react-bootstrap/FormControl";
-// import Col from "react-bootstrap/Col";
-// import Form from "react-bootstrap/Form";
 import useTextInput from "../../hooks/UseTextInput";
 import "../../css/LocationDetails.css";
 import { TextField } from "@material-ui/core";
@@ -15,7 +11,7 @@ const LocationDetails = ({ place, display = false, changeField }) => {
     place.description ? place.description : ""
   );
   return (
-    <Grid container spacing={1}>
+    <Grid style={{ padding: "10px" }} container spacing={1}>
       <Grid xs={12} md={3} item>
         <div className="col-container">
           <div className="number-container">
@@ -62,49 +58,6 @@ const LocationDetails = ({ place, display = false, changeField }) => {
         )}
       </Grid>
     </Grid>
-    // <Form.Row>
-    //   <Col lg={3}>
-    //     <div className="col-container">
-    //       <div className="number-container">
-    //         <p>{num}</p>
-    //       </div>
-    //     </div>
-    //   </Col>
-    //   <Col lg={9}>
-    //     {!display ? (
-    //       <FormGroup>
-    //         <Form.Label>Name</Form.Label>
-    //         <FormControl
-    //           type="text"
-    //           value={name}
-    //           onChange={e => {
-    //             setName(e);
-    //             changeField(num - 1, "name", e.target.value);
-    //           }}
-    //         />
-    //       </FormGroup>
-    //     ) : name ? (
-    //       <h3 style={{ textAlign: "center" }}>{name}</h3>
-    //     ) : null}
-    //     {!display ? (
-    //       <FormGroup>
-    //         <Form.Label>Description</Form.Label>
-    //         <FormControl
-    //           as="textarea"
-    //           rows="4"
-    //           value={description}
-    //           onChange={e => {
-    //             setDescription(e);
-    //             changeField(num - 1, "description", e.target.value);
-    //           }}
-    //           type="text"
-    //         />
-    //       </FormGroup>
-    //     ) : (
-    //       <p style={{ textAlign: "center" }}>{description}</p>
-    //     )}
-    //   </Col>
-    // </Form.Row>
   );
 };
 

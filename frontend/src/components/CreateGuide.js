@@ -148,7 +148,7 @@ const CreateGuide = props => {
           onChange={setDescription}
         />
         <Grid spacing={2} container>
-          <Grid justify="center" spacing={2} container direction="column" item>
+          <Grid spacing={2} container direction="row" item>
             <Grid md={6} item>
               <span className="label">Add a city</span>
               <Autocomplete />
