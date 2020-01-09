@@ -6,13 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-// import Button from "react-bootstrap/Button";
-// import FormGroup from "react-bootstrap/FormGroup";
-// import FormControl from "react-bootstrap/FormControl";
-// import Form from "react-bootstrap/Form";
-// import Accordion from "react-bootstrap/Accordion";
-// import Card from "react-bootstrap/Card";
-// import Col from "react-bootstrap/Col";
+import { Typography } from "@material-ui/core";
 import GuideMap from "./GuideMap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
@@ -25,7 +19,6 @@ import axios from "axios";
 import { CityContext } from "../contexts/CityContext";
 import { LocationsContext } from "../contexts/LocationsContext";
 import "../css/CreateGuide.css";
-import { Typography } from "@material-ui/core";
 
 const CreateGuide = props => {
   const [title, setTitle] = UseTextInput("");
@@ -149,11 +142,11 @@ const CreateGuide = props => {
         />
         <Grid spacing={2} container>
           <Grid spacing={2} container direction="row" item>
-            <Grid md={6} item>
+            <Grid xs={12} md={6} item>
               <span className="label">Add a city</span>
               <Autocomplete />
             </Grid>
-            <Grid md={6} item>
+            <Grid xs={12} md={6} item>
               <div className="selected">
                 <span className="label">Cities</span>
                 <SelectedCities addCity={addCity} removeCity={removeCity} />
@@ -203,92 +196,6 @@ const CreateGuide = props => {
           {props.edit === "true" ? "Edit" : "Create"}
         </Button>
       </form>
-      {/* <Form
-        onSubmit={e => {
-          e.preventDefault();
-        }}
-      >
-        <FormGroup controlId="title">
-          <Form.Label>Title</Form.Label>
-          <FormControl
-            placeholder="Enter a title"
-            autoFocus
-            type="text"
-            value={title}
-            onChange={setTitle}
-          />
-        </FormGroup>
-        <FormGroup controlId="description">
-          <Form.Label>Description</Form.Label>
-          <FormControl
-            as="textarea"
-            rows="6"
-            placeholder="Enter a description"
-            value={description}
-            onChange={setDescription}
-            type="text"
-          />
-        </FormGroup>
-        <Form.Row>
-          <Col lg={6}>
-            <FormGroup controlId="citiesAutocomplete">
-              <Form.Label>Add cities</Form.Label>
-              <Autocomplete />
-            </FormGroup>
-          </Col>
-          <Col lg={6}>
-            <FormGroup controlId="selectedCities">
-              <div className="selected">
-                <SelectedCities addCity={addCity} removeCity={removeCity} />
-              </div>
-            </FormGroup>
-          </Col>
-        </Form.Row>
-        <Form.Row>
-          <Col lg={8}>
-            <FormGroup controlId="map">
-              <Form.Label>Add locations</Form.Label>
-              <GuideMap
-                place={location}
-                addPoint={addPoint}
-                removePoint={removePoint}
-                edit={props.edit}
-                id={props.id}
-                input="true"
-              />
-            </FormGroup>
-          </Col>
-          <Col lg={4}>
-            <FormGroup>
-              <Form.Label>Places</Form.Label>
-              <Places addLocation={addLocation} />
-            </FormGroup>
-          </Col>
-        </Form.Row>
-        {locations.length > 0 ? (
-          <FormGroup>
-            <Form.Label>Descriptions</Form.Label>
-            <Accordion defaultActiveKey="0">
-              <Card>
-                <Accordion.Toggle as={Card.Header} eventKey="0">
-                  <FontAwesomeIcon
-                    style={{ float: "right" }}
-                    size="lg"
-                    icon={faAngleDoubleDown}
-                  />
-                </Accordion.Toggle>
-                <Accordion.Collapse eventKey="0">
-                  <DetailsList />
-                </Accordion.Collapse>
-              </Card>
-            </Accordion>
-          </FormGroup>
-        ) : null}
-
-        <Button block type="button" onClick={create}>
-          {props.edit === "true" ? "Edit" : "Create"}
-        </Button>
-      </Form> */}
     </div>
   );
 };

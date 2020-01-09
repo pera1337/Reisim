@@ -3,8 +3,9 @@ import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import GuideMap from "./GuideMap";
 import SelectedItems from "./shared/SelectedItems";
-// import Button from "react-bootstrap/Button";
-// import Modal from "react-bootstrap/Modal";
+import ConfirmDialog from "./shared/ConfirmDialog";
+import FollowButton from "./shared/FollowButton";
+import Button from "@material-ui/core/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import GuideRating from "./GuideRating";
@@ -23,8 +24,8 @@ const Guide = params => {
   const [cities, setCities] = useState([]);
   const [userId, setUserId] = useState(-1);
   const [guideUser, setGuideUser] = useState({});
-  const [show, setShow] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
+  //const [show, setShow] = useState(false);
+  //const [isFollowing, setIsFollowing] = useState(false);
   useEffect(() => {
     async function getData() {
       try {
@@ -50,16 +51,16 @@ const Guide = params => {
           statePoints.push(point);
         });
         setCoords(statePoints);
-        if (token) {
-          const headers = {
-            "X-Auth-Token": localStorage.getItem("token")
-          };
-          const result = await axios.get(
-            `http://localhost:5000/api/account/isfollowing/${response.data.User.id}`,
-            { headers }
-          );
-          setIsFollowing(result.data);
-        }
+        // if (token) {
+        //   const headers = {
+        //     "X-Auth-Token": localStorage.getItem("token")
+        //   };
+        //   const result = await axios.get(
+        //     `http://localhost:5000/api/account/isfollowing/${response.data.User.id}`,
+        //     { headers }
+        //   );
+        //   setIsFollowing(result.data);
+        // }
       } catch (e) {
         console.log("e :", e);
         console.log("something went wrong");
@@ -68,14 +69,23 @@ const Guide = params => {
     getData();
   }, []);
 
-  async function deleteGuide() {
+  // async function deleteGuide() {
+  //   const headers = {
+  //     "X-Auth-Token": localStorage.getItem("token")
+  //   };
+  //   await axios.delete(`http://localhost:5000/api/guide/${params.id}`, {
+  //     headers
+  //   });
+  //   params.history.push("/");
+  // }
+  async function deleteGuide(id, history) {
     const headers = {
       "X-Auth-Token": localStorage.getItem("token")
     };
-    await axios.delete(`http://localhost:5000/api/guide/${params.id}`, {
+    await axios.delete(`http://localhost:5000/api/guide/${id}`, {
       headers
     });
-    params.history.push("/");
+    history.push("/");
   }
 
   function changeRating(avg, numOfRatings) {
@@ -83,51 +93,70 @@ const Guide = params => {
     setNumOfRatings(numOfRatings);
   }
 
-  function modalShow() {
-    setShow(true);
-  }
+  // function modalShow() {
+  //   setShow(true);
+  // }
 
-  function modalHide() {
-    setShow(false);
-  }
+  // function modalHide() {
+  //   setShow(false);
+  // }
 
   function moveToEdit() {
     params.history.push(`/guide/edit/${params.id}`);
   }
 
-  async function followUser() {
-    if (userId === -1) return params.history.push("/login");
-    const headers = {
-      "x-auth-token": localStorage.getItem("token")
-    };
-    if (isFollowing) {
-      try {
-        await axios.delete(
-          `http://localhost:5000/api/account/unfollow/${guide.userId}`,
-          { headers }
-        );
-        setIsFollowing(false);
-      } catch (e) {
-        console.log("e :", e);
-      }
-    } else {
-      try {
-        await axios.post(
-          `http://localhost:5000/api/account/follow/${guide.userId}`,
-          null,
-          { headers }
-        );
-        setIsFollowing(true);
-      } catch (e) {
-        console.log("e :", e);
-      }
-    }
-  }
+  // async function followUser() {
+  //   if (userId === -1) return params.history.push("/login");
+  //   const headers = {
+  //     "x-auth-token": localStorage.getItem("token")
+  //   };
+  //   if (isFollowing) {
+  //     try {
+  //       await axios.delete(
+  //         `http://localhost:5000/api/account/unfollow/${guide.userId}`,
+  //         { headers }
+  //       );
+  //       setIsFollowing(false);
+  //     } catch (e) {
+  //       console.log("e :", e);
+  //     }
+  //   } else {
+  //     try {
+  //       await axios.post(
+  //         `http://localhost:5000/api/account/follow/${guide.userId}`,
+  //         null,
+  //         { headers }
+  //       );
+  //       setIsFollowing(true);
+  //     } catch (e) {
+  //       console.log("e :", e);
+  //     }
+  //   }
+  // }
+
+  const DescriptionText = () => {
+    let filtered = locations.filter(el => el.description);
+    if (filtered.length > 0)
+      return (
+        <div>
+          <h2>Descriptions</h2>
+          {filtered.map(el => (
+            <div key={el.locationNumber} className="location-container">
+              <LocationDetails
+                place={el}
+                display={true}
+                changeField={() => {}}
+              />
+            </div>
+          ))}
+        </div>
+      );
+    else return null;
+  };
 
   return (
     <div
       style={{
-        height: "20%",
         margin: "20px 60px",
         padding: "10px",
         backgroundColor: "white",
@@ -140,6 +169,43 @@ const Guide = params => {
         {avgRating}
         <FontAwesomeIcon icon={faStar} />({numOfRatings})
       </p>
+      <GuideRating changeRating={changeRating} guideId={guide.id} />
+      <p className="guide-created">
+        Created by{" "}
+        <Link className="created" to={`/user/${guideUser.id}`}>
+          {guideUser.firstName} {guideUser.lastName}
+        </Link>
+        {"         "}
+        {userId !== guide.userId && (
+          // <Button variant="contained" color="primary" onClick={followUser}>
+          //   {isFollowing ? "Following" : "Follow"}
+          // </Button>
+          <FollowButton userId={userId} targetId={guide.userId} />
+        )}
+      </p>
+      <SelectedItems items={cities} />
+      <p>{guide.description}</p>
+      {userId === guide.userId ? (
+        <div>
+          <Button onClick={moveToEdit} variant="contained" color="primary">
+            Edit
+          </Button>
+          <ConfirmDialog
+            buttonText="Delete"
+            title="Detele this guide?"
+            contentText="Permanently delete this guide?"
+            confirmBtnText="Delete"
+            onConfirm={() => deleteGuide(params.id, params.history)}
+          />
+        </div>
+      ) : (
+        ""
+      )}
+      <div>
+        <GuideMap edit="false" input="false" id={params.id} />
+      </div>
+      {DescriptionText()}
+
       {/* <GuideRating changeRating={changeRating} guideId={guide.id} />
       <p className="guide-created">
         Created by{" "}

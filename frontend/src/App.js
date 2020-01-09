@@ -23,6 +23,10 @@ function App() {
       className="App"
       style={{ backgroundColor: "rgba(52, 52, 52, 0.1)", height: "100vh" }}
     >
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      />
       <CssBaseline />
       <UserProvider>
         <NavB />
