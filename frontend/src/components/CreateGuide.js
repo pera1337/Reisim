@@ -1,5 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router";
+import GuideMap from "./GuideMap";
+import Autocomplete from "./Autocomplete";
+import Places from "./Places";
+import SelectedCities from "./SelectedCities";
+import DetailsList from "./shared/DetailsList";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -7,17 +12,12 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import { Typography } from "@material-ui/core";
-import GuideMap from "./GuideMap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
-import Autocomplete from "./Autocomplete";
-import Places from "./Places";
-import SelectedCities from "./SelectedCities";
-import DetailsList from "./shared/DetailsList";
 import UseTextInput from "../hooks/UseTextInput";
-import axios from "axios";
 import { CityContext } from "../contexts/CityContext";
 import { LocationsContext } from "../contexts/LocationsContext";
+import axios from "axios";
 import "../css/CreateGuide.css";
 
 const CreateGuide = props => {
@@ -110,6 +110,10 @@ const CreateGuide = props => {
     setCities(newState);
   }
 
+  function cancelEdit() {
+    props.history.push(`/guide/${props.id}`);
+  }
+
   return (
     <div className="create-guide-container">
       <h1>Create a guide</h1>
@@ -186,15 +190,46 @@ const CreateGuide = props => {
             </ExpansionPanelDetails>
           </ExpansionPanel>
         )}
-        <Button
-          style={{ marginTop: "16px", textAlign: "center" }}
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={create}
-        >
-          {props.edit === "true" ? "Edit" : "Create"}
-        </Button>
+        {props.edit ? (
+          <Grid
+            style={{ marginTop: "16px" }}
+            container
+            spacing={1}
+            direction="row"
+            justify="space-around"
+          >
+            <Grid item xs={12} md={3}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={create}
+              >
+                Edit
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="primary"
+                onClick={cancelEdit}
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+        ) : (
+          <Button
+            style={{ marginTop: "16px", textAlign: "center" }}
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={create}
+          >
+            Create
+          </Button>
+        )}
       </form>
     </div>
   );

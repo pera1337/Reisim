@@ -12,3 +12,15 @@
   margin: 10px 0;
   border-radius: 10px;
 }
+.guide-container {
+  margin: 20px 60px;
+  padding: 10px;
+  background-color: white;
+  box-shadow: 0px 0px 5px 0px rgba(79, 77, 79, 0.6);
+}
+
+@media only screen and (max-width: 960px) {
+  .guide-container {
+    margin: 20px 30px;
+  }
+}

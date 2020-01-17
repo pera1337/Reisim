@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 
-const FollowButton = ({ userId, targetId }) => {
+const FollowButton = ({ targetId }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   useEffect(() => {
     async function getData() {

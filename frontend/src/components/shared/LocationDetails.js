@@ -1,8 +1,8 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import useTextInput from "../../hooks/UseTextInput";
-import "../../css/LocationDetails.css";
 import { TextField } from "@material-ui/core";
+import "../../css/LocationDetails.css";
 
 const LocationDetails = ({ place, display = false, changeField }) => {
   const num = place.locationNumber + 1;
@@ -35,7 +35,9 @@ const LocationDetails = ({ place, display = false, changeField }) => {
             />
           </Grid>
         ) : name ? (
-          <h3 style={{ textAlign: "center" }}>{name}</h3>
+          <Grid item xs={12}>
+            <h3 className="mobile-center">{name}</h3>
+          </Grid>
         ) : null}
         {!display ? (
           <Grid xs={12} item>
@@ -54,7 +56,10 @@ const LocationDetails = ({ place, display = false, changeField }) => {
             />
           </Grid>
         ) : (
-          <p style={{ textAlign: "center" }}>{description}</p>
+          <Grid item xs={12}>
+            {" "}
+            <p className="mobile-center">{description}</p>
+          </Grid>
         )}
       </Grid>
     </Grid>

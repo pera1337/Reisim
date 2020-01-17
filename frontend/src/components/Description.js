@@ -18,7 +18,7 @@ const Description = ({ profileDescription, id, currentUserId }) => {
         "http://localhost:5000/api/account/description",
         { profileDescription: description },
         { headers }
-      )
+      ) //TODO:res.send the new description
       .then(() => {
         axios
           .get(`http://localhost:5000/api/account/description/${id}`)

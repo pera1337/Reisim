@@ -13,7 +13,7 @@ function isEqual(prevProps, nextProps) {
 const SelectedItems = React.memo(
   ({ items, handleRemoveClick = null, handleClick = null }) => {
     return (
-      <div className="items-container">
+      <div className={"items-container" + (handleClick ? " border" : "")}>
         {items.length > 0 &&
           items.map((element, index) => {
             return (
@@ -22,8 +22,10 @@ const SelectedItems = React.memo(
                 color="primary"
                 label={`${element.name}`}
                 clickable={handleClick}
-                onClick={() => handleClick(element)}
-                onDelete={() => handleRemoveClick(index)}
+                onClick={handleClick ? () => handleClick(element) : undefined}
+                onDelete={
+                  handleRemoveClick ? () => handleRemoveClick(index) : undefined
+                }
               />
             );
           })}

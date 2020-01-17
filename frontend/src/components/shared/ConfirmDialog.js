@@ -11,7 +11,9 @@ const ConfirmDialog = ({
   title,
   contentText,
   onConfirm,
-  confirmBtnText
+  confirmBtnText,
+  startIcon = undefined,
+  endIcon = undefined
 }) => {
   const [show, setShow] = useState(false);
   const handleShow = () => {
@@ -22,7 +24,13 @@ const ConfirmDialog = ({
   };
   return (
     <div>
-      <Button variant="contained" color="secondary" onClick={handleShow}>
+      <Button
+        startIcon={startIcon}
+        endIcon={endIcon}
+        variant="contained"
+        color="secondary"
+        onClick={handleShow}
+      >
         {buttonText}
       </Button>
       <Dialog

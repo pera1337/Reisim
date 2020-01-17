@@ -8,6 +8,7 @@ const DescriptionText = ({ profileDescription, onEdit, isCurrentUser }) => {
       {isCurrentUser ? (
         <button
           style={{
+            cursor: "pointer",
             border: "none",
             backgroundColor: "white",
             color: "#046b94"

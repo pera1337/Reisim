@@ -22,3 +22,8 @@
   width: 100%;
   position: relative;
 }
+@media only screen and (max-width: 960px) {
+  .mobile-center {
+    text-align: center;
+  }
+}

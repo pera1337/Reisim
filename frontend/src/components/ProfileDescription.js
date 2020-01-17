@@ -1,28 +1,19 @@
-import React, { useState } from "react";
-// import Button from "react-bootstrap/Button";
-import "../css/ProfileDescription.css";
+import React from "react";
+import Grid from "@material-ui/core/Grid";
 import Description from "./Description";
 import SocialLinks from "./SocialLinks";
+import FollowButton from "./shared/FollowButton";
+import "../css/ProfileDescription.css";
 
-const ProfileDescription = ({
-  user,
-  currentUserId,
-  isFollowing,
-  followUser
-}) => {
-  console.log(user);
+const ProfileDescription = ({ user, currentUserId }) => {
   return (
     <div className="description-container">
       <h2 style={{ textAlign: "center" }}>
         {user.firstName} {user.lastName}
       </h2>
-      {/* {currentUserId !== -1 && currentUserId !== user.id ? (
-        <Button variant="success" onClick={followUser}>
-          {isFollowing ? "Following" : "Follow"}
-        </Button>
-      ) : (
-        ""
-      )} */}
+      <Grid container alignContent="center" direction="column">
+        <FollowButton targetId={user.id} />
+      </Grid>
       <Description
         profileDescription={user.profileDescription}
         id={user.id}

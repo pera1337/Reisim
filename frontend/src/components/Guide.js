@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import GuideMap from "./GuideMap";
+import GuideRating from "./GuideRating";
 import SelectedItems from "./shared/SelectedItems";
 import ConfirmDialog from "./shared/ConfirmDialog";
 import FollowButton from "./shared/FollowButton";
+import LocationDetails from "./shared/LocationDetails";
 import Button from "@material-ui/core/Button";
+import { Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import GuideRating from "./GuideRating";
-import LocationDetails from "./shared/LocationDetails";
+import { faEdit, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
+import jsonwebtoken from "jsonwebtoken";
 import "../css/Guide.css";
 import "../css/Home.css";
-import jsonwebtoken from "jsonwebtoken";
 
 const Guide = params => {
   const [guide, setGuide] = useState({});
@@ -24,8 +26,6 @@ const Guide = params => {
   const [cities, setCities] = useState([]);
   const [userId, setUserId] = useState(-1);
   const [guideUser, setGuideUser] = useState({});
-  //const [show, setShow] = useState(false);
-  //const [isFollowing, setIsFollowing] = useState(false);
   useEffect(() => {
     async function getData() {
       try {
@@ -51,16 +51,6 @@ const Guide = params => {
           statePoints.push(point);
         });
         setCoords(statePoints);
-        // if (token) {
-        //   const headers = {
-        //     "X-Auth-Token": localStorage.getItem("token")
-        //   };
-        //   const result = await axios.get(
-        //     `http://localhost:5000/api/account/isfollowing/${response.data.User.id}`,
-        //     { headers }
-        //   );
-        //   setIsFollowing(result.data);
-        // }
       } catch (e) {
         console.log("e :", e);
         console.log("something went wrong");
@@ -69,15 +59,6 @@ const Guide = params => {
     getData();
   }, []);
 
-  // async function deleteGuide() {
-  //   const headers = {
-  //     "X-Auth-Token": localStorage.getItem("token")
-  //   };
-  //   await axios.delete(`http://localhost:5000/api/guide/${params.id}`, {
-  //     headers
-  //   });
-  //   params.history.push("/");
-  // }
   async function deleteGuide(id, history) {
     const headers = {
       "X-Auth-Token": localStorage.getItem("token")
@@ -93,46 +74,9 @@ const Guide = params => {
     setNumOfRatings(numOfRatings);
   }
 
-  // function modalShow() {
-  //   setShow(true);
-  // }
-
-  // function modalHide() {
-  //   setShow(false);
-  // }
-
   function moveToEdit() {
     params.history.push(`/guide/edit/${params.id}`);
   }
-
-  // async function followUser() {
-  //   if (userId === -1) return params.history.push("/login");
-  //   const headers = {
-  //     "x-auth-token": localStorage.getItem("token")
-  //   };
-  //   if (isFollowing) {
-  //     try {
-  //       await axios.delete(
-  //         `http://localhost:5000/api/account/unfollow/${guide.userId}`,
-  //         { headers }
-  //       );
-  //       setIsFollowing(false);
-  //     } catch (e) {
-  //       console.log("e :", e);
-  //     }
-  //   } else {
-  //     try {
-  //       await axios.post(
-  //         `http://localhost:5000/api/account/follow/${guide.userId}`,
-  //         null,
-  //         { headers }
-  //       );
-  //       setIsFollowing(true);
-  //     } catch (e) {
-  //       console.log("e :", e);
-  //     }
-  //   }
-  // }
 
   const DescriptionText = () => {
     let filtered = locations.filter(el => el.description);
@@ -155,117 +99,68 @@ const Guide = params => {
   };
 
   return (
-    <div
-      style={{
-        margin: "20px 60px",
-        padding: "10px",
-        backgroundColor: "white",
-        textAlign: "center",
-        boxShadow: "0px 0px 5px 0px rgba(79, 77, 79, 0.6)"
-      }}
-    >
-      <h1>{guide.title}</h1>
-      <p style={{ fontWeight: "bold" }}>
-        {avgRating}
-        <FontAwesomeIcon icon={faStar} />({numOfRatings})
-      </p>
-      <GuideRating changeRating={changeRating} guideId={guide.id} />
-      <p className="guide-created">
-        Created by{" "}
-        <Link className="created" to={`/user/${guideUser.id}`}>
-          {guideUser.firstName} {guideUser.lastName}
-        </Link>
-        {"         "}
-        {userId !== guide.userId && (
-          // <Button variant="contained" color="primary" onClick={followUser}>
-          //   {isFollowing ? "Following" : "Follow"}
-          // </Button>
-          <FollowButton userId={userId} targetId={guide.userId} />
-        )}
-      </p>
-      <SelectedItems items={cities} />
-      <p>{guide.description}</p>
-      {userId === guide.userId ? (
-        <div>
-          <Button onClick={moveToEdit} variant="contained" color="primary">
-            Edit
-          </Button>
-          <ConfirmDialog
-            buttonText="Delete"
-            title="Detele this guide?"
-            contentText="Permanently delete this guide?"
-            confirmBtnText="Delete"
-            onConfirm={() => deleteGuide(params.id, params.history)}
-          />
-        </div>
-      ) : (
-        ""
-      )}
-      <div>
-        <GuideMap edit="false" input="false" id={params.id} />
-      </div>
-      {DescriptionText()}
-
-      {/* <GuideRating changeRating={changeRating} guideId={guide.id} />
-      <p className="guide-created">
-        Created by{" "}
-        <Link className="created" to={`/user/${guideUser.id}`}>
-          {guideUser.firstName} {guideUser.lastName}
-        </Link>
-        {"         "}
-        {userId !== guide.userId ? (
-          <Button variant="success" onClick={followUser}>
-            {isFollowing ? "Following" : "Follow"}
-          </Button>
-        ) : (
-          ""
-        )}
-      </p>
-      <SelectedItems items={cities} />
-      <p>{guide.description}</p>
-      {userId === guide.userId ? (
-        <div>
-          <Button onClick={moveToEdit} variant="info">
-            Edit
-          </Button>
-          <Button variant="danger" onClick={modalShow}>
-            Delete
-          </Button>
-          <Modal show={show} onHide={modalHide}>
-            <Modal.Header closeButton>
-              <Modal.Title>Delete guide</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Are you sure you want to delete this guide?</Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={modalHide}>
-                Close
+    <div className="guide-container">
+      <Grid container direction="column" spacing={1}>
+        <Grid item>
+          <h1>{guide.title}</h1>
+        </Grid>
+        {userId === guide.userId && (
+          <Grid item container spacing={1} direction="row" justify="center">
+            <Grid item>
+              <Button
+                startIcon={<FontAwesomeIcon icon={faEdit} />}
+                onClick={moveToEdit}
+                variant="contained"
+                color="primary"
+              >
+                Edit
               </Button>
-              <Button variant="danger" onClick={deleteGuide}>
-                Delete
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </div>
-      ) : (
-        ""
-      )} */}
-      {/* <div>
-        <GuideMap edit="false" input="false" id={params.id} />
-      </div>
-      <div>
-        <h2>Descriptions</h2>
-        {locations
-          .filter(el => el.description)
-          .map(el => (
-            <div key={el.locationNumber} className="location-container">
-              <LocationDetails
-                place={el}
-                display={true}
-                changeField={() => {}}
+            </Grid>
+            <Grid item>
+              <ConfirmDialog
+                buttonText="Delete"
+                startIcon={<FontAwesomeIcon icon={faTrashAlt} />}
+                title="Delete this guide?"
+                contentText="Permanently delete this guide?"
+                confirmBtnText="Delete"
+                onConfirm={() => deleteGuide(params.id, params.history)}
               />
-            </div>
-          ))}
-      </div> */}
+            </Grid>
+          </Grid>
+        )}
+        <Grid container item justify="center">
+          <p style={{ fontWeight: "bold" }}>
+            {avgRating}
+            <FontAwesomeIcon icon={faStar} />({numOfRatings})
+          </p>
+        </Grid>
+        <Grid container item justify="center">
+          <GuideRating changeRating={changeRating} guideId={guide.id} />
+        </Grid>
+        <Grid container item justify="center">
+          <p className="guide-created">
+            Created by{" "}
+            <Link className="created" to={`/user/${guideUser.id}`}>
+              {guideUser.firstName} {guideUser.lastName}
+            </Link>
+            {"         "}
+            {userId !== guide.userId && (
+              <FollowButton targetId={guide.userId} />
+            )}
+          </p>
+        </Grid>
+        <Grid item>
+          <SelectedItems items={cities} />
+        </Grid>
+        <Grid item>
+          <p>{guide.description}</p>
+        </Grid>
+
+        <Grid item>
+          <GuideMap edit="false" input="false" id={params.id} />
+        </Grid>
+        {DescriptionText()}
+      </Grid>
     </div>
   );
 };
