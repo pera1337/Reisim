@@ -5,7 +5,6 @@ import "../css/Home.css";
 const Home = () => {
   return (
     <>
-      <div className="image-container" />
       <div className="home-container">
         <h1 className="search-header">Where would you like to go?</h1>
         <Search />

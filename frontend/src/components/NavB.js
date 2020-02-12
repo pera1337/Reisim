@@ -39,7 +39,10 @@ const NavB = props => {
             <Button
               component={Link}
               onClick={() => handleMenuChange(0)}
-              variant={value === 0 ? "outlined" : undefined}
+              style={{
+                borderBottom: value === 0 ? "2px solid white" : undefined,
+                borderRadius: "0px"
+              }}
               color="inherit"
               to="/"
             >
@@ -48,7 +51,10 @@ const NavB = props => {
             <Button
               component={Link}
               onClick={() => handleMenuChange(1)}
-              variant={value === 1 ? "outlined" : undefined}
+              style={{
+                borderBottom: value === 1 ? "2px solid white" : undefined,
+                borderRadius: "0px"
+              }}
               color="inherit"
               to="/feed"
             >
@@ -57,7 +63,10 @@ const NavB = props => {
             <Button
               component={Link}
               onClick={() => handleMenuChange(2)}
-              variant={value === 2 ? "outlined" : undefined}
+              style={{
+                borderBottom: value === 2 ? "2px solid white" : undefined,
+                borderRadius: "0px"
+              }}
               color="inherit"
               to="/sandbox"
             >

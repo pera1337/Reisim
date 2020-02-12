@@ -16,12 +16,13 @@ import FollowingFeed from "./components/FollowingFeed";
 import SearchResults from "./components/SearchResults";
 import Sandbox from "./components/Sandbox";
 import { CssBaseline } from "@material-ui/core";
+import "./css/App.css";
 
 function App() {
   return (
     <div
       className="App"
-      style={{ backgroundColor: "rgba(52, 52, 52, 0.1)", height: "100vh" }}
+      // style={{ backgroundColor: "rgba(52, 52, 52, 0.1)", height: "100vh" }}
     >
       <link
         rel="stylesheet"
