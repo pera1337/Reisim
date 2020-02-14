@@ -17,7 +17,8 @@ let User = sequelize.define("User", {
   profileDescription: {
     type: Sequelize.STRING,
     allowNull: true
-  }
+  },
+  profileImage: Sequelize.STRING
 });
 
 let ProfileSocialLinks = sequelize.define("SocialLink", {

@@ -19,7 +19,7 @@ router.post("/register", async (req, res) => {
     lastName,
     email,
     password,
-	profileDescription:""
+    profileDescription: ""
   });
 
   const sendUser = {
@@ -98,7 +98,7 @@ router.get("/:id", async (req, res) => {
       { model: Guide, as: "Guides" },
       { model: SocialLinks, as: "SocialLinks" }
     ],
-	attributes: { exclude: ["password"] },
+    attributes: { exclude: ["password"] },
     order: [[Guide, "updatedAt", "DESC"]]
   });
   if (!user) return res.status(401).send("User not found");
@@ -106,30 +106,30 @@ router.get("/:id", async (req, res) => {
   res.send(user);
 });
 
-router.put("/description",auth, async (req, res) => {
-  const { profileDescription} = req.body;
+router.put("/description", auth, async (req, res) => {
+  const { profileDescription } = req.body;
   const userId = req.user.id;
   const user = await User.findOne({ where: { id: userId } });
-  if(!user) return res.status(404).send("User not found");
+  if (!user) return res.status(404).send("User not found");
   user.profileDescription = profileDescription;
   await user.save();
   res.send(user);
 });
 
-router.get("/description/:id",async(req,res)=>{
-	const userId = req.params.id;
+router.get("/description/:id", async (req, res) => {
+  const userId = req.params.id;
   const user = await User.findOne({ where: { id: userId } });
-  if(!user) return res.status(404).send("User not found");
+  if (!user) return res.status(404).send("User not found");
   res.send(user.profileDescription);
 });
 
-router.put("/soclinks",auth, async (req, res) => {
-  const {links} = req.body;
+router.put("/soclinks", auth, async (req, res) => {
+  const { links } = req.body;
   const userId = req.user.id;
   const user = await User.findOne({ where: { id: userId } });
-  if(!user) return res.status(404).send("User not found");
+  if (!user) return res.status(404).send("User not found");
   let socialLinks = await SocialLinks.findAll({ where: { userId: userId } });
-  if(!socialLinks) socialLinks = [];
+  if (!socialLinks) socialLinks = [];
 
   let transaction;
   try {
