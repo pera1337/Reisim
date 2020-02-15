@@ -16,6 +16,7 @@ const UserProfile = params => {
         `http://localhost:5000/api/account/${params.id}`
       );
       setUser(result.data);
+      console.log(result.data);
       setGuides(result.data.Guides);
       const token = localStorage.getItem("token") || "";
       if (token) {
@@ -24,11 +25,11 @@ const UserProfile = params => {
       }
     };
     populate();
-  }, []);
+  }, [params.id]);
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={12} md={3} direction="column">
+      <Grid item xs={12} md={3}>
         <ProfileDescription user={user} currentUserId={userId} />
       </Grid>
       <Grid item xs={12} md={9}>

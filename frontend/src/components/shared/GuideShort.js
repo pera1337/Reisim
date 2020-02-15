@@ -9,14 +9,15 @@ import "../../css/GuideShort.css";
 const GuideShort = ({ guide, displayAuthor }) => {
   return (
     <div key={guide.id}>
-      <Link
+      {/* <Link
         component={RouterLink}
         underline="none"
         className="guide-title"
         to={`/guide/${guide.id}`}
       >
         {guide.title}
-      </Link>
+      </Link> */}
+      <span className="guide-title">{guide.title}</span>
       <p style={{ fontWeight: "bold", margin: 0 }}>
         {guide.avgRating}
         <FontAwesomeIcon icon={faStar} />({guide.numOfRatings})

@@ -9,9 +9,10 @@ const GuidesList = ({ guides, displayAuthor = false }) => {
   return (
     <div className="guides">
       <List style={{ margin: "10px 30px" }} component="nav">
-        {guides.map(element => {
+        {guides.map((element, index) => {
           return (
             <ListItem
+              key={index}
               component={Link}
               to={`/guide/${element.id}`}
               divider

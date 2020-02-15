@@ -18,6 +18,7 @@ const SelectedItems = React.memo(
           items.map((element, index) => {
             return (
               <Chip
+                key={index}
                 style={{ margin: "3px 2px" }}
                 color="primary"
                 label={`${element.name}`}
