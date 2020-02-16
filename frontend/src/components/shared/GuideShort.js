@@ -1,22 +1,17 @@
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@material-ui/core/Link";
+import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import "../../css/GuideShort.css";
 
-const GuideShort = ({ guide, displayAuthor }) => {
+const GuideShort = ({ guide, displayAuthor, history }) => {
+  const handleSpanClick = e => {
+    e.stopPropagation();
+    history.push(`/user/${guide.User.id}`);
+  };
   return (
     <div key={guide.id}>
-      {/* <Link
-        component={RouterLink}
-        underline="none"
-        className="guide-title"
-        to={`/guide/${guide.id}`}
-      >
-        {guide.title}
-      </Link> */}
       <span className="guide-title">{guide.title}</span>
       <p style={{ fontWeight: "bold", margin: 0 }}>
         {guide.avgRating}
@@ -26,14 +21,9 @@ const GuideShort = ({ guide, displayAuthor }) => {
         <div>
           <p className="guide-created">
             Created by{" "}
-            <Link
-              component={RouterLink}
-              underline="none"
-              className="created"
-              to={`/user/${guide.User.id}`}
-            >
+            <span className="author-name" onClick={handleSpanClick}>
               {guide.User.firstName} {guide.User.lastName}
-            </Link>
+            </span>
           </p>
         </div>
       ) : null}
@@ -42,4 +32,4 @@ const GuideShort = ({ guide, displayAuthor }) => {
   );
 };
 
-export default GuideShort;
+export default withRouter(GuideShort);

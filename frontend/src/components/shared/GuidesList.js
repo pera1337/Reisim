@@ -2,10 +2,13 @@ import React from "react";
 import GuideShort from "./GuideShort";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import "../../css/GuideList.css";
 
-const GuidesList = ({ guides, displayAuthor = false }) => {
+const GuidesList = ({ guides, displayAuthor = false, history }) => {
+  const handleLinkClick = element => {
+    history.push(`/guide/${element.id}`);
+  };
   return (
     <div className="guides">
       <List style={{ margin: "10px 30px" }} component="nav">
@@ -13,8 +16,7 @@ const GuidesList = ({ guides, displayAuthor = false }) => {
           return (
             <ListItem
               key={index}
-              component={Link}
-              to={`/guide/${element.id}`}
+              onClick={() => handleLinkClick(element)}
               divider
               button
             >

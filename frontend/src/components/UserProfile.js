@@ -16,7 +16,6 @@ const UserProfile = params => {
         `http://localhost:5000/api/account/${params.id}`
       );
       setUser(result.data);
-      console.log(result.data);
       setGuides(result.data.Guides);
       const token = localStorage.getItem("token") || "";
       if (token) {

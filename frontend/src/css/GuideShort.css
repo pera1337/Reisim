@@ -3,7 +3,12 @@
   transition: color 0.3s;
   font-size: 30px;
 }
-
+.author-name {
+  color: rgb(6, 96, 153);
+}
+.author-name:hover {
+  color: rgb(80, 155, 202);
+}
 .guide-title:hover {
   color: rgb(80, 155, 202);
 }
