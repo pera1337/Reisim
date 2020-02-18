@@ -82,7 +82,6 @@ const CitySearch = ({ onSelected, clearAfterSelected = true, classes }) => {
   function renderSuggestion(suggestion, { query, isHighlighted }) {
     const matches = match(suggestion.matching_full_name, query);
     const parts = parse(suggestion.matching_full_name, matches);
-    console.log(parts);
 
     return (
       <MenuItem selected={isHighlighted} component="div">

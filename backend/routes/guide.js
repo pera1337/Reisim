@@ -38,6 +38,22 @@ router.post("/new", auth, async (req, res) => {
   res.send({ id: guide.dataValues.id });
 });
 
+router.get("/top",async(req,res)=>{
+	const offset = req.query.offset;
+	const limit = req.query.limit;
+	const guides = await Guide.findAll({
+    include: {
+      model: User,
+      as: "User",
+      attributes: ["id", "firstName", "lastName","profileImage"]
+    },
+    order: [["avgRating", "DESC"]],
+	limit:Number(limit),
+	offset:Number(offset)
+  });
+  res.send(guides);
+});
+
 router.get("/search", async (req, res) => {
   let { city, name, text, rating } = req.query;
   if (!city) city = "";
@@ -239,6 +255,25 @@ router.get("/rated/:id", auth, async (req, res) => {
   else {
     res.send(guideRating);
   }
+});
+
+router.get("/similar/:id", async (req, res) => {
+  const guideId = req.params.id;
+  const cities = await City.findAll({ where: { guideId } });
+  if(!cities) res.status(404).send("Not cities found");
+  let names = [];
+  cities.map(el => names.push(el.name));
+  const similar = await sequelize.query(
+    `SELECT guideId as id,userId,title,guides.createdAt,numOfRatings,avgRating,firstName,lastName,profileImage
+     from(select guideId,name from cities as common where name in (:names) and guideId<>:gId) as result
+	 inner join guides on result.guideId = guides.id
+     inner join users on guides.userId=users.id
+     group by guideId
+     order by count(1) desc
+     limit 8`,
+    { replacements: { names,gId:Number(guideId) }, type: Sequelize.QueryTypes.SELECT }
+  );
+  res.send(similar);
 });
 
 router.get("/", async (req, res) => {

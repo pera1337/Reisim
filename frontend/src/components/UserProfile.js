@@ -10,19 +10,20 @@ const UserProfile = params => {
   const [user, setUser] = useState({});
   const [guides, setGuides] = useState([]);
   const [userId, setUserId] = useState(-1);
+
+  const populate = async () => {
+    const result = await axios.get(
+      `http://localhost:5000/api/account/${params.id}`
+    );
+    setUser(result.data);
+    setGuides(guides.concat(result.data.Guides));
+    const token = localStorage.getItem("token") || "";
+    if (token) {
+      const decoded = await jsonwebtoken.decode(token);
+      setUserId(Number(decoded.id));
+    }
+  };
   useEffect(() => {
-    const populate = async () => {
-      const result = await axios.get(
-        `http://localhost:5000/api/account/${params.id}`
-      );
-      setUser(result.data);
-      setGuides(result.data.Guides);
-      const token = localStorage.getItem("token") || "";
-      if (token) {
-        const decoded = await jsonwebtoken.decode(token);
-        setUserId(Number(decoded.id));
-      }
-    };
     populate();
   }, [params.id]);
 
@@ -32,7 +33,7 @@ const UserProfile = params => {
         <ProfileDescription user={user} currentUserId={userId} />
       </Grid>
       <Grid item xs={12} md={9}>
-        <GuideList guides={guides} />
+        <GuideList hasMore={false} next={populate} guides={guides} />
       </Grid>
     </Grid>
   );

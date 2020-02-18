@@ -30,6 +30,7 @@ const NavB = props => {
     localStorage.removeItem("user");
     changeUser("");
     setAnchorEl(null);
+    props.history.push("/");
   }
   return (
     <AppBar position="static">
@@ -48,19 +49,21 @@ const NavB = props => {
             >
               Home
             </Button>
-            <Button
-              component={Link}
-              onClick={() => handleMenuChange(1)}
-              style={{
-                borderBottom: value === 1 ? "2px solid white" : undefined,
-                borderRadius: "0px"
-              }}
-              color="inherit"
-              to="/feed"
-            >
-              Following
-            </Button>
-            <Button
+            {user && (
+              <Button
+                component={Link}
+                onClick={() => handleMenuChange(1)}
+                style={{
+                  borderBottom: value === 1 ? "2px solid white" : undefined,
+                  borderRadius: "0px"
+                }}
+                color="inherit"
+                to="/feed"
+              >
+                Following
+              </Button>
+            )}
+            {/* <Button
               component={Link}
               onClick={() => handleMenuChange(2)}
               style={{
@@ -71,6 +74,18 @@ const NavB = props => {
               to="/sandbox"
             >
               Sandbox
+            </Button> */}
+            <Button
+              component={Link}
+              onClick={() => handleMenuChange(2)}
+              style={{
+                borderBottom: value === 2 ? "2px solid white" : undefined,
+                borderRadius: "0px"
+              }}
+              color="inherit"
+              to="/top"
+            >
+              Top guides
             </Button>
           </Grid>
           <Grid item>

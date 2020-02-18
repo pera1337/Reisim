@@ -22,7 +22,7 @@ const SelectedItems = React.memo(
                 style={{ margin: "3px 2px" }}
                 color="primary"
                 label={`${element.name}`}
-                clickable={handleClick}
+                clickable={Boolean(handleClick)}
                 onClick={handleClick ? () => handleClick(element) : undefined}
                 onDelete={
                   handleRemoveClick ? () => handleRemoveClick(index) : undefined

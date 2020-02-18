@@ -5,6 +5,8 @@
 }
 .author-name {
   color: rgb(6, 96, 153);
+  margin-left: 4px;
+  margin-right: 4px;
 }
 .author-name:hover {
   color: rgb(80, 155, 202);
@@ -15,6 +17,8 @@
 
 .guide-created {
   font-style: italic;
+  display: flex;
+  flex-direction: row;
   color: #868e96;
 }
 .created {

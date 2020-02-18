@@ -17,6 +17,7 @@ import SearchResults from "./components/SearchResults";
 import Sandbox from "./components/Sandbox";
 import { CssBaseline } from "@material-ui/core";
 import "./css/App.css";
+import TopGuides from "./components/TopGuides";
 
 function App() {
   return (
@@ -34,10 +35,10 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/top" component={TopGuides} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/feed" component={FollowingFeed} />
           <Route exact path="/search" component={SearchResults} />
-          <Route exact path="/sandbox" component={Sandbox} />
           <Route exact path="/guide/create">
             <CityProvider>
               <PlaceProvider>

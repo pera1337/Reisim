@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Description from "./Description";
-import SocialLinks from "./SocialLinks";
+//import SocialLinks from "./SocialLinks";
 import FollowButton from "./shared/FollowButton";
 import ProfilePicture from "./shared/ProfilePicture";
 import "../css/ProfileDescription.css";
@@ -29,11 +29,11 @@ const ProfileDescription = ({ user, currentUserId }) => {
         id={user.id}
         currentUserId={currentUserId}
       />
-      <hr />
+      {/* <hr />
       <SocialLinks
         isCurrentUser={currentUserId === user.id}
         links={user.SocialLinks ? user.SocialLinks : []}
-      />
+      /> */}
     </div>
   );
 };

@@ -67,6 +67,8 @@ router.delete("/", async (req, res) => {
 });
 
 router.get("/feed", auth, async (req, res) => {
+  const offset = req.query.offset;
+  const limit = req.query.limit;
   const userId = req.user.id;
   const follower = await User.findOne({
     where: { id: userId }
@@ -83,9 +85,11 @@ router.get("/feed", auth, async (req, res) => {
     include: {
       model: User,
       as: "User",
-      attributes: ["id", "firstName", "lastName"]
+      attributes: ["id", "firstName", "lastName","profileImage"]
     },
-    order: [["updatedAt", "DESC"]]
+    order: [["updatedAt", "DESC"]],
+	limit:Number(limit),
+	offset:Number(offset)
   });
 
   res.send(guides);
@@ -95,11 +99,11 @@ router.get("/:id", async (req, res) => {
   const user = await User.findOne({
     where: { id: req.params.id },
     include: [
-      { model: Guide, as: "Guides" },
+      { model: Guide, as: "Guides"},
       { model: SocialLinks, as: "SocialLinks" }
     ],
     attributes: { exclude: ["password"] },
-    order: [[Guide, "updatedAt", "DESC"]]
+    order: [[Guide, "updatedAt", "DESC"]],
   });
   if (!user) return res.status(401).send("User not found");
 
@@ -218,6 +222,21 @@ router.get("/isfollowing/:id", auth, async (req, res) => {
   const result = await follower.getFollowing({ where: { id: isFollowingId } });
   if (result.length == 0) res.send(false);
   else res.send(true);
+});
+
+router.get("/guides/:id", async (req, res) => {
+  const userId = req.params.id;
+  let excludeGuide = req.body.excl;
+  if (!excludeGuide) excludeGuide = "";
+  const results = await Guide.findAll({
+    where: {
+      [Sequelize.Op.and]: [
+        { userId },
+        { id: { [Sequelize.Op.ne]: excludeGuide } }
+      ]
+    }
+  });
+  res.send(results);
 });
 
 module.exports = router;
