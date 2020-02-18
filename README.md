@@ -5,4 +5,5 @@ I'm using a mysql database to store users and their guides and sequelize as my O
 
 Frontend:React,
 Backend:NodeJS,
+Database:Mysql
 ORM:Sequelize
