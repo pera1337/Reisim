@@ -4,6 +4,6 @@ I'm making this app in react and node to learn ReactJs front end development and
 I'm using a mysql database to store users and their guides and sequelize as my ORM.
 
 Frontend:React,
-Backend:NodeJS,
+Backend:NodeJS with Express,
 Database:Mysql
 ORM:Sequelize
