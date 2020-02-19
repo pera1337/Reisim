@@ -15,6 +15,7 @@ const Search = props => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [author, setAuthor] = UseTextInput("");
   const [text, setText] = UseTextInput("");
+  const [username, setUsername] = UseTextInput("");
   const [city, setCity] = useState("");
   const [rating, setRating] = useState(0);
 
@@ -30,7 +31,7 @@ const Search = props => {
     e.preventDefault();
     props.history.push({
       pathname: "/search",
-      search: `?city=${city}&name=${author}&text=${text}&rating=${rating}`
+      search: `?city=${city}&name=${author}&text=${text}&rating=${rating}&username=${username}`
     });
   }
 
@@ -90,7 +91,7 @@ const Search = props => {
                 />
               </Grid>
               <Grid container item justify="flex-start" spacing={2}>
-                <Grid item xs={8}>
+                <Grid item xs={4}>
                   <TextField
                     label="Author"
                     placeholder="Author name"
@@ -101,11 +102,20 @@ const Search = props => {
                 </Grid>
                 <Grid item xs={4}>
                   <TextField
+                    label="Username"
+                    placeholder="Username"
+                    fullWidth
+                    value={username}
+                    onChange={setUsername}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
                     select
                     fullWidth
                     label="Rating"
                     onChange={selectRating}
-                    defaultValue={-1}
+                    defaultValue={""}
                     helperText="Select a minimum rating"
                   >
                     <MenuItem key={2} value={2}>

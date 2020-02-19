@@ -4,15 +4,13 @@ import UseTextInput from "../hooks/UseTextInput";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
 import Container from "@material-ui/core/Container";
-import { SnackbarContent, Grid, Avatar } from "@material-ui/core";
+import { Grid, Avatar } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
-import { faTimes, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../contexts/UserContext";
 import axios from "axios";
+import ErrorSnackbar from "./shared/ErrorSnackbar";
 
 const Login = props => {
   const [email, setEmail] = UseTextInput("");
@@ -109,32 +107,7 @@ const Login = props => {
           </Grid>
         </form>
       </Paper>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={error}
-        onClose={closeError}
-        ContentProps={{
-          "aria-describedby": "message-id"
-        }}
-      >
-        <SnackbarContent
-          message={
-            <span>
-              <FontAwesomeIcon
-                icon={faExclamationCircle}
-                style={{ color: "white" }}
-              />
-              {`  ${error}`}
-            </span>
-          }
-          style={{ backgroundColor: "#d62e22" }}
-          action={[
-            <IconButton onClick={closeError}>
-              <FontAwesomeIcon icon={faTimes} color="white" />
-            </IconButton>
-          ]}
-        />
-      </Snackbar>
+      <ErrorSnackbar open={error} error={error} onClose={closeError} />
     </Container>
   );
 };

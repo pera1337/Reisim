@@ -162,7 +162,7 @@ const Guide = params => {
                 <Link
                   style={{ marginLeft: "4px", marginRight: "4px" }}
                   className="created"
-                  to={`/user/${guideUser.id}`}
+                  to={`/user/${guideUser.username}`}
                 >
                   {guideUser.firstName} {guideUser.lastName}
                 </Link>

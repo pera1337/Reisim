@@ -116,14 +116,14 @@ const NavB = props => {
                 >
                   <MenuItem
                     component={Link}
-                    to={`/user/${user.id}`}
+                    to={`/user/${user.username}`}
                     onClick={handleClose}
                   >
                     Profile
                   </MenuItem>
                   <MenuItem
                     component={Link}
-                    to={`/user/edit/${user.id}`}
+                    to={`/user/edit/${user.username}`}
                     onClick={handleClose}
                   >
                     Edit Profile

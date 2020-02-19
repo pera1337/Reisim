@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 
+const useStyles = makeStyles(theme => ({
+  following: {
+    backgroundColor: "#4CAF50",
+    "&:hover": {
+      background: "#f44336"
+    }
+  }
+}));
+
 const FollowButton = ({ targetId }) => {
+  const classes = useStyles();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [buttonText, setButtonText] = useState("Following");
   useEffect(() => {
     async function getData() {
       const token = localStorage.getItem("token") || "";
@@ -20,6 +32,14 @@ const FollowButton = ({ targetId }) => {
     }
     getData();
   });
+
+  const enterText = () => {
+    setButtonText("Unfollow");
+  };
+
+  const leaveText = () => {
+    setButtonText("Following");
+  };
 
   async function followUser() {
     // if (userId === -1) return params.history.push("/login");
@@ -44,6 +64,7 @@ const FollowButton = ({ targetId }) => {
           { headers }
         );
         setIsFollowing(true);
+        setButtonText("Following");
       } catch (e) {
         console.log("e :", e);
       }
@@ -51,9 +72,25 @@ const FollowButton = ({ targetId }) => {
   }
 
   return (
-    <Button variant="contained" color="primary" onClick={followUser}>
-      {isFollowing ? "Following" : "Follow"}
-    </Button>
+    // <Button variant="contained" color="primary" onClick={followUser}>
+    //   {isFollowing ? "Following" : "Follow"}
+    // </Button>
+    isFollowing ? (
+      <Button
+        variant="contained"
+        className={classes.following}
+        color="primary"
+        onClick={followUser}
+        onMouseEnter={enterText}
+        onMouseLeave={leaveText}
+      >
+        {buttonText}
+      </Button>
+    ) : (
+      <Button variant="contained" color="primary" onClick={followUser}>
+        Follow
+      </Button>
+    )
   );
 };
 

@@ -13,18 +13,33 @@ const EditProfile = props => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = UseTextInput("");
   const [lastName, setLastName] = UseTextInput("");
+  const [username, setUsername] = UseTextInput("");
   const [password, setPassword] = UseTextInput("");
   const [confirmPassword, setConfirmPassword] = UseTextInput("");
   const { changeUser } = useContext(UserContext);
 
   useEffect(() => {
     async function populate() {
-      const responseUser = await axios.get(
-        `http://localhost:5000/api/account/${props.id}`
-      );
-      setFirstName(responseUser.data.firstName);
-      setLastName(responseUser.data.lastName);
-      setEmail(responseUser.data.email);
+      const token = localStorage.getItem("token");
+      if (!token) props.history.push("/login");
+      else {
+        const headers = {
+          "X-Auth-Token": token
+        };
+        try {
+          const responseUser = await axios.get(
+            `http://localhost:5000/api/account/edit/${props.username}`,
+            { headers }
+          );
+          setFirstName(responseUser.data.firstName);
+          setLastName(responseUser.data.lastName);
+          setUsername(responseUser.data.username);
+          setEmail(responseUser.data.email);
+        } catch (e) {
+          console.log(e.reponse);
+          props.history.push("/");
+        }
+      }
     }
     populate();
   }, []);
@@ -35,12 +50,14 @@ const EditProfile = props => {
     try {
       response = await axios.put("http://localhost:5000/api/account/register", {
         firstName,
+        username,
         lastName,
         email,
         password
       });
-      localStorage.setItem("user", JSON.stringify(response.data));
-      changeUser(response.data);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", response.data.token);
+      changeUser(response.data.user);
       props.history.push("/");
     } catch (e) {
       //setError(e.response.data);
@@ -74,6 +91,18 @@ const EditProfile = props => {
                 placeholder="Enter an e-mail address"
                 value={email}
                 onChange={setEmail}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="Username"
+                placeholder="Enter a username"
+                value={username}
+                onChange={setUsername}
               />
             </Grid>
             <Grid item xs={12} sm={6}>

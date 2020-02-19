@@ -7,14 +7,19 @@ const auth = require("../middleware/auth");
 const Sequelize = require("sequelize");
 
 router.post("/register", async (req, res) => {
-  let { firstName, lastName, email, password } = req.body;
-  const user = await User.findOne({ where: { email } });
-  if (user) return res.status(401).send("User already exists");
+  let { username, firstName, lastName, email, password } = req.body;
+  let user = await User.findOne({ where: { email } });
+  if (user)
+    return res.status(401).send("A user with that email already exists");
+
+  user = await User.findOne({ where: { username } });
+  if (user) return res.status(401).send("Username already taken.");
 
   const salt = await bcrypt.genSalt(10);
   password = await bcrypt.hash(password, salt);
 
   const newUser = await User.create({
+    username,
     firstName,
     lastName,
     email,
@@ -25,24 +30,36 @@ router.post("/register", async (req, res) => {
   const sendUser = {
     id: newUser.id,
     firstName: newUser.firstName,
-    email: newUser.email
+    email: newUser.email,
+    username
   };
   const token = await jwt.sign(
-    { email, id: newUser.id },
+    { email, id: newUser.id, username },
     process.env.JWT_SIGN_SERCRET
   );
   res.send({ user: sendUser, token });
 });
 
 router.put("/register", async (req, res) => {
-  let { firstName, lastName, email, password } = req.body;
+  let { username, firstName, lastName, email, password } = req.body;
   const user = await User.findOne({ where: { email } });
   if (!user) return res.status(401).send("User not found");
+
+  const sameUsername = await User.findOne({
+    where: {
+      [Sequelize.Op.and]: [
+        { username },
+        { email: { [Sequelize.Op.ne]: email } }
+      ]
+    }
+  });
+  if (sameUsername) return res.status(401).send("Username already taken.");
 
   const salt = await bcrypt.genSalt(10);
   password = await bcrypt.hash(password, salt);
 
   user.firstName = firstName;
+  user.username = username;
   user.lastName = lastName;
   user.password = password;
 
@@ -50,10 +67,15 @@ router.put("/register", async (req, res) => {
   const sendUser = {
     id: user.id,
     firstName: user.firstName,
-    email: user.email
+    email: user.email,
+    username: user.username
   };
 
-  res.send(sendUser);
+  const token = await jwt.sign(
+    { email, id: user.id,username: user.username },
+    process.env.JWT_SIGN_SERCRET
+  );
+  res.send({user:sendUser,token});
 });
 
 router.delete("/", async (req, res) => {
@@ -85,28 +107,57 @@ router.get("/feed", auth, async (req, res) => {
     include: {
       model: User,
       as: "User",
-      attributes: ["id", "firstName", "lastName","profileImage"]
+      attributes: ["id", "firstName", "lastName", "profileImage", "username"]
     },
     order: [["updatedAt", "DESC"]],
-	limit:Number(limit),
-	offset:Number(offset)
+    limit: Number(limit),
+    offset: Number(offset)
   });
 
   res.send(guides);
 });
 
-router.get("/:id", async (req, res) => {
+/*router.get("/:id", async (req, res) => {
   const user = await User.findOne({
     where: { id: req.params.id },
     include: [
-      { model: Guide, as: "Guides"},
+      { model: Guide, as: "Guides" },
       { model: SocialLinks, as: "SocialLinks" }
     ],
     attributes: { exclude: ["password"] },
-    order: [[Guide, "updatedAt", "DESC"]],
+    order: [[Guide, "updatedAt", "DESC"]]
   });
   if (!user) return res.status(401).send("User not found");
 
+  res.send(user);
+});*/
+
+router.get("/:username", async (req, res) => {
+  const user = await User.findOne({
+    where: { username: req.params.username },
+    include: [
+      { model: Guide, as: "Guides" },
+      { model: SocialLinks, as: "SocialLinks" }
+    ],
+    attributes: { exclude: ["password","email"] },
+    order: [[Guide, "updatedAt", "DESC"]]
+  });
+  if (!user) return res.status(401).send("User not found");
+  res.send(user);
+});
+
+router.get("/edit/:username",auth, async (req, res) => {
+  if(req.user.username!==req.params.username) return res.status(403).send("Cannot edit this users data");
+  const user = await User.findOne({
+    where: { username: req.params.username },
+    include: [
+      { model: Guide, as: "Guides" },
+      { model: SocialLinks, as: "SocialLinks" }
+    ],
+    attributes: { exclude: ["password"] },
+    order: [[Guide, "updatedAt", "DESC"]]
+  });
+  if (!user) return res.status(401).send("User not found");
   res.send(user);
 });
 
@@ -176,10 +227,11 @@ router.post("/login", async (req, res) => {
   const sendUser = {
     id: user.id,
     firstName: user.firstName,
-    email: user.email
+    email: user.email,
+    username: user.username
   };
   const token = await jwt.sign(
-    { email, id: user.id },
+    { email, id: user.id, username:user.username },
     process.env.JWT_SIGN_SERCRET
   );
   res.send({ user: sendUser, token });

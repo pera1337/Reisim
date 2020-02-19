@@ -14,11 +14,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const GuideShort = ({ guide, displayAuthor, history }) => {
+const GuideShort = ({ guide, displayAuthor, history, username }) => {
   const classes = useStyles();
   const handleSpanClick = e => {
     e.stopPropagation();
-    history.push(`/user/${guide.User ? guide.User.id : guide.userId}`);
+    history.push(`/user/${guide.User ? guide.User.username : username}`);
   };
   const image = guide.User ? guide.User.profileImage : guide.profileImage;
   return (

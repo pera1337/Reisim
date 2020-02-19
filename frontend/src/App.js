@@ -68,16 +68,16 @@ function App() {
           />
           <Route
             exact
-            path="/user/:id"
+            path="/user/:username"
             render={routeProps => (
-              <UserProfile id={routeProps.match.params.id} />
+              <UserProfile username={routeProps.match.params.username} />
             )}
           />
           <Route
             exact
-            path="/user/edit/:id"
+            path="/user/edit/:username"
             render={routeProps => (
-              <EditProfile id={routeProps.match.params.id} />
+              <EditProfile username={routeProps.match.params.username} />
             )}
           />
         </Switch>

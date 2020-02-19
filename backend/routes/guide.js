@@ -9,7 +9,10 @@ router.post("/new", auth, async (req, res) => {
   const { title, description, coords, cities } = req.body;
   const user = await User.findOne({ where: { id } });
   if (!user) return res.status(401).send("User not found");
-
+  if (coords.length === 0)
+    return res.status(401).send("You must have at least one location");
+  if (cities.length === 0)
+    return res.status(401).send("You must have at least one city");
   const guide = await Guide.create({
     title,
     description,
@@ -38,27 +41,28 @@ router.post("/new", auth, async (req, res) => {
   res.send({ id: guide.dataValues.id });
 });
 
-router.get("/top",async(req,res)=>{
-	const offset = req.query.offset;
-	const limit = req.query.limit;
-	const guides = await Guide.findAll({
+router.get("/top", async (req, res) => {
+  const offset = req.query.offset;
+  const limit = req.query.limit;
+  const guides = await Guide.findAll({
     include: {
       model: User,
       as: "User",
-      attributes: ["id", "firstName", "lastName","profileImage"]
+      attributes: ["id", "firstName", "lastName", "profileImage", "username"]
     },
     order: [["avgRating", "DESC"]],
-	limit:Number(limit),
-	offset:Number(offset)
+    limit: Number(limit),
+    offset: Number(offset)
   });
   res.send(guides);
 });
 
 router.get("/search", async (req, res) => {
-  let { city, name, text, rating } = req.query;
+  let { city, name, text, rating, username,offset,limit } = req.query;
   if (!city) city = "";
   if (!name) name = "";
   if (!text) text = "";
+  if (!username) username = "";
   const guides = await Guide.findAll({
     include: [
       { model: Location, as: "Locations" },
@@ -66,13 +70,15 @@ router.get("/search", async (req, res) => {
         model: User,
         as: "User",
         where: {
-          [Sequelize.Op.or]: [
+          [Sequelize.Op.and]: [
+		  {[Sequelize.Op.or]:[
             { firstName: { [Sequelize.Op.substring]: name } },
-            { lastName: { [Sequelize.Op.substring]: name } }
+		  { lastName: { [Sequelize.Op.substring]: name } }]},
+			{ username: { [Sequelize.Op.substring]: username } }
           ]
         }
       },
-      { model: City, as: "Cities", where: { full_name: city } }
+      { model: City, as: "Cities", where: { full_name:{[Sequelize.Op.substring]: city} } }
     ],
     where: {
       [Sequelize.Op.or]: [
@@ -83,8 +89,10 @@ router.get("/search", async (req, res) => {
           description: { [Sequelize.Op.substring]: text }
         }
       ],
-      avgRating: { [Sequelize.Op.gte]: rating }
-    }
+      avgRating: { [Sequelize.Op.gte]: Number(rating) }
+    },
+	offset:Number(offset),
+	limit:Number(limit)
   });
   res.send(guides);
 });
@@ -116,8 +124,11 @@ router.put("/:id", auth, async (req, res) => {
     where: { guideId: req.params.id }
   });
   if (!locations) return res.status(404).send("Locations not found");
-  if (!cits) cits = []; //a guide can have no cities
-
+  if (!cits) return res.status(404).send("Cities not found");
+  if (coords.length === 0)
+    return res.status(401).send("You must have at least one location");
+  if (cities.length === 0)
+    return res.status(401).send("You must have at least one city");
   let transaction;
   try {
     transaction = await sequelize.transaction();
@@ -260,18 +271,21 @@ router.get("/rated/:id", auth, async (req, res) => {
 router.get("/similar/:id", async (req, res) => {
   const guideId = req.params.id;
   const cities = await City.findAll({ where: { guideId } });
-  if(!cities) res.status(404).send("Not cities found");
+  if (!cities) res.status(404).send("Not cities found");
   let names = [];
   cities.map(el => names.push(el.name));
   const similar = await sequelize.query(
-    `SELECT guideId as id,userId,title,guides.createdAt,numOfRatings,avgRating,firstName,lastName,profileImage
+    `SELECT guideId as id,userId,title,guides.createdAt,numOfRatings,avgRating,firstName,lastName,profileImage,username
      from(select guideId,name from cities as common where name in (:names) and guideId<>:gId) as result
 	 inner join guides on result.guideId = guides.id
      inner join users on guides.userId=users.id
      group by guideId
      order by count(1) desc
      limit 8`,
-    { replacements: { names,gId:Number(guideId) }, type: Sequelize.QueryTypes.SELECT }
+    {
+      replacements: { names, gId: Number(guideId) },
+      type: Sequelize.QueryTypes.SELECT
+    }
   );
   res.send(similar);
 });

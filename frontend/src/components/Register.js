@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
@@ -10,11 +10,15 @@ import UseTextInput from "../hooks/UseTextInput";
 import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ErrorSnackbar from "./shared/ErrorSnackbar";
 
 const Register = props => {
   const [email, setEmail] = UseTextInput("");
   const [firstName, setFirstName] = UseTextInput("");
+  const [error, setError] = useState("");
+  const [openError, setOpenError] = useState(false);
   const [lastName, setLastName] = UseTextInput("");
+  const [username, setUsername] = UseTextInput("");
   const [password, setPassword] = UseTextInput("");
   const [confirmPassword, setConfirmPassword] = UseTextInput("");
   const { changeUser } = useContext(UserContext);
@@ -27,6 +31,7 @@ const Register = props => {
         "http://localhost:5000/api/account/register",
         {
           firstName,
+          username,
           lastName,
           email,
           password
@@ -37,9 +42,16 @@ const Register = props => {
       changeUser(response.data.user);
       props.history.push("/");
     } catch (e) {
-      //setError(e.response.data);
+      setOpenError(true);
+      setError(e.response.data);
     }
   }
+
+  const closeError = () => {
+    setOpenError(false);
+    setError("");
+  };
+
   return (
     <Container
       component="main"
@@ -71,6 +83,18 @@ const Register = props => {
                 placeholder="Enter an e-mail address"
                 value={email}
                 onChange={setEmail}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="Username"
+                placeholder="Enter a username"
+                value={username}
+                onChange={setUsername}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -141,6 +165,7 @@ const Register = props => {
           </Grid>
         </form>
       </Paper>
+      <ErrorSnackbar open={openError} error={error} onClose={closeError} />
     </Container>
   );
 };

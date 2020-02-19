@@ -16,9 +16,19 @@ const ProfileDescription = ({ user, currentUserId }) => {
           currentUserId={currentUserId}
         />
       </Grid>
-      <h2 style={{ textAlign: "center" }}>
+      <h2 style={{ textAlign: "center", marginTop: "9px", marginBottom: "0" }}>
         {user.firstName} {user.lastName}
       </h2>
+      <p
+        style={{
+          textAlign: "center",
+          fontStyle: "italic",
+          margin: "0",
+          opacity: "0.8"
+        }}
+      >
+        @{user.username}
+      </p>
       {user.id !== currentUserId && (
         <Grid container alignContent="center" direction="column">
           <FollowButton targetId={user.id} />
@@ -29,11 +39,6 @@ const ProfileDescription = ({ user, currentUserId }) => {
         id={user.id}
         currentUserId={currentUserId}
       />
-      {/* <hr />
-      <SocialLinks
-        isCurrentUser={currentUserId === user.id}
-        links={user.SocialLinks ? user.SocialLinks : []}
-      /> */}
     </div>
   );
 };

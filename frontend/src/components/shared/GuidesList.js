@@ -28,6 +28,7 @@ const GuidesList = ({
         <InfiniteScroll
           pageStart={0}
           loadMore={next}
+          initialLoad={true}
           hasMore={hasMore}
           loader={loader}
         >
@@ -40,8 +41,9 @@ const GuidesList = ({
                 button
               >
                 <GuideShort
-                  key={element.id}
+                  //key={element.id}
                   guide={element}
+                  username={element.username ? element.username : ""}
                   displayAuthor={displayAuthor}
                 />
               </ListItem>

@@ -12,11 +12,12 @@ const UserProfile = params => {
   const [userId, setUserId] = useState(-1);
 
   const populate = async () => {
+    console.log(params.username);
     const result = await axios.get(
-      `http://localhost:5000/api/account/${params.id}`
+      `http://localhost:5000/api/account/${params.username}`
     );
     setUser(result.data);
-    setGuides(guides.concat(result.data.Guides));
+    setGuides(result.data.Guides);
     const token = localStorage.getItem("token") || "";
     if (token) {
       const decoded = await jsonwebtoken.decode(token);
@@ -25,7 +26,7 @@ const UserProfile = params => {
   };
   useEffect(() => {
     populate();
-  }, [params.id]);
+  }, [params.username]);
 
   return (
     <Grid container spacing={1}>

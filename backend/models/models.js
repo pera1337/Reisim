@@ -7,6 +7,11 @@ let User = sequelize.define("User", {
     autoIncrement: true,
     primaryKey: true
   },
+  username: {
+    type: Sequelize.STRING(24),
+    allowNull: false,
+    defaultValue: "user123"
+  },
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
   password: Sequelize.STRING,
