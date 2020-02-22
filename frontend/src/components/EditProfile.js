@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
+import { Formik } from "formik";
 import { withRouter } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
+import TextField from "./shared/TextField";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
@@ -8,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import UseTextInput from "../hooks/UseTextInput";
 import axios from "axios";
 import { UserContext } from "../contexts/UserContext";
+import * as Yup from "yup";
 
 const EditProfile = props => {
   const [email, setEmail] = useState("");
@@ -17,6 +19,37 @@ const EditProfile = props => {
   const [password, setPassword] = UseTextInput("");
   const [confirmPassword, setConfirmPassword] = UseTextInput("");
   const { changeUser } = useContext(UserContext);
+
+  let initialValues = {
+    firstName: firstName,
+    username: username,
+    lastName: lastName,
+    password: "",
+    confirmPassword: ""
+  };
+
+  const validationSchema = Yup.object({
+    firstName: Yup.string()
+      .min(3, "Must be at least 3 characters")
+      .max(15, "Must be 15 characters or less")
+      .required("Required"),
+    username: Yup.string()
+      .min(3, "Must be at least 3 characters")
+      .max(15, "Must be 15 characters or less")
+      .required("Required"),
+    lastName: Yup.string()
+      .min(3, "Must be at least 3 characters")
+      .max(20, "Must be 20 characters or less")
+      .required("Required"),
+    password: Yup.string()
+      .required("Required")
+      .min(8, "Must be at least 8 characters")
+      .max(21, "Must be 21 characters or less")
+      .oneOf([Yup.ref("confirmPassword"), null], "Passwords don't match!"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords don't match!")
+      .required("Required")
+  });
 
   useEffect(() => {
     async function populate() {
@@ -44,8 +77,8 @@ const EditProfile = props => {
     populate();
   }, []);
 
-  async function editProfile(e) {
-    e.preventDefault();
+  async function editProfile(values) {
+    const { firstName, username, lastName, password } = values;
     let response;
     try {
       response = await axios.put("http://localhost:5000/api/account/register", {
@@ -59,7 +92,9 @@ const EditProfile = props => {
       localStorage.setItem("token", response.data.token);
       changeUser(response.data.user);
       props.history.push("/");
+      console.log(response);
     } catch (e) {
+      console.log(e.response);
       //setError(e.response.data);
     }
   }
@@ -79,94 +114,66 @@ const EditProfile = props => {
         }}
       >
         <h2 style={{ textAlign: "center" }}>Edit Profile</h2>
-        <form style={{ width: "100%" }} onSubmit={editProfile}>
-          <Grid spacing={1} container>
-            <Grid item xs={12}>
-              <TextField
-                required
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label="E-mail address"
-                placeholder="Enter an e-mail address"
-                value={email}
-                onChange={setEmail}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label="Username"
-                placeholder="Enter a username"
-                value={username}
-                onChange={setUsername}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label="First name"
-                placeholder="Enter a first name"
-                value={firstName}
-                onChange={setFirstName}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label="Last name"
-                placeholder="Enter a last name"
-                value={lastName}
-                onChange={setLastName}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label="Password"
-                placeholder="Enter a password"
-                type="password"
-                value={password}
-                onChange={setPassword}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label="Confirm password"
-                placeholder="Confirm your password"
-                type="password"
-                value={confirmPassword}
-                onChange={setConfirmPassword}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="contained"
-                type="submit"
-              >
-                Edit Profile
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
+        <Formik
+          enableReinitialize
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={editProfile}
+        >
+          {formik => (
+            <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
+              <Grid spacing={1} container>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Username"
+                    placeholder="Enter a username"
+                    {...formik.getFieldProps("username")}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="First Name"
+                    placeholder="Enter a first name"
+                    {...formik.getFieldProps("firstName")}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Last Name"
+                    placeholder="Enter a last name"
+                    {...formik.getFieldProps("lastName")}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Password"
+                    placeholder="Enter a password"
+                    type="password"
+                    {...formik.getFieldProps("password")}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Confirm Password"
+                    placeholder="Confirm your password"
+                    type="password"
+                    {...formik.getFieldProps("confirmPassword")}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                  >
+                    Edit Profile
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </Paper>
     </Container>
   );

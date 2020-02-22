@@ -43,7 +43,7 @@ router.post("/register", async (req, res) => {
 router.put("/register", async (req, res) => {
   let { username, firstName, lastName, email, password } = req.body;
   const user = await User.findOne({ where: { email } });
-  if (!user) return res.status(401).send("User not found");
+  if (!user) return res.status(404).send("User not found");
 
   const sameUsername = await User.findOne({
     where: {
@@ -132,7 +132,7 @@ router.get("/feed", auth, async (req, res) => {
   res.send(user);
 });*/
 
-router.get("/:username", async (req, res) => {
+/*router.get("/:username", async (req, res) => {
   const user = await User.findOne({
     where: { username: req.params.username },
     include: [
@@ -141,6 +141,15 @@ router.get("/:username", async (req, res) => {
     ],
     attributes: { exclude: ["password","email"] },
     order: [[Guide, "updatedAt", "DESC"]]
+  });
+  if (!user) return res.status(401).send("User not found");
+  res.send(user);
+});*/
+
+router.get("/:username", async (req, res) => {
+  let user = await User.findOne({
+    where: { username: req.params.username },
+    attributes: { exclude: ["password","email"] },
   });
   if (!user) return res.status(401).send("User not found");
   res.send(user);
@@ -276,7 +285,7 @@ router.get("/isfollowing/:id", auth, async (req, res) => {
   else res.send(true);
 });
 
-router.get("/guides/:id", async (req, res) => {
+/*router.get("/guides/:id", async (req, res) => {
   const userId = req.params.id;
   let excludeGuide = req.body.excl;
   if (!excludeGuide) excludeGuide = "";
@@ -289,6 +298,18 @@ router.get("/guides/:id", async (req, res) => {
     }
   });
   res.send(results);
+});*/
+
+router.get("/guides/:id", async (req, res) => {
+	const userId = req.params.id;
+	const {limit,offset} = req.query;
+  const guides =await Guide.findAll({
+	  where:{userId},
+	  limit:Number(limit),
+	  offset:Number(offset),
+	  order:[["updatedAt","DESC"]]
+  });
+  res.send(guides);
 });
 
 module.exports = router;

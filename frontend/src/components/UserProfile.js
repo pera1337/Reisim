@@ -10,21 +10,38 @@ const UserProfile = params => {
   const [user, setUser] = useState({});
   const [guides, setGuides] = useState([]);
   const [userId, setUserId] = useState(-1);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 10;
 
   const populate = async () => {
-    console.log(params.username);
-    const result = await axios.get(
-      `http://localhost:5000/api/account/${params.username}`
-    );
-    setUser(result.data);
-    setGuides(result.data.Guides);
-    const token = localStorage.getItem("token") || "";
-    if (token) {
-      const decoded = await jsonwebtoken.decode(token);
-      setUserId(Number(decoded.id));
+    if (user.id) {
+      const results = await axios.get(
+        `http://localhost:5000/api/account/guides/${user.id}?offset=${offset}&limit=${limit}`
+      );
+      if (results.data.length === limit) {
+        setGuides(guides.concat(results.data));
+        setOffset(offset + limit);
+        setHasMore(true);
+      } else {
+        setHasMore(false);
+        if (results.data.length !== 0) setGuides(guides.concat(results.data));
+      }
     }
   };
   useEffect(() => {
+    async function getUser() {
+      const result = await axios.get(
+        `http://localhost:5000/api/account/${params.username}`
+      );
+      setUser(result.data);
+      const token = localStorage.getItem("token") || "";
+      if (token) {
+        const decoded = await jsonwebtoken.decode(token);
+        setUserId(Number(decoded.id));
+      }
+    }
+    getUser();
     populate();
   }, [params.username]);
 
@@ -34,7 +51,7 @@ const UserProfile = params => {
         <ProfileDescription user={user} currentUserId={userId} />
       </Grid>
       <Grid item xs={12} md={9}>
-        <GuideList hasMore={false} next={populate} guides={guides} />
+        <GuideList hasMore={hasMore} next={populate} guides={guides} />
       </Grid>
     </Grid>
   );

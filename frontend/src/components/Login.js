@@ -107,7 +107,7 @@ const Login = props => {
           </Grid>
         </form>
       </Paper>
-      <ErrorSnackbar open={error} error={error} onClose={closeError} />
+      <ErrorSnackbar open={Boolean(error)} error={error} onClose={closeError} />
     </Container>
   );
 };
