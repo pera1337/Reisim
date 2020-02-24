@@ -7,7 +7,8 @@ import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import UseTextInput from "../hooks/UseTextInput";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import { UserContext } from "../contexts/UserContext";
 import * as Yup from "yup";
 
@@ -61,7 +62,7 @@ const EditProfile = props => {
         };
         try {
           const responseUser = await axios.get(
-            `http://localhost:5000/api/account/edit/${props.username}`,
+            `/api/account/edit/${props.username}`,
             { headers }
           );
           setFirstName(responseUser.data.firstName);
@@ -81,7 +82,7 @@ const EditProfile = props => {
     const { firstName, username, lastName, password } = values;
     let response;
     try {
-      response = await axios.put("http://localhost:5000/api/account/register", {
+      response = await axios.put("/api/account/register", {
         firstName,
         username,
         lastName,

@@ -17,7 +17,8 @@ import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 import UseTextInput from "../hooks/UseTextInput";
 import { CityContext } from "../contexts/CityContext";
 import { LocationsContext } from "../contexts/LocationsContext";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import "../css/CreateGuide.css";
 
 const CreateGuide = props => {
@@ -31,9 +32,7 @@ const CreateGuide = props => {
   useEffect(() => {
     async function populate() {
       if (props.edit === "true") {
-        const response = await axios.get(
-          `http://localhost:5000/api/guide/${props.id}`
-        );
+        const response = await axios.get(`/api/guide/${props.id}`);
         const guide = response.data;
         setTitle(guide.title);
         setDescription(guide.description);
@@ -58,7 +57,7 @@ const CreateGuide = props => {
         };
         if (props.edit === "true") {
           await axios.put(
-            `http://localhost:5000/api/guide/${props.id}`,
+            `/api/guide/${props.id}`,
             {
               title,
               description,
@@ -70,7 +69,7 @@ const CreateGuide = props => {
           props.history.push(`/guide/${props.id}`);
         } else {
           const result = await axios.post(
-            "http://localhost:5000/api/guide/new",
+            "/api/guide/new",
             {
               title,
               description,

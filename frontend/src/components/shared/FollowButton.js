@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../../utils/axiosProxy";
 
 const useStyles = makeStyles(theme => ({
   following: {
@@ -23,10 +24,9 @@ const FollowButton = ({ targetId }) => {
         const headers = {
           "X-Auth-Token": localStorage.getItem("token")
         };
-        const result = await axios.get(
-          `http://localhost:5000/api/account/isfollowing/${targetId}`,
-          { headers }
-        );
+        const result = await axios.get(`/api/account/isfollowing/${targetId}`, {
+          headers
+        });
         setIsFollowing(result.data);
       }
     }
@@ -48,21 +48,14 @@ const FollowButton = ({ targetId }) => {
     };
     if (isFollowing) {
       try {
-        await axios.delete(
-          `http://localhost:5000/api/account/unfollow/${targetId}`,
-          { headers }
-        );
+        await axios.delete(`/api/account/unfollow/${targetId}`, { headers });
         setIsFollowing(false);
       } catch (e) {
         console.log("e :", e);
       }
     } else {
       try {
-        await axios.post(
-          `http://localhost:5000/api/account/follow/${targetId}`,
-          null,
-          { headers }
-        );
+        await axios.post(`/api/account/follow/${targetId}`, null, { headers });
         setIsFollowing(true);
         setButtonText("Following");
       } catch (e) {

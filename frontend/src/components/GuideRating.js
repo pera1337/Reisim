@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as emptyStar } from "@fortawesome/free-regular-svg-icons";
 import Rating from "react-rating";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import jsonwebtoken from "jsonwebtoken";
 
 const GuideRating = ({ guideId, history, changeRating }) => {
@@ -23,10 +24,9 @@ const GuideRating = ({ guideId, history, changeRating }) => {
         "X-Auth-Token": localStorage.getItem("token")
       };
       if (guideId && loggedIn) {
-        const result = await axios.get(
-          `http://localhost:5000/api/guide/rated/${guideId}`,
-          { headers }
-        );
+        const result = await axios.get(`/api/guide/rated/${guideId}`, {
+          headers
+        });
         if (result.data) {
           setRating(result.data.rating);
         } else {
@@ -46,7 +46,7 @@ const GuideRating = ({ guideId, history, changeRating }) => {
           "X-Auth-Token": localStorage.getItem("token")
         };
         const result = await axios.put(
-          `http://localhost:5000/api/guide/rate/${guideId}`,
+          `/api/guide/rate/${guideId}`,
           {
             rating: newRating
           },

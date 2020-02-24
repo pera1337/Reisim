@@ -9,7 +9,8 @@ import { Grid, Avatar } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../contexts/UserContext";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import ErrorSnackbar from "./shared/ErrorSnackbar";
 
 const Login = props => {
@@ -22,7 +23,7 @@ const Login = props => {
     e.preventDefault();
     let response;
     try {
-      response = await axios.post("http://localhost:5000/api/account/login", {
+      response = await axios.post("/api/account/login", {
         email,
         password
       });

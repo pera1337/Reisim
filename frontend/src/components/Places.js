@@ -3,7 +3,8 @@ import { CityContext } from "../contexts/CityContext";
 import UseTextInput from "../hooks/UseTextInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import {
   InputBase,
   List,
@@ -16,7 +17,6 @@ import "../css/Places.css";
 
 const Places = ({ addLocation }) => {
   const { city } = useContext(CityContext);
-  //const { changePlace } = useContext(PlaceContext);
   const [query, setQuery] = UseTextInput("");
   const [offset, setOffset] = useState(0);
   const [places, setPlaces] = useState([]);
@@ -32,17 +32,13 @@ const Places = ({ addLocation }) => {
     const cityName = city.name;
     if (cityName !== "") {
       const response = await axios.get(
-        `http://localhost:5000/api/places/?city=${cityName}&limit=10&offset=${off}`
+        `/api/places/?city=${cityName}&limit=10&offset=${off}`
       );
       setPlaces(response.data);
       if (response.data.length < 10) setMaxOffset(true);
       else setMaxOffset(false);
     }
   }
-
-  /*function removePlace(index) {
-    changePlace(places[index]);
-  }*/
 
   function handleLeft() {
     if (places.length > 10) {
@@ -62,7 +58,7 @@ const Places = ({ addLocation }) => {
     } else if (e.target.value.length >= 3 && city.name !== "") {
       setOffset(0);
       const response = await axios.get(
-        `http://localhost:5000/api/places/search?city=${city.name}&limit=50&query=${e.target.value}`
+        `/api/places/search?city=${city.name}&limit=50&query=${e.target.value}`
       );
       setPlaces(response.data);
     }

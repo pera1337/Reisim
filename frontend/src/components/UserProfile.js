@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import GuideList from "./shared/GuidesList";
 import ProfileDescription from "./ProfileDescription";
 import Grid from "@material-ui/core/Grid";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import jsonwebtoken from "jsonwebtoken";
 
 const UserProfile = params => {
@@ -17,7 +18,7 @@ const UserProfile = params => {
   const populate = async () => {
     if (user.id) {
       const results = await axios.get(
-        `http://localhost:5000/api/account/guides/${user.id}?offset=${offset}&limit=${limit}`
+        `/api/account/guides/${user.id}?offset=${offset}&limit=${limit}`
       );
       if (results.data.length === limit) {
         setGuides(guides.concat(results.data));
@@ -31,9 +32,7 @@ const UserProfile = params => {
   };
   useEffect(() => {
     async function getUser() {
-      const result = await axios.get(
-        `http://localhost:5000/api/account/${params.username}`
-      );
+      const result = await axios.get(`/api/account/${params.username}`);
       setUser(result.data);
       const token = localStorage.getItem("token") || "";
       if (token) {

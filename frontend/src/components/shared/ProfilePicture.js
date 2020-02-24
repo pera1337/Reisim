@@ -4,7 +4,8 @@ import Fab from "@material-ui/core/Fab";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import SelectPicture from "../SelectPicture";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../../utils/axiosProxy";
 
 const ProfilePicture = ({ imgSrc, userId, currentUserId }) => {
   const [open, setOpen] = useState(false);
@@ -27,14 +28,14 @@ const ProfilePicture = ({ imgSrc, userId, currentUserId }) => {
       };
       if (imgSrc) {
         const response = await axios.put(
-          `http://localhost:5000/api/upload/${currentUserId}`,
+          `/api/upload/${currentUserId}`,
           formData,
           { headers }
         );
         setNewSrc(response.data);
       } else {
         const response = await axios.post(
-          `http://localhost:5000/api/upload/${currentUserId}`,
+          `/api/upload/${currentUserId}`,
           formData,
           { headers }
         );
@@ -47,7 +48,7 @@ const ProfilePicture = ({ imgSrc, userId, currentUserId }) => {
     <div style={{ position: "relative" }}>
       <Avatar
         style={{ width: "150px", height: "150px" }}
-        src={"http://localhost:5000/" + (newSrc ? newSrc : imgSrc)}
+        src={axios.defaults.baseURL + "/" + (newSrc ? newSrc : imgSrc)}
       />
       {userId === currentUserId && (
         <>

@@ -5,6 +5,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
+import axios from "../../utils/axiosProxy";
 import "../../css/GuideShort.css";
 
 const useStyles = makeStyles(theme => ({
@@ -37,7 +38,7 @@ const GuideShort = ({ guide, displayAuthor, history, username }) => {
           </span>
           <Avatar
             className={classes.small}
-            src={`http://localhost:5000/${image}`}
+            src={`${axios.defaults.baseURL}/${image}`}
           />
         </div>
       ) : null}

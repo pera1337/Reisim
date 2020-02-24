@@ -63,18 +63,6 @@ const NavB = props => {
                 Following
               </Button>
             )}
-            {/* <Button
-              component={Link}
-              onClick={() => handleMenuChange(2)}
-              style={{
-                borderBottom: value === 2 ? "2px solid white" : undefined,
-                borderRadius: "0px"
-              }}
-              color="inherit"
-              to="/sandbox"
-            >
-              Sandbox
-            </Button> */}
             <Button
               component={Link}
               onClick={() => handleMenuChange(2)}

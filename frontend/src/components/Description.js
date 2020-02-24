@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import EditDescription from "./EditDescription";
 import DescriptionText from "./DescriptionText";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
+
 const Description = ({ profileDescription, id, currentUserId }) => {
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [desc, setDesc] = useState("");
@@ -15,17 +17,15 @@ const Description = ({ profileDescription, id, currentUserId }) => {
     };
     axios
       .put(
-        "http://localhost:5000/api/account/description",
+        "/api/account/description",
         { profileDescription: description },
         { headers }
       ) //TODO:res.send the new description
       .then(() => {
-        axios
-          .get(`http://localhost:5000/api/account/description/${id}`)
-          .then(res => {
-            setDesc(res.data);
-            setIsEditingDescription(!isEditingDescription);
-          });
+        axios.get(`/api/account/description/${id}`).then(res => {
+          setDesc(res.data);
+          setIsEditingDescription(!isEditingDescription);
+        });
       });
   };
   return isEditingDescription ? (

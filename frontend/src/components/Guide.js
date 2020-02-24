@@ -14,7 +14,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faEdit, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import jsonwebtoken from "jsonwebtoken";
 import "../css/Guide.css";
 import "../css/Home.css";
@@ -42,11 +43,9 @@ const Guide = params => {
   useEffect(() => {
     async function getData() {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/guide/${params.id}`
-        );
+        const response = await axios.get(`/api/guide/${params.id}`);
         const similar = await axios.get(
-          `http://localhost:5000/api/guide/similar/${response.data.id}`
+          `/api/guide/similar/${response.data.id}`
         );
         const token = localStorage.getItem("token") || "";
         if (token) {
@@ -80,7 +79,7 @@ const Guide = params => {
     const headers = {
       "X-Auth-Token": localStorage.getItem("token")
     };
-    await axios.delete(`http://localhost:5000/api/guide/${id}`, {
+    await axios.delete(`/api/guide/${id}`, {
       headers
     });
     history.push("/");
@@ -169,7 +168,7 @@ const Guide = params => {
                 {"         "}
                 <Avatar
                   className={classes.small}
-                  src={`http://localhost:5000/${guideUser.profileImage}`}
+                  src={`${axios.defaults.baseURL}/${guideUser.profileImage}`}
                 />
               </div>
             </Grid>

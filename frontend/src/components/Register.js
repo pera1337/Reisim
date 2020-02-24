@@ -9,7 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import ErrorSnackbar from "./shared/ErrorSnackbar";
 import * as Yup from "yup";
 
@@ -57,16 +58,13 @@ const Register = props => {
     let response;
     const { firstName, username, lastName, email, password } = values;
     try {
-      response = await axios.post(
-        "http://localhost:5000/api/account/register",
-        {
-          firstName,
-          username,
-          lastName,
-          email,
-          password
-        }
-      );
+      response = await axios.post("/api/account/register", {
+        firstName,
+        username,
+        lastName,
+        email,
+        password
+      });
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       changeUser(response.data.user);

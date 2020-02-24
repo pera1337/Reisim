@@ -8,7 +8,8 @@ import { Tile, Vector } from "ol/layer.js";
 import Overlay from "ol/Overlay.js";
 import { toLonLat, fromLonLat } from "ol/proj";
 import OSM from "ol/source/OSM";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 import "../css/GuideMap.css";
 
 class GuideMap extends React.Component {
@@ -182,9 +183,7 @@ class GuideMap extends React.Component {
       map: map
     });
     if (this.props.edit === "true" || this.props.input === "false") {
-      const response = await axios.get(
-        `http://localhost:5000/api/guide/${this.props.id}`
-      );
+      const response = await axios.get(`/api/guide/${this.props.id}`);
       response.data.Locations.forEach(point => {
         const markerPoint = [];
         markerPoint.push(Number(point.lng));

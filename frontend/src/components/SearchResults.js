@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GuidesList from "./shared/GuidesList";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 
 const SearchResults = props => {
   const [guides, setGuides] = useState([]);
@@ -9,7 +10,7 @@ const SearchResults = props => {
   async function populate() {
     const limit = 3;
     const response = await axios.get(
-      `http://localhost:5000/api/guide/search${props.location.search}&offset=${offset}&limit=${limit}`
+      `/api/guide/search${props.location.search}&offset=${offset}&limit=${limit}`
     );
     if (response.data.length === limit) {
       setGuides(guides.concat(response.data));

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GuidesList from "./shared/GuidesList";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../utils/axiosProxy";
 
 const FollowingFeed = () => {
   const [guides, setGuides] = useState([]);
@@ -13,7 +14,7 @@ const FollowingFeed = () => {
       "X-Auth-Token": token
     };
     const response = await axios.get(
-      `http://localhost:5000/api/account/feed?offset=${offset}&limit=20`,
+      `/api/account/feed?offset=${offset}&limit=20`,
       {
         headers
       }

@@ -7,7 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
 import { withStyles } from "@material-ui/core/styles";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../../utils/axiosProxy";
 
 const styles = theme => ({
   input: {
