@@ -36,7 +36,7 @@ const CreateGuide = props => {
         const guide = response.data;
         setTitle(guide.title);
         setDescription(guide.description);
-        response.data.Locations.forEach(element => {
+        response.data.locations.forEach(element => {
           dispatch({ type: "add", location: element });
         });
         response.data.Cities.forEach(el => {

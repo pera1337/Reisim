@@ -58,9 +58,9 @@ const Guide = params => {
         setAvgRating(response.data.avgRating);
         setNumOfRatings(response.data.numOfRatings);
         setGuideUser(response.data.User);
-        setLocations(response.data.Locations);
+        setLocations(response.data.locations);
         var statePoints = [];
-        response.data.Locations.forEach(element => {
+        response.data.locations.forEach(element => {
           const point = [];
           point.push(element.lng);
           point.push(element.lat);

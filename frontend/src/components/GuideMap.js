@@ -184,7 +184,7 @@ class GuideMap extends React.Component {
     });
     if (this.props.edit === "true" || this.props.input === "false") {
       const response = await axios.get(`/api/guide/${this.props.id}`);
-      response.data.Locations.forEach(point => {
+      response.data.locations.forEach(point => {
         const markerPoint = [];
         markerPoint.push(Number(point.lng));
         markerPoint.push(Number(point.lat));
