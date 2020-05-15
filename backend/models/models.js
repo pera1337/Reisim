@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 
-let User = sequelize.define("User", {
+let User = sequelize.define("user", {
   id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
@@ -26,7 +26,7 @@ let User = sequelize.define("User", {
   profileImage: Sequelize.STRING
 });
 
-let ProfileSocialLinks = sequelize.define("SocialLink", {
+let ProfileSocialLinks = sequelize.define("socialLink", {
   id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
@@ -38,7 +38,7 @@ let ProfileSocialLinks = sequelize.define("SocialLink", {
   userId: Sequelize.INTEGER(11)
 });
 
-let Location = sequelize.define("Location", {
+let Location = sequelize.define("location", {
   id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
@@ -53,7 +53,7 @@ let Location = sequelize.define("Location", {
   description: Sequelize.STRING
 });
 
-let Guide = sequelize.define("Guide", {
+let Guide = sequelize.define("guide", {
   id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
@@ -71,11 +71,11 @@ let Guide = sequelize.define("Guide", {
   userId: Sequelize.INTEGER(11)
 });
 
-let Rating = sequelize.define("Rating", {
+let Rating = sequelize.define("rating", {
   rating: Sequelize.DECIMAL
 });
 
-let City = sequelize.define("City", {
+let City = sequelize.define("city", {
   id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
@@ -88,15 +88,15 @@ let City = sequelize.define("City", {
 });
 
 Guide.hasMany(Location, { foreignKey: "guideId" });
-Location.belongsTo(Guide, { foreignKey: "guideId" });
-User.hasMany(Guide, { foreignKey: "userId" });
+Location.belongsTo(Guide, { as: "Guide", foreignKey: "guideId" });
+User.hasMany(Guide, { as: "Guides", foreignKey: "userId" });
 User.belongsToMany(User, {
-  through: "Follow",
+  through: "follow",
   as: "Follower",
   foreignKey: "followingId"
 });
 User.belongsToMany(User, {
-  through: "Follow",
+  through: "follow",
   as: "Following",
   foreignKey: "followerId"
 });
@@ -114,9 +114,9 @@ Guide.belongsToMany(User, {
 User.hasMany(ProfileSocialLinks, { foreignKey: "userId" });
 ProfileSocialLinks.belongsTo(User, { foreignKey: "userId" });
 
-Guide.belongsTo(User, { foreignKey: "userId" });
+Guide.belongsTo(User, { as: "User", foreignKey: "userId" });
 
-Guide.hasMany(City, { foreignKey: "guideId" });
+Guide.hasMany(City, { as: "Cities", foreignKey: "guideId" });
 City.belongsTo(Guide, { foreignKey: "guideId" });
 
 module.exports.User = User;

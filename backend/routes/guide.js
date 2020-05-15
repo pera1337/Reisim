@@ -58,27 +58,34 @@ router.get("/top", async (req, res) => {
 });
 
 router.get("/search", async (req, res) => {
-  let { city, name, text, rating, username,offset,limit } = req.query;
+  let { city, name, text, rating, username, offset, limit } = req.query;
   if (!city) city = "";
   if (!name) name = "";
   if (!text) text = "";
   if (!username) username = "";
   const guides = await Guide.findAll({
     include: [
-      { model: Location, as: "Locations" },
+      { model: Location, as: "locations" },
       {
         model: User,
         as: "User",
         where: {
           [Sequelize.Op.and]: [
-		  {[Sequelize.Op.or]:[
-            { firstName: { [Sequelize.Op.substring]: name } },
-		  { lastName: { [Sequelize.Op.substring]: name } }]},
-			{ username: { [Sequelize.Op.substring]: username } }
+            {
+              [Sequelize.Op.or]: [
+                { firstName: { [Sequelize.Op.substring]: name } },
+                { lastName: { [Sequelize.Op.substring]: name } }
+              ]
+            },
+            { username: { [Sequelize.Op.substring]: username } }
           ]
         }
       },
-      { model: City, as: "Cities", where: { full_name:{[Sequelize.Op.substring]: city} } }
+      {
+        model: City,
+        as: "Cities",
+        where: { full_name: { [Sequelize.Op.substring]: city } }
+      }
     ],
     where: {
       [Sequelize.Op.or]: [
@@ -91,8 +98,8 @@ router.get("/search", async (req, res) => {
       ],
       avgRating: { [Sequelize.Op.gte]: Number(rating) }
     },
-	offset:Number(offset),
-	limit:Number(limit)
+    offset: Number(offset),
+    limit: Number(limit)
   });
   res.send(guides);
 });
@@ -100,7 +107,7 @@ router.get("/:id", async (req, res) => {
   const guide = await Guide.findOne({
     where: { id: req.params.id },
     include: [
-      { model: Location, as: "Locations" },
+      { model: Location, as: "locations" },
       { model: User, as: "User" },
       { model: City, as: "Cities" }
     ],
@@ -291,8 +298,9 @@ router.get("/similar/:id", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const guide = await Guide.findAll({ include: { model: User, as: "User" } });
-  res.send(guide);
+  // const guide = await Guide.findAll({ include: { model: User, as: "User" } });
+  // res.send(guide);
+  res.send("Hello from guides");
 });
 
 module.exports = router;
