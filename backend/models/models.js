@@ -5,25 +5,25 @@ let User = sequelize.define("User", {
     type: Sequelize.INTEGER(11),
     allowNull: false,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   username: {
     type: Sequelize.STRING(24),
     allowNull: false,
-    defaultValue: "user123"
+    defaultValue: "user123",
   },
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
   password: Sequelize.STRING,
   email: {
     type: Sequelize.STRING,
-    unique: true
+    unique: true,
   },
   profileDescription: {
     type: Sequelize.STRING,
-    allowNull: true
+    allowNull: true,
   },
-  profileImage: Sequelize.STRING
+  profileImage: Sequelize.STRING,
 });
 
 let ProfileSocialLinks = sequelize.define("SocialLink", {
@@ -31,11 +31,11 @@ let ProfileSocialLinks = sequelize.define("SocialLink", {
     type: Sequelize.INTEGER(11),
     allowNull: false,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   title: Sequelize.STRING,
   linkTo: Sequelize.STRING,
-  userId: Sequelize.INTEGER(11)
+  userId: Sequelize.INTEGER(11),
 });
 
 let Location = sequelize.define("Location", {
@@ -43,14 +43,26 @@ let Location = sequelize.define("Location", {
     type: Sequelize.INTEGER(11),
     allowNull: false,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   lat: Sequelize.DECIMAL(10, 8),
   lng: Sequelize.DECIMAL(11, 8),
   locationNumber: Sequelize.INTEGER,
   guideId: Sequelize.INTEGER(11),
   name: Sequelize.STRING,
-  description: Sequelize.STRING
+  description: Sequelize.STRING,
+});
+let Comment = sequelize.define("Comment", {
+  id: {
+    type: Sequelize.INTEGER(11),
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  guideId: Sequelize.INTEGER(11),
+  parentId: Sequelize.INTEGER(11),
+  authorId: Sequelize.INTEGER(11),
+  text: Sequelize.STRING,
 });
 
 let Guide = sequelize.define("Guide", {
@@ -58,7 +70,7 @@ let Guide = sequelize.define("Guide", {
     type: Sequelize.INTEGER(11),
     allowNull: false,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   title: Sequelize.STRING,
   description: Sequelize.STRING,
@@ -66,13 +78,13 @@ let Guide = sequelize.define("Guide", {
   numOfRatings: {
     type: Sequelize.INTEGER,
     allowNull: false,
-    defaultValue: 0
+    defaultValue: 0,
   },
-  userId: Sequelize.INTEGER(11)
+  userId: Sequelize.INTEGER(11),
 });
 
 let Rating = sequelize.define("Rating", {
-  rating: Sequelize.DECIMAL
+  rating: Sequelize.DECIMAL,
 });
 
 let City = sequelize.define("City", {
@@ -80,36 +92,39 @@ let City = sequelize.define("City", {
     type: Sequelize.INTEGER(11),
     allowNull: false,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   name: Sequelize.STRING,
   full_name: Sequelize.STRING,
-  guideId: Sequelize.INTEGER(11)
+  guideId: Sequelize.INTEGER(11),
 });
 
+Guide.hasMany(Comment, { foreignKey: "guideId" });
 Guide.hasMany(Location, { foreignKey: "guideId" });
+Comment.belongsTo(Guide, { foreignKey: "guideId" });
+Comment.belongsTo(User, { foreignKey: "authorId" });
 Location.belongsTo(Guide, { foreignKey: "guideId" });
 User.hasMany(Guide, { foreignKey: "userId" });
 User.belongsToMany(User, {
   through: "Follow",
   as: "Follower",
-  foreignKey: "followingId"
+  foreignKey: "followingId",
 });
 User.belongsToMany(User, {
   through: "Follow",
   as: "Following",
-  foreignKey: "followerId"
+  foreignKey: "followerId",
 });
 
 User.belongsToMany(Guide, {
   through: Rating,
   as: "RatingUser",
-  foreignKey: "userId"
+  foreignKey: "userId",
 });
 Guide.belongsToMany(User, {
   through: Rating,
   as: "RatingGuide",
-  foreignKey: "guideId"
+  foreignKey: "guideId",
 });
 User.hasMany(ProfileSocialLinks, { foreignKey: "userId" });
 ProfileSocialLinks.belongsTo(User, { foreignKey: "userId" });
@@ -125,3 +140,4 @@ module.exports.Guide = Guide;
 module.exports.Rating = Rating;
 module.exports.City = City;
 module.exports.SocialLinks = ProfileSocialLinks;
+module.exports.Comment = Comment;

@@ -16,26 +16,26 @@ router.post("/new", auth, async (req, res) => {
   const guide = await Guide.create({
     title,
     description,
-    userId: user.id
+    userId: user.id,
   });
 
-  coords.forEach(async element => {
+  coords.forEach(async (element) => {
     let location = {
       lat: element.lat,
       lng: element.lng,
       guideId: guide.id,
-      locationNumber: element.locationNumber
+      locationNumber: element.locationNumber,
     };
     if (element.name) location.name = element.name;
     if (element.description) location.description = element.description;
     await Location.create(location);
   });
 
-  cities.forEach(async element => {
+  cities.forEach(async (element) => {
     await City.create({
       name: element.name,
       full_name: element.full_name,
-      guideId: guide.id
+      guideId: guide.id,
     });
   });
   res.send({ id: guide.dataValues.id });
@@ -48,17 +48,17 @@ router.get("/top", async (req, res) => {
     include: {
       model: User,
       as: "User",
-      attributes: ["id", "firstName", "lastName", "profileImage", "username"]
+      attributes: ["id", "firstName", "lastName", "profileImage", "username"],
     },
     order: [["avgRating", "DESC"]],
     limit: Number(limit),
-    offset: Number(offset)
+    offset: Number(offset),
   });
   res.send(guides);
 });
 
 router.get("/search", async (req, res) => {
-  let { city, name, text, rating, username,offset,limit } = req.query;
+  let { city, name, text, rating, username, offset, limit } = req.query;
   if (!city) city = "";
   if (!name) name = "";
   if (!text) text = "";
@@ -71,28 +71,35 @@ router.get("/search", async (req, res) => {
         as: "User",
         where: {
           [Sequelize.Op.and]: [
-		  {[Sequelize.Op.or]:[
-            { firstName: { [Sequelize.Op.substring]: name } },
-		  { lastName: { [Sequelize.Op.substring]: name } }]},
-			{ username: { [Sequelize.Op.substring]: username } }
-          ]
-        }
+            {
+              [Sequelize.Op.or]: [
+                { firstName: { [Sequelize.Op.substring]: name } },
+                { lastName: { [Sequelize.Op.substring]: name } },
+              ],
+            },
+            { username: { [Sequelize.Op.substring]: username } },
+          ],
+        },
       },
-      { model: City, as: "Cities", where: { full_name:{[Sequelize.Op.substring]: city} } }
+      {
+        model: City,
+        as: "Cities",
+        where: { full_name: { [Sequelize.Op.substring]: city } },
+      },
     ],
     where: {
       [Sequelize.Op.or]: [
         {
-          title: { [Sequelize.Op.substring]: text }
+          title: { [Sequelize.Op.substring]: text },
         },
         {
-          description: { [Sequelize.Op.substring]: text }
-        }
+          description: { [Sequelize.Op.substring]: text },
+        },
       ],
-      avgRating: { [Sequelize.Op.gte]: Number(rating) }
+      avgRating: { [Sequelize.Op.gte]: Number(rating) },
     },
-	offset:Number(offset),
-	limit:Number(limit)
+    offset: Number(offset),
+    limit: Number(limit),
   });
   res.send(guides);
 });
@@ -102,9 +109,9 @@ router.get("/:id", async (req, res) => {
     include: [
       { model: Location, as: "Locations" },
       { model: User, as: "User" },
-      { model: City, as: "Cities" }
+      { model: City, as: "Cities" },
     ],
-    order: [[Location, "locationNumber"]]
+    order: [[Location, "locationNumber"]],
   });
   if (!guide) return res.status(404).send("Guide not found");
   res.send(guide);
@@ -118,10 +125,10 @@ router.put("/:id", auth, async (req, res) => {
 
   if (guide.userId != user.id) return res.status(403).send("Foribidden");
   let locations = await Location.findAll({
-    where: { guideId: req.params.id }
+    where: { guideId: req.params.id },
   });
   let cits = await City.findAll({
-    where: { guideId: req.params.id }
+    where: { guideId: req.params.id },
   });
   if (!locations) return res.status(404).send("Locations not found");
   if (!cits) return res.status(404).send("Cities not found");
@@ -154,7 +161,7 @@ router.put("/:id", auth, async (req, res) => {
         lat: coords[i].lat,
         lng: coords[i].lng,
         guideId: guide.id,
-        locationNumber: coords[i].locationNumber
+        locationNumber: coords[i].locationNumber,
       };
       if (coords[i].name) loc.name = coords[i].name;
       if (coords[i].description) loc.description = coords[i].description;
@@ -175,7 +182,7 @@ router.put("/:id", auth, async (req, res) => {
         {
           name: cities[i].name,
           full_name: cities[i].full_name,
-          guideId: guide.id
+          guideId: guide.id,
         },
         { transaction }
       );
@@ -245,7 +252,7 @@ router.put("/rate/:id", auth, async (req, res) => {
         {
           userId,
           guideId: id,
-          rating
+          rating,
         },
         { transaction }
       );
@@ -273,7 +280,7 @@ router.get("/similar/:id", async (req, res) => {
   const cities = await City.findAll({ where: { guideId } });
   if (!cities) res.status(404).send("Not cities found");
   let names = [];
-  cities.map(el => names.push(el.name));
+  cities.map((el) => names.push(el.name));
   const similar = await sequelize.query(
     `SELECT guideId as id,userId,title,guides.createdAt,numOfRatings,avgRating,firstName,lastName,profileImage,username
      from(select guideId,name from cities as common where name in (:names) and guideId<>:gId) as result
@@ -284,7 +291,7 @@ router.get("/similar/:id", async (req, res) => {
      limit 8`,
     {
       replacements: { names, gId: Number(guideId) },
-      type: Sequelize.QueryTypes.SELECT
+      type: Sequelize.QueryTypes.SELECT,
     }
   );
   res.send(similar);
