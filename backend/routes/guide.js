@@ -1,12 +1,43 @@
 const express = require("express");
 const router = express.Router();
-const { User, Location, Guide, Rating, City } = require("../models/models");
+const {
+  User,
+  Location,
+  Guide,
+  GoingTo,
+  Rating,
+  City,
+  Comment,
+} = require("../models/models");
 const auth = require("../middleware/auth");
+const { subMonths } = require("date-fns");
 const Sequelize = require("sequelize");
+const {
+  findClosesWeekly,
+  closestWeekly,
+  findClosestDaily,
+  closestDaily,
+  findClosestMonthly,
+  closestMonthly,
+  findNextDaily,
+  findNextWeekly,
+  findNextMonthly,
+} = require("../utils/closest");
 
 router.post("/new", auth, async (req, res) => {
   const { id } = req.user;
-  const { title, description, coords, cities } = req.body;
+  const {
+    title,
+    description,
+    coords,
+    cities,
+    organized,
+    guideType,
+    guideTimes,
+    startTime,
+    endTime,
+  } = req.body;
+  console.log(req.body);
   const user = await User.findOne({ where: { id } });
   if (!user) return res.status(401).send("User not found");
   if (coords.length === 0)
@@ -17,6 +48,11 @@ router.post("/new", auth, async (req, res) => {
     title,
     description,
     userId: user.id,
+    organized,
+    guideType,
+    guideTimes,
+    startTime,
+    endTime,
   });
 
   coords.forEach(async (element) => {
@@ -39,6 +75,62 @@ router.post("/new", auth, async (req, res) => {
     });
   });
   res.send({ id: guide.dataValues.id });
+});
+
+router.get("/going", auth, async (req, res) => {
+  const userId = req.user.id;
+  const now = Date.now();
+  const nowDate = new Date(now);
+  const monthBefore = subMonths(nowDate, 1);
+  const guides = await GoingTo.findAll(
+    {
+      where: {
+        createdAt: { [Sequelize.Op.between]: [monthBefore, nowDate] },
+      },
+      include: { model: Guide, as: "Guide" ,include:[{model:User,as:"User"}]},
+    }
+    // { include: { model: Guide, as: "Guide" } }
+  );
+  const filteredGuides = guides
+    .filter((el) => {
+      let closestDate;
+      if (el.Guide.guideType === "Daily") closestDate = closestDaily(el.Guide);
+      else if (el.Guide.guideType === "Weekly") {
+        closestDate = closestWeekly(el.Guide);
+        console.log(closestDate);
+      } else closestDate = closestMonthly(el.Guide);
+
+      return el.createdAt > closestDate && el.createdAt <= nowDate;
+    })
+    .sort((el1, el2) => {
+      let cl1;
+      let cl2;
+      if (el1.Guide.guideType === "Daily") cl1 = findNextDaily(el1.Guide);
+      else if (el1.Guide.guideType === "Weekly")
+        cl1 = findNextWeekly(el1.Guide);
+      else cl1 = findNextMonthly(el1.Guide);
+
+      if (el2.Guide.guideType === "Daily") cl2 = findNextDaily(el2.Guide);
+      else if (el2.Guide.guideType === "Weekly")
+        cl2 = findNextWeekly(el2.Guide);
+      else cl2 = findNextMonthly(el2.Guide);
+
+      if (cl1 > cl2) return 1;
+      else if (cl2 > cl1) return -1;
+      else return 0;
+    });
+  const retGuides = filteredGuides.map((el) => {
+    const guide = { ...el.Guide.dataValues };
+    console.log(guide);
+    if (el.Guide.guideType === "Daily")
+      guide.nextTour = findNextDaily(el.Guide);
+    else if (el.Guide.guideType === "Weekly")
+      guide.nextTour = findNextWeekly(el.Guide);
+    else guide.nextTour = findNextMonthly(el.Guide);
+    el.Guide.asd = "ASD";
+    return guide;
+  });
+  res.send(retGuides);
 });
 
 router.get("/top", async (req, res) => {
@@ -110,16 +202,45 @@ router.get("/:id", async (req, res) => {
       { model: Location, as: "Locations" },
       { model: User, as: "User" },
       { model: City, as: "Cities" },
+      { model: Comment, as: "Comments" },
     ],
     order: [[Location, "locationNumber"]],
   });
+  let going = {};
   if (!guide) return res.status(404).send("Guide not found");
-  res.send(guide);
+  switch (guide.guideType) {
+    case "Daily":
+      going = await findClosestDaily(guide);
+      guide.dataValues.nextDate = findNextDaily(guide);
+      break;
+    case "Weekly":
+      going = await findClosesWeekly(guide);
+      guide.dataValues.nextDate = findNextWeekly(guide);
+      break;
+    case "Monthly":
+      going = await findClosestMonthly(guide);
+      guide.dataValues.nextDate = findNextMonthly(guide);
+      break;
+
+    default:
+      break;
+  }
+  res.send({ guide, going });
 });
 
 router.put("/:id", auth, async (req, res) => {
   const user = req.user;
-  const { title, description, coords, cities } = req.body;
+  const {
+    title,
+    description,
+    coords,
+    cities,
+    organized,
+    guideType,
+    guideTimes,
+    startTime,
+    endTime,
+  } = req.body;
   const guide = await Guide.findOne({ where: { id: req.params.id } });
   if (!guide) return res.status(404).send("Guide not found");
 
@@ -142,6 +263,11 @@ router.put("/:id", auth, async (req, res) => {
 
     guide.title = title;
     guide.description = description;
+    guide.organized = organized;
+    guide.guideType = guideType;
+    guide.guideTimes = guideTimes;
+    guide.startTime = startTime;
+    guide.endTime = endTime;
     await guide.save({ transaction });
     let i = 0;
     for (i = 0; i < locations.length; i++) {
@@ -283,9 +409,9 @@ router.get("/similar/:id", async (req, res) => {
   cities.map((el) => names.push(el.name));
   const similar = await sequelize.query(
     `SELECT guideId as id,userId,title,guides.createdAt,numOfRatings,avgRating,firstName,lastName,profileImage,username
-     from(select guideId,name from cities as common where name in (:names) and guideId<>:gId) as result
-	 inner join guides on result.guideId = guides.id
-     inner join users on guides.userId=users.id
+     from(select guideId,name from diplomski.cities as common where name in (:names) and guideId!=:gId) as result
+	 inner join diplomski.guides on result.guideId = guides.id
+     inner join diplomski.users on guides.userId=users.id
      group by guideId
      order by count(1) desc
      limit 8`,
@@ -296,6 +422,50 @@ router.get("/similar/:id", async (req, res) => {
   );
   res.send(similar);
 });
+
+// router.get("/going", auth, async (req, res) => {
+//   const userId = req.user.id;
+//   const now = Date.now();
+//   const nowDate = new Date(now);
+//   const monthBefore = subMonths(nowDate, 1);
+//   const guides = await GoingTo.findAll(
+//     {
+//       where: {
+//         createdAt: { [Sequelize.Op.between]: [monthBefore, nowDate] },
+//       },
+//     }
+//     { include: [{ model: Guide, as: "Guide" }] }
+//   );
+//   console.log("RETURNED GUIDES , ", guides);
+//   const filteredGuides = guides
+//     .filter((el) => {
+//       let closestDate;
+//       if (el.Guide.guideType === "Daily") closestDate = closestDaily(el.Guide);
+//       else if (el.Guide.guideType === "Weekly")
+//         closestDate = closestWeekly(el.Guide);
+//       else closestDate = closestMonthly(el.Guide);
+
+//       return el.createdAt > closestDaily && el.createdAt <= nowDate;
+//     })
+//     .sort((el1, el2) => {
+//       let cl1;
+//       let cl2;
+//       if (el1.Guide.guideType === "Daily") cl1 = findNextDaily(el1.Guide);
+//       else if (el1.Guide.guideType === "Weekly")
+//         cl1 = findNextWeekly(el1.Guide);
+//       else cl1 = findNextMonthly(el1.Guide);
+
+//       if (el2.Guide.guideType === "Daily") cl2 = findNextDaily(el2.Guide);
+//       else if (el2.Guide.guideType === "Weekly")
+//         cl2 = findNextWeekly(el2.Guide);
+//       else cl2 = findNextMonthly(el2.Guide);
+
+//       if (cl1 > cl2) return 1;
+//       else if (cl2 > cl1) return -1;
+//       else return 0;
+//     });
+//   res.send(filteredGuides);
+// });
 
 router.get("/", async (req, res) => {
   const guide = await Guide.findAll({ include: { model: User, as: "User" } });

@@ -81,6 +81,24 @@ let Guide = sequelize.define("Guide", {
     defaultValue: 0,
   },
   userId: Sequelize.INTEGER(11),
+  guideType: Sequelize.STRING(10),
+  guideTimes: Sequelize.STRING,
+  startTime: Sequelize.STRING,
+  endTime: Sequelize.STRING,
+  organized: Sequelize.BOOLEAN,
+});
+
+let GoingTo = sequelize.define("GoingTo", {
+  id: {
+    type: Sequelize.INTEGER(11),
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  userId: Sequelize.INTEGER(11),
+  guideId: Sequelize.INTEGER(11),
+  createdAt: Sequelize.DATE,
+  updatedAt: Sequelize.DATE,
 });
 
 let Rating = sequelize.define("Rating", {
@@ -101,6 +119,8 @@ let City = sequelize.define("City", {
 
 Guide.hasMany(Comment, { foreignKey: "guideId" });
 Guide.hasMany(Location, { foreignKey: "guideId" });
+Guide.hasMany(GoingTo, { foreignKey: "guideId" });
+GoingTo.belongsTo(Guide, { foreignKey: "guideId" });
 Comment.belongsTo(Guide, { foreignKey: "guideId" });
 Comment.belongsTo(User, { foreignKey: "authorId" });
 Location.belongsTo(Guide, { foreignKey: "guideId" });
@@ -115,6 +135,18 @@ User.belongsToMany(User, {
   as: "Following",
   foreignKey: "followerId",
 });
+User.belongsToMany(Guide, {
+  through: GoingTo,
+  as: "Going",
+  foreignKey: "guideId",
+});
+Guide.belongsToMany(User, {
+  through: GoingTo,
+  as: "To",
+  foreignKey: "userId",
+});
+User.hasMany(GoingTo, { foreignKey: "userId" });
+GoingTo.belongsTo(User, { foreignKey: "userId" });
 
 User.belongsToMany(Guide, {
   through: Rating,
@@ -141,3 +173,4 @@ module.exports.Rating = Rating;
 module.exports.City = City;
 module.exports.SocialLinks = ProfileSocialLinks;
 module.exports.Comment = Comment;
+module.exports.GoingTo = GoingTo;

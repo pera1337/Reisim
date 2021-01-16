@@ -9,19 +9,19 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { UserContext } from "../contexts/UserContext";
 import "../css/NavB.css";
 
-const NavB = props => {
+const NavB = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { user, changeUser } = useContext(UserContext);
   const [value, setValue] = useState(0);
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const handleMenuChange = num => {
+  const handleMenuChange = (num) => {
     setValue(num);
   };
 
@@ -42,7 +42,7 @@ const NavB = props => {
               onClick={() => handleMenuChange(0)}
               style={{
                 borderBottom: value === 0 ? "2px solid white" : undefined,
-                borderRadius: "0px"
+                borderRadius: "0px",
               }}
               color="inherit"
               to="/"
@@ -55,7 +55,7 @@ const NavB = props => {
                 onClick={() => handleMenuChange(1)}
                 style={{
                   borderBottom: value === 1 ? "2px solid white" : undefined,
-                  borderRadius: "0px"
+                  borderRadius: "0px",
                 }}
                 color="inherit"
                 to="/feed"
@@ -63,12 +63,26 @@ const NavB = props => {
                 Following
               </Button>
             )}
+            {user && (
+              <Button
+                component={Link}
+                onClick={() => handleMenuChange(3)}
+                style={{
+                  borderBottom: value === 3 ? "2px solid white" : undefined,
+                  borderRadius: "0px",
+                }}
+                color="inherit"
+                to="/signedUp"
+              >
+                Signed Up
+              </Button>
+            )}
             <Button
               component={Link}
               onClick={() => handleMenuChange(2)}
               style={{
                 borderBottom: value === 2 ? "2px solid white" : undefined,
-                borderRadius: "0px"
+                borderRadius: "0px",
               }}
               color="inherit"
               to="/top"

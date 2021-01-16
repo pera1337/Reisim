@@ -20,6 +20,18 @@ router.post("/new", auth, async (req, res) => {
   res.send(retComment);
 });
 
+router.get("/comments/:guideId",async(req,res)=>{
+	const guideId = req.params.guideId;
+	console.log(guideId);
+	const comments = await Comment.findAll({where:{guideId},include: [
+      { model: User, as: "User" },
+    ],
+	order: [['createdAt', "DESC"]],
+	});
+	if(!comments) return res.status(404).send("Comments not found");
+	res.send(comments);
+});
+
 router.put("/:id", auth, async (req, res) => {
   const user = req.user;
   const id = req.params.id;
@@ -46,7 +58,7 @@ router.delete("/:id", auth, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
-  const comment = await Comment.findOne({ whwre: { id } });
+  const comment = await Comment.findOne({ where: { id } });
   if (!comment) res.status(404).send("Comment not found");
   res.send(comment);
 });

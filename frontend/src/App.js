@@ -18,6 +18,7 @@ import Sandbox from "./components/Sandbox";
 import { CssBaseline } from "@material-ui/core";
 import "./css/App.css";
 import TopGuides from "./components/TopGuides";
+import SignedUp from "./components/SignedUp";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/signedUp" component={SignedUp} />
           <Route exact path="/top" component={TopGuides} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/feed" component={FollowingFeed} />
@@ -51,12 +53,12 @@ function App() {
           <Route
             exact
             path="/guide/:id"
-            render={routeProps => <Guide id={routeProps.match.params.id} />}
+            render={(routeProps) => <Guide id={routeProps.match.params.id} />}
           />
           <Route
             exact
             path="/guide/edit/:id"
-            render={routeProps => (
+            render={(routeProps) => (
               <CityProvider>
                 <PlaceProvider>
                   <LocationsProvider>
@@ -69,14 +71,14 @@ function App() {
           <Route
             exact
             path="/user/:username"
-            render={routeProps => (
+            render={(routeProps) => (
               <UserProfile username={routeProps.match.params.username} />
             )}
           />
           <Route
             exact
             path="/user/edit/:username"
-            render={routeProps => (
+            render={(routeProps) => (
               <EditProfile username={routeProps.match.params.username} />
             )}
           />

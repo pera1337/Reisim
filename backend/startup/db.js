@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-module.exports = function() {
+module.exports = function () {
   let sequelize;
   if (process.env.DATABASE_URL)
     sequelize = new Sequelize(process.env.DATABASE_URL);
@@ -12,7 +12,7 @@ module.exports = function() {
         host: process.env.DB_HOST_NAME,
         port: process.env.DB_PORT,
         dialect: "mysql",
-        logging: false
+        logging: console.log,
       }
     );
   }

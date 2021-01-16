@@ -7,11 +7,20 @@ import SelectedCities from "./SelectedCities";
 import DetailsList from "./shared/DetailsList";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Select from "@material-ui/core/Select/Select";
 import Grid from "@material-ui/core/Grid";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import { Typography } from "@material-ui/core";
+import {
+  Typography,
+  Checkbox,
+  MenuItem,
+  InputLabel,
+  FormControlLabel,
+  Input,
+  ListItemText,
+} from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 import UseTextInput from "../hooks/UseTextInput";
@@ -21,12 +30,19 @@ import { LocationsContext } from "../contexts/LocationsContext";
 import axios from "../utils/axiosProxy";
 import "../css/CreateGuide.css";
 
-const CreateGuide = props => {
+const CreateGuide = (props) => {
   const [title, setTitle] = UseTextInput("");
   const [description, setDescription] = UseTextInput("");
   const { locations, dispatch } = useContext(LocationsContext);
   const [location, setLocation] = useState({});
   const [cities, setCities] = useState([]);
+  const [organized, setOrganized] = useState(false);
+  const [guideType, setGuideType] = useState("");
+  const [startHour, setStartHour] = useState("");
+  const [startMinute, setStartMinute] = useState("");
+  const [endHour, setEndHour] = useState("");
+  const [endMinute, setEndMinute] = useState("");
+  const [guideTimes, setGuideTimes] = useState([]);
   const { changeCity } = useContext(CityContext);
 
   useEffect(() => {
@@ -36,10 +52,10 @@ const CreateGuide = props => {
         const guide = response.data;
         setTitle(guide.title);
         setDescription(guide.description);
-        response.data.Locations.forEach(element => {
+        response.data.Locations.forEach((element) => {
           dispatch({ type: "add", location: element });
         });
-        response.data.Cities.forEach(el => {
+        response.data.Cities.forEach((el) => {
           changeCity(el);
         });
       }
@@ -53,7 +69,7 @@ const CreateGuide = props => {
       try {
         const token = localStorage.getItem("token");
         const headers = {
-          "X-Auth-Token": token
+          "X-Auth-Token": token,
         };
         if (props.edit === "true") {
           await axios.put(
@@ -62,19 +78,36 @@ const CreateGuide = props => {
               title,
               description,
               coords: locations,
-              cities
+              cities,
+              organized,
+              startTime: `${startHour}:${startMinute}`,
+              endTime: `${endHour}:${endMinute}`,
+              guideTimes: guideTimes.join("-"),
+              guideType,
             },
             { headers }
           );
           props.history.push(`/guide/${props.id}`);
         } else {
+          let times = [...guideTimes];
+          if (guideType === "Monthly")
+            times = times.sort((a, b) => {
+              if (a < b) return -1;
+              else if (a > b) return 1;
+              else return 0;
+            });
           const result = await axios.post(
             "/api/guide/new",
             {
               title,
               description,
               coords: locations,
-              cities
+              cities,
+              organized,
+              startTime: `${startHour}:${startMinute}`,
+              endTime: `${endHour}:${endMinute}`,
+              guideTimes: guideTimes.join("-"),
+              guideType,
             },
             { headers }
           );
@@ -86,10 +119,23 @@ const CreateGuide = props => {
     }
     add();
   }
-
   function addLocation(loc) {
     setLocation(loc);
   }
+
+  const daysInMonth = [];
+  for (let i = 1; i < 32; i++) {
+    daysInMonth.push(i.toString());
+  }
+  const daysInWeek = [
+    { key: "MO", value: "Monday" },
+    { key: "TU", value: "Tuesday" },
+    { key: "WE", value: "Wednesday" },
+    { key: "TH", value: "Thursday" },
+    { key: "FR", value: "Friday" },
+    { key: "SA", value: "Saturday" },
+    { key: "SU", value: "Sunday" },
+  ];
 
   function addPoint(point) {
     dispatch({ type: "add", location: point });
@@ -117,7 +163,7 @@ const CreateGuide = props => {
     <div className="create-guide-container">
       <h1>Create a guide</h1>
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
         }}
       >
@@ -143,6 +189,137 @@ const CreateGuide = props => {
           value={description}
           onChange={setDescription}
         />
+        <Grid style={{ margin: "20px 0" }} pacing={4} container direction="row">
+          <FormControlLabel
+            value="top"
+            control={
+              <Checkbox
+                value={organized}
+                label={"Organized"}
+                onChange={() => setOrganized(!organized)}
+              />
+            }
+            label="Organized"
+            labelPlacement="start"
+          />
+
+          {organized && (
+            <>
+              <Grid style={{ marginLeft: "50px" }} item>
+                <InputLabel id="demo-simple-select-label">
+                  Guide Type
+                </InputLabel>
+                <Select
+                  style={{ width: "100px" }}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={guideType}
+                  onChange={(e) => {
+                    setGuideType(e.target.value);
+                    setGuideTimes([]);
+                  }}
+                >
+                  <MenuItem value={"Daily"}>Daily</MenuItem>
+                  <MenuItem value={"Weekly"}>Weekly</MenuItem>
+                  <MenuItem value={"Monthly"}>Monthly</MenuItem>
+                </Select>
+              </Grid>
+              <Grid style={{ marginLeft: "30px" }} item>
+                <InputLabel id="demo-simple-select-label">
+                  Start Time
+                </InputLabel>
+                <TextField
+                  value={startHour}
+                  onChange={(e) => setStartHour(e.target.value)}
+                  style={{ width: "100px", textAlign: "center" }}
+                />
+                <span style={{ margin: "40px 10px" }}>:</span>
+                <TextField
+                  value={startMinute}
+                  onChange={(e) => setStartMinute(e.target.value)}
+                  style={{ width: "100px", textAlign: "center" }}
+                />
+              </Grid>
+              <Grid style={{ marginLeft: "30px" }} item>
+                <InputLabel id="demo-simple-select-label">End Time</InputLabel>
+                <TextField
+                  value={endHour}
+                  onChange={(e) => setEndHour(e.target.value)}
+                  style={{ width: "100px", textAlign: "center" }}
+                />
+                <span style={{ margin: "40px 10px" }}>:</span>
+                <TextField
+                  value={endMinute}
+                  onChange={(e) => setEndMinute(e.target.value)}
+                  style={{ width: "100px", textAlign: "center" }}
+                />
+              </Grid>
+              <Grid style={{ marginLeft: "30px" }} item>
+                {guideType === "Weekly" ? (
+                  <>
+                    <InputLabel id="demo-simple-select-label">
+                      Day in Week
+                    </InputLabel>
+                    <Select
+                      style={{ minWidth: "100px" }}
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      multiple
+                      value={guideTimes}
+                      onChange={(e) => {
+                        setGuideTimes(e.target.value);
+                      }}
+                      input={<Input />}
+                      renderValue={(selected) => {
+                        console.log(selected);
+                        const els = daysInWeek.filter(
+                          (el) => selected.indexOf(el.key) > -1
+                        );
+                        return els.map((el) => el.value).join(", ");
+                      }}
+                    >
+                      {daysInWeek.map((el) => (
+                        <MenuItem key={el.key} value={el.key}>
+                          <Checkbox checked={guideTimes.indexOf(el.key) > -1} />
+                          <ListItemText primary={el.value} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </>
+                ) : (
+                  guideType === "Monthly" && (
+                    <>
+                      <InputLabel id="demo-simple-select-label">
+                        Day in Month
+                      </InputLabel>
+                      <Select
+                        style={{ minWidth: "100px" }}
+                        labelId="demo-mutiple-checkbox-label"
+                        id="demo-mutiple-checkbox"
+                        multiple
+                        value={guideTimes}
+                        onChange={(e) => {
+                          setGuideTimes(e.target.value);
+                        }}
+                        input={<Input />}
+                        renderValue={(selected) => {
+                          return selected.map((el) => el).join(", ");
+                        }}
+                      >
+                        {daysInMonth.map((el) => (
+                          <MenuItem key={el} value={el}>
+                            <Checkbox checked={guideTimes.indexOf(el) > -1} />
+                            <ListItemText primary={el} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </>
+                  )
+                )}
+              </Grid>
+            </>
+          )}
+        </Grid>
         <Grid spacing={2} container>
           <Grid spacing={2} container direction="row" item>
             <Grid xs={12} md={6} item>

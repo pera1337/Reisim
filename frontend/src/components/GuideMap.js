@@ -17,7 +17,7 @@ class GuideMap extends React.Component {
     super(props);
     this.state = {
       map: {},
-      removedNums: []
+      removedNums: [],
     };
     this.num = 0;
     this.locationNumber = 0;
@@ -39,34 +39,34 @@ class GuideMap extends React.Component {
     var clickedPointGeom = new Point(fromLonLat(point));
     var marker = new Feature({
       geometry: clickedPointGeom,
-      name
+      name,
     });
 
     let image = new Circle({
       fill: new Fill({
-        color: "rgba(255,255,255,0.4)"
+        color: "rgba(255,255,255,0.4)",
       }),
       stroke: new Stroke({
         color: "#3399CC",
-        width: 1.25
+        width: 1.25,
       }),
-      radius: 10
+      radius: 10,
     });
 
     var iconStyle = new Style({
       image: image,
       text: new Text({
-        text: `${argNum}`
-      })
+        text: `${argNum}`,
+      }),
     });
 
     marker.setStyle(iconStyle);
 
     var vectorSource = new VectorSource({
-      features: [marker]
+      features: [marker],
     });
     var markerVectorLayer = new Vector({
-      source: vectorSource
+      source: vectorSource,
     });
     this.state.map.addLayer(markerVectorLayer);
   }
@@ -74,8 +74,8 @@ class GuideMap extends React.Component {
   async componentDidMount() {
     var featuresLayer = new Vector({
       source: new VectorSource({
-        features: []
-      })
+        features: [],
+      }),
     });
     let container;
     let content;
@@ -90,10 +90,10 @@ class GuideMap extends React.Component {
         element: container,
         autoPan: true,
         autoPanAnimation: {
-          duration: 250
-        }
+          duration: 250,
+        },
       });
-      closer.onclick = function() {
+      closer.onclick = function () {
         overlay.setPosition(undefined);
         closer.blur();
         return false;
@@ -102,35 +102,35 @@ class GuideMap extends React.Component {
         target: this.refs.mapContainer,
         layers: [
           new Tile({
-            source: new OSM()
+            source: new OSM(),
           }),
-          featuresLayer
+          featuresLayer,
         ],
         overlays: [overlay],
         view: new View({
           center: [0, 0],
-          zoom: 2
-        })
+          zoom: 2,
+        }),
       });
     } else {
       map = new Map({
         target: this.refs.mapContainer,
         layers: [
           new Tile({
-            source: new OSM()
+            source: new OSM(),
           }),
-          featuresLayer
+          featuresLayer,
         ],
         view: new View({
           center: [0, 0],
-          zoom: 2
-        })
+          zoom: 2,
+        }),
       });
     }
 
     var that = this;
     if (this.props.edit === "true" || this.props.input === "true") {
-      map.on("click", function(event) {
+      map.on("click", function (event) {
         let m = map.forEachFeatureAtPixel(
           event.pixel,
           (feature, layer) => {
@@ -139,12 +139,12 @@ class GuideMap extends React.Component {
             );
             that.props.removePoint({
               lng: featureCoords[0],
-              lat: featureCoords[1]
+              lat: featureCoords[1],
             });
             let style = feature.getStyle();
             let text = style.getText();
             that.setState({
-              removedNums: [...that.state.removedNums, Number(text.text_)]
+              removedNums: [...that.state.removedNums, Number(text.text_)],
             });
             map.removeLayer(layer);
             layer.dispose();
@@ -157,7 +157,7 @@ class GuideMap extends React.Component {
         }
       });
     } else {
-      map.on("click", function(event) {
+      map.on("click", function (event) {
         let m = map.forEachFeatureAtPixel(
           event.pixel,
           (feature, layer) => {
@@ -172,19 +172,19 @@ class GuideMap extends React.Component {
         );
       });
     }
-    map.on("pointermove", function(evt) {
+    map.on("pointermove", function (evt) {
       map.getTargetElement().style.cursor = map.hasFeatureAtPixel(evt.pixel, {
-        hitTolerance: 6
+        hitTolerance: 6,
       })
         ? "pointer"
         : "";
     });
     this.setState({
-      map: map
+      map: map,
     });
     if (this.props.edit === "true" || this.props.input === "false") {
       const response = await axios.get(`/api/guide/${this.props.id}`);
-      response.data.Locations.forEach(point => {
+      response.data.guide.Locations.forEach((point) => {
         const markerPoint = [];
         markerPoint.push(Number(point.lng));
         markerPoint.push(Number(point.lat));
@@ -206,7 +206,7 @@ class GuideMap extends React.Component {
         lat: nextprops.place.lat,
         lng: nextprops.place.lng,
         locationNumber: this.locationNumber - 1,
-        name: nextprops.place.name
+        name: nextprops.place.name,
       });
     }
   }
@@ -220,7 +220,7 @@ class GuideMap extends React.Component {
     this.props.addPoint({
       lat: point[1],
       lng: point[0],
-      locationNumber: this.locationNumber - 1
+      locationNumber: this.locationNumber - 1,
     });
   }
   render() {

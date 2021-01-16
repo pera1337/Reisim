@@ -20,15 +20,20 @@ import jsonwebtoken from "jsonwebtoken";
 import "../css/Guide.css";
 import "../css/Home.css";
 import GuidesList from "./shared/GuidesList";
+import AddComment from "./shared/AddComment";
+import CommentList from "./shared/CommentList";
+import moment from "moment";
+import InterestedButton from "./shared/InterestedButton";
+import DisplayUsers from "./shared/DisplayUsers";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   small: {
     width: theme.spacing(3),
-    height: theme.spacing(3)
-  }
+    height: theme.spacing(3),
+  },
 }));
 
-const Guide = params => {
+const Guide = (params) => {
   const classes = useStyles();
   const [guide, setGuide] = useState({});
   const [locations, setLocations] = useState([]);
@@ -37,30 +42,39 @@ const Guide = params => {
   const [similarGuides, setSimilarGuides] = useState([]);
   const [, setCoords] = useState([]);
   const [cities, setCities] = useState([]);
+  const [going, setGoing] = useState([]);
   const [userId, setUserId] = useState(-1);
   const [guideUser, setGuideUser] = useState({});
+  const [isGoing, setIsGoing] = useState(false);
 
   useEffect(() => {
     async function getData() {
       try {
         const response = await axios.get(`/api/guide/${params.id}`);
         const similar = await axios.get(
-          `/api/guide/similar/${response.data.id}`
+          `/api/guide/similar/${response.data.guide.id}`
         );
         const token = localStorage.getItem("token") || "";
+        let decoded = {};
         if (token) {
-          const decoded = await jsonwebtoken.decode(token);
+          decoded = await jsonwebtoken.decode(token);
           setUserId(Number(decoded.id));
         }
         setSimilarGuides(similar.data);
-        setGuide(response.data);
-        setCities(response.data.Cities);
-        setAvgRating(response.data.avgRating);
-        setNumOfRatings(response.data.numOfRatings);
-        setGuideUser(response.data.User);
-        setLocations(response.data.Locations);
+        console.log(response.data);
+        setGuide(response.data.guide);
+        setGoing(response.data.going);
+        console.log(userId);
+        setIsGoing(
+          response.data.going.some((el) => el.userId === Number(decoded.id))
+        );
+        setCities(response.data.guide.Cities);
+        setAvgRating(response.data.guide.avgRating);
+        setNumOfRatings(response.data.guide.numOfRatings);
+        setGuideUser(response.data.guide.User);
+        setLocations(response.data.guide.Locations);
         var statePoints = [];
-        response.data.Locations.forEach(element => {
+        response.data.guide.Locations.forEach((element) => {
           const point = [];
           point.push(element.lng);
           point.push(element.lat);
@@ -77,10 +91,10 @@ const Guide = params => {
 
   async function deleteGuide(id, history) {
     const headers = {
-      "X-Auth-Token": localStorage.getItem("token")
+      "X-Auth-Token": localStorage.getItem("token"),
     };
     await axios.delete(`/api/guide/${id}`, {
-      headers
+      headers,
     });
     history.push("/");
   }
@@ -94,13 +108,34 @@ const Guide = params => {
     params.history.push(`/guide/edit/${params.id}`);
   }
 
+  const handleGoingClick = async () => {
+    const headers = {
+      "x-auth-token": localStorage.getItem("token"),
+    };
+    if (isGoing) {
+      try {
+        await axios.delete(`/api/goingTo/${guide.id}`, { headers });
+        setIsGoing(false);
+      } catch (e) {
+        console.log("e :", e);
+      }
+    } else {
+      try {
+        await axios.post(`/api/goingTo/${guide.id}`, null, { headers });
+        setIsGoing(true);
+      } catch (e) {
+        console.log("e :", e);
+      }
+    }
+  };
+
   const DescriptionText = () => {
-    let filtered = locations.filter(el => el.description);
+    let filtered = locations.filter((el) => el.description);
     if (filtered.length > 0)
       return (
         <div>
           <h2>Descriptions</h2>
-          {filtered.map(el => (
+          {filtered.map((el) => (
             <div key={el.locationNumber} className="location-container">
               <LocationDetails
                 place={el}
@@ -172,14 +207,50 @@ const Guide = params => {
                 />
               </div>
             </Grid>
+            {guide.organized && (
+              <Grid
+                direction="column"
+                item
+                container
+                justify="center"
+                align="center"
+              >
+                <Grid item>
+                  <span>{`From: ${guide.startTime}`}</span>
+                </Grid>
+                <Grid item>
+                  <span>{`To: ${guide.endTime}`}</span>
+                </Grid>
+                <Grid item>
+                  <span>{`Next Tour: ${new Date(
+                    guide.nextDate
+                  ).toDateString()}`}</span>
+                </Grid>
+              </Grid>
+            )}
             {userId !== guide.userId && userId !== -1 && (
-              <Grid item container justify="center">
-                <FollowButton targetId={guide.userId} />
+              <Grid
+                style={{ marginTop: "2px" }}
+                item
+                spacing={3}
+                container
+                justify="center"
+              >
+                <Grid item>
+                  <FollowButton targetId={guide.userId} />
+                </Grid>
+                <Grid item>
+                  <InterestedButton
+                    isGoing={isGoing}
+                    onClick={handleGoingClick}
+                  />
+                </Grid>
               </Grid>
             )}
             <Grid item>
               <SelectedItems items={cities} />
             </Grid>
+
             <Grid item>
               <p>{guide.description}</p>
             </Grid>
@@ -188,12 +259,44 @@ const Guide = params => {
               <GuideMap edit="false" input="false" id={params.id} />
             </Grid>
             {DescriptionText()}
+            <h1 style={{ textAlign: "center" }}>Comments</h1>
+            <Grid item>
+              <AddComment guideId={params.id} />
+            </Grid>
+            <Grid item>
+              <CommentList guideId={params.id} />
+            </Grid>
           </Grid>
         </div>
       </Grid>
-      <Grid item xs={12} lg={4}>
-        <h1>Similar guides</h1>
-        <GuidesList hasMore={false} guides={similarGuides} displayAuthor />
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        item
+        xs={12}
+        lg={4}
+      >
+        {going.length > 0 && (
+          <Grid item>
+            <h1>Going</h1>
+            <DisplayUsers
+              going={[
+                going[0],
+                going[0],
+                going[0],
+                going[0],
+                going[0],
+                going[0],
+                going[0],
+              ]}
+            />
+          </Grid>
+        )}
+        <Grid item>
+          <h1>Similar guides</h1>
+          <GuidesList hasMore={false} guides={similarGuides} displayAuthor />
+        </Grid>
       </Grid>
     </Grid>
   );
